@@ -51,14 +51,32 @@ bun i
 
 ### Web-Dev server
 
-To run **Vite Dev Server**, you can run (in /server dir):
+To run **Bun Dev Server**, you can run (in /server dir):
 
 ```bash
 bun run hot
 ```
 
-> API server port is specified in .env file
+> Bun Development Server port is 3000 (http://localhost:3000)
 
 # Building and running in production
 
-To build this project, you need to setup
+To build this project, you need to build web to a bundles and then mount the whole project to Docker
+
+1. Building Web (/dist will be created):
+
+```bash
+bun run web build
+```
+
+> Note: from /web directory, you can use `bun run build` to achieve the same effect
+
+2. Starting docker
+
+The server sub-project needs to be built from a Dockerfile. The most simple way to run Web&Server is:
+
+```build
+sudo docker compose up --build
+```
+
+> Note: The WEB and API ports are defined in _.env_ file
