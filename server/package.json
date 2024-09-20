@@ -5,7 +5,8 @@
   "version": "0.0.0",
   "scripts": {
     "start": "bun run index.ts",
-    "hot": "bun run --hot index.ts"
+    "hot": "bun run --hot index.ts",
+    "build": "bun build index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"
@@ -14,6 +15,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "bun": "^1.1.29",
     "dotenv": "^16.4.5"
   }
 }
