@@ -7,7 +7,7 @@ This project is for subject-based TODOs, where every user has his/her own instan
 Project is seperated into two sub-project: [Web]("#dev-web") and [Server/Api](#dev-api). You can clone this project and then enter it:
 
 ```bash
-git clone 'this_url'
+git clone https://github.com/Damko757/vut-tasker.git
 cd vut-tasker
 ```
 
@@ -49,7 +49,7 @@ cd server
 bun i
 ```
 
-### Web-Dev server
+### Bun-Dev server
 
 To run **Bun Dev Server**, you can run (in /server dir):
 
