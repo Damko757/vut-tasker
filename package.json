@@ -1,9 +1,10 @@
 {
   "name": "vut-tasker-server",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "web": "cd ./web && bun run dev && cd ..",
+    "web build": "cd ./web && bun run build && cd ..",
     "server": "cd ./server && bun run hot && cd ..",
     "all": "bun run web && bun run server"
   },
