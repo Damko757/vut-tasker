@@ -1,0 +1,82 @@
+@mixin placeholder {
+    &::-webkit-input-placeholder {
+        @content
+    }
+
+    &:-moz-placeholder {
+        @content
+    }
+
+    &::-moz-placeholder {
+        @content
+    }
+
+    &:-ms-input-placeholder {
+        @content
+    }
+}
+
+@mixin scrollbars($size, $foreground-color, $background-color: mix($foreground-color, white, 50%)) {
+
+    // For Google Chrome
+    &::-webkit-scrollbar {
+        width: $size;
+        height: $size;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $foreground-color;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $background-color;
+    }
+
+    // For Internet Explorer
+    & {
+        scrollbar-face-color: $foreground-color;
+        scrollbar-track-color: $background-color;
+    }
+}
+
+@mixin hideScrollbar {
+
+    // There is a CSS rule that can hide scrollbars in Webkit-based browsers (Chrome and Safari).
+    &::-webkit-scrollbar {
+        width: 0 !important;
+    }
+
+    // There is a CSS rule that can hide scrollbars in IE 10+.
+    // -ms-overflow-style: none;
+
+    // Use -ms-autohiding-scrollbar if you wish to display on hover.
+    // -ms-overflow-style: -ms-autohiding-scrollbar;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+
+    // There used to be a CSS rule that could hide scrollbars in Firefox, but it has since been deprecated.
+    scrollbar-width: none;
+}
+
+@mixin disableTextSelection() {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+@mixin noUserSelect {
+    // iOS Safari
+    -webkit-touch-callout: none;
+    // Safari
+    -webkit-user-select: none;
+    // Konqueror HTML
+    -khtml-user-select: none;
+    // Old versions of Firefox
+    -moz-user-select: none;
+    // Internet Explorer/Edge
+    -ms-user-select: none;
+    // Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox
+    user-select: none;
+}

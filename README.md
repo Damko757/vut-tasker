@@ -1,0 +1,64 @@
+# VUT TASKER
+
+This project is for subject-based TODOs, where every user has his/her own instance of tasks. It is meant for a close group of friends with the same (but very own) responsibilities, so they can track what everyone had already done and what they should do :)
+
+# Development
+
+Project is seperated into two sub-project: [Web]("#dev-web") and [Server/Api](#dev-api). You can clone this project and then enter it:
+
+```bash
+git clone 'this_url'
+cd vut-tasker
+```
+
+You can run all development severs from root folder with `bun run all` or choose specifically `bun run web|server`
+
+<a id="dev-web"></a>
+
+## Web
+
+### Initialization
+
+To install web modules (dependencies), enter web directory and run `bun i`:
+
+```bash
+cd web
+bun i
+```
+
+### Web-Dev server
+
+To run **Vite Dev Server**, you can run (in /web dir):
+
+```bash
+bun run dev
+```
+
+> Vite Development Server port is 5000 (http://localhost:5000)
+
+<a id="dev-api"></a>
+
+## API
+
+### Initialization
+
+To install web modules (dependencies), enter web directory and run `bun i`:
+
+```bash
+cd server
+bun i
+```
+
+### Web-Dev server
+
+To run **Vite Dev Server**, you can run (in /server dir):
+
+```bash
+bun run hot
+```
+
+> API server port is specified in .env file
+
+# Building and running in production
+
+To build this project, you need to setup

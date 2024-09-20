@@ -1,0 +1,19 @@
+{
+  "name": "vut-tasker-server",
+  "type": "module",
+  "version": "0.0.0",
+  "scripts": {
+    "web": "cd ./web && bun run dev && cd ..",
+    "server": "cd ./server && bun run hot && cd ..",
+    "all": "bun run web && bun run server"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  }
+}
