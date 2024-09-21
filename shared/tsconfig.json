@@ -15,11 +15,12 @@
     "noEmit": true,
     "jsx": "preserve",
 
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "../shared/**/*.ts"]
+  "include": ["Entities/*.ts"]
 }
