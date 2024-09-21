@@ -4,3 +4,7 @@
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
 @import "./build/mixins.scss";
+
+.w-fit-content {
+    width: fit-content !important;
+}
