@@ -11,7 +11,7 @@ const props = defineProps({
 </script>
 <template>
     <div
-        class="fw-bold d-flex m-2 fs-2 user w-fit-content"
+        class="fw-bold d-flex m-2 fs-2 user w-fit-content no-select"
         :style="{ '--color': user.color }"
     >
         <div
