@@ -8,3 +8,7 @@
 .w-fit-content {
     width: fit-content !important;
 }
+
+.no-select {
+    @include noUserSelect();
+}
