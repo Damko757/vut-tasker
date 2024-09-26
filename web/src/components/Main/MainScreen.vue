@@ -5,22 +5,34 @@ import axios, { HttpStatusCode } from "axios";
 import type { Task } from "../../../../shared/Entities/Task";
 
 const dots = ref("");
-const dotInterval = setInterval(() => {
-    dots.value += ".";
-    if (loadState.value != 0) clearInterval(dotInterval);
-}, 500);
 
 const loadState = ref(0);
 const tasks = ref<Task[]>([]);
 
+function load() {
+    loadState.value = 0;
+    dots.value = "";
+    const dotInterval = setInterval(() => {
+        dots.value += ".";
+        if (loadState.value != 0) clearInterval(dotInterval);
+    }, 500);
+    axios
+        .get<Task[]>("http://localhost:3000/tasks")
+        .then((response) => {
+            if (response.status == HttpStatusCode.Ok) {
+                loadState.value = 1;
+                tasks.value = response.data;
+            } else {
+                loadState.value = -1;
+            }
+        })
+        .catch(() => {
+            loadState.value = -1;
+        });
+}
+
 onMounted(async () => {
-    const response = await axios.get<Task[]>("http://localhost:3000/tasks");
-    if (response.status == HttpStatusCode.Ok) {
-        loadState.value = 1;
-        tasks.value = response.data;
-    } else {
-        loadState.value = -1;
-    }
+    load();
 });
 </script>
 <template>
@@ -32,7 +44,11 @@ onMounted(async () => {
         class="fw-bold p-3 fs-1 text-danger text-center"
     >
         Unable to connect! :C
-        <button type="button" class="btn btn-success d-block mx-auto fw-bold">
+        <button
+            type="button"
+            class="btn btn-success d-block mx-auto fw-bold"
+            @click="load"
+        >
             Refresh
         </button>
     </div>
