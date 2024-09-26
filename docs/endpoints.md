@@ -1,2 +1,3 @@
-`GET /tasks/{subject} -> Task[]`
-`GET /tasks/{subject}/{type} -> Task[]`
+`GET /tasks -> Task[]`
+`POST /tasks << Task`
+`PUT /tasks << Task`

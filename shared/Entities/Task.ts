@@ -6,6 +6,9 @@ export interface Task {
     type: TaskType;
     description: string;
     due_date: date | null;
+    registration_data_start: date | null;
+    registration_data_end: date | null;
+    link: string | null;
     completed_by: User[];
 }
 export enum TaskType {
