@@ -1,14 +1,20 @@
 <script setup lang="ts">
 import { useCookies } from "@vueuse/integrations/useCookies";
-import { USERS } from "../../shared/config/users";
-import type { User } from "../../shared/Entities/User";
-import UserComponent from "./components/Main/UserComponent.vue";
+import type { User } from "../../../../shared/Entities/User";
+import { USERS } from "../../../../shared/config/users";
+import { CookieValue } from "../../const";
+import UserComponent from "./UserComponent.vue";
 
-const cookies = useCookies(["user"]);
+const cookies = useCookies([CookieValue.USER]);
 
 function onUserClick(user: User) {
-    cookies.set("user", user.nick);
-    console.log(cookies.get("user"));
+    cookies.set(CookieValue.USER, user.nick, {
+        sameSite: "strict",
+        expires: (function (d = new Date()) {
+            d.setDate(d.getDate() + 365);
+            return d;
+        })(),
+    });
 }
 </script>
 <template>
@@ -23,12 +29,6 @@ function onUserClick(user: User) {
     </div>
 </template>
 
-<style lang="scss">
-@import "/src/SCSS/main.scss";
-body {
-    background-color: $black !important;
-}
-</style>
 <style scoped lang="scss">
 @import "/src/SCSS/main.scss";
 h1 {
