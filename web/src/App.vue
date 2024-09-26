@@ -20,5 +20,6 @@ const user = computed<string | undefined>(() => {
 @import "/src/SCSS/main.scss";
 body {
     background-color: $black !important;
+    color: $white;
 }
 </style>
