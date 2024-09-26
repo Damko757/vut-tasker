@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import NavComponent from "../NavComponent.vue";
+import axios from "axios";
 
 const dots = ref("");
 const dotInterval = setInterval(() => {
@@ -10,8 +11,9 @@ const dotInterval = setInterval(() => {
 
 const loadState = ref(1);
 
-onMounted(() => {
-    // fetch();
+onMounted(async () => {
+    const port = await axios.get<number>("http://127.0.0.1:3000");
+    console.log(port);
 });
 </script>
 <template>
