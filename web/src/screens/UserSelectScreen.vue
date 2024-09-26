@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { useCookies } from "@vueuse/integrations/useCookies";
-import type { User } from "../../../../shared/Entities/User";
-import { USERS } from "../../../../shared/config/users";
-import { CookieValue } from "../../const";
-import UserComponent from "./UserComponent.vue";
+import type { User } from "../../../shared/Entities/User";
+import { CookieValue } from "../const";
+import { Globals } from "../../../shared/config/globals";
 
 const cookies = useCookies([CookieValue.USER]);
 
@@ -21,7 +20,7 @@ function onUserClick(user: User) {
     <h1 class="fw-bold p-2">Hello! Who are you?</h1>
     <div class="d-flex justify-content-center align-items-center">
         <UserComponent
-            v-for="user in USERS"
+            v-for="user in Globals.USERS"
             :key="user.nick"
             :user="user"
             @click="onUserClick(user)"

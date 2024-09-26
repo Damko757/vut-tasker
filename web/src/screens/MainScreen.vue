@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import NavComponent from "../NavComponent.vue";
 import axios, { HttpStatusCode } from "axios";
-import type { Task } from "../../../../shared/Entities/Task";
+import type { Task } from "../../../shared/Entities/Task";
+import HomeScreen from "./HomeScreen.vue";
 
 const dots = ref("");
 
@@ -54,6 +54,9 @@ onMounted(async () => {
     </div>
     <template v-else-if="loadState == 1">
         <NavComponent />
+        <main>
+            <HomeScreen @load-state-change="(ns) => (loadState = ns)" />
+        </main>
     </template>
 </template>
 <style lang="sass" scoped></style>
