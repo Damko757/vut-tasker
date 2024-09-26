@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useCookies } from "@vueuse/integrations/useCookies";
 import { CookieValue } from "./const";
-import UserSelectScreen from "./components/Main/UserSelectScreen.vue";
 import { computed } from "vue";
-import MainScreen from "./components/Main/MainScreen.vue";
+import UserSelectScreen from "./screens/UserSelectScreen.vue";
+import MainScreen from "./screens/MainScreen.vue";
 
 const cookies = useCookies([CookieValue.USER]);
 
