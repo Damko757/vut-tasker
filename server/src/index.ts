@@ -3,7 +3,14 @@ import { ENV } from "./const.ts";
 
 serve({
     fetch(request) {
-        return new Response(ENV.port.toString());
+        const res = new Response(ENV.port.toString());
+        res.headers.set("Access-Control-Allow-Origin", "*");
+        res.headers.set(
+            "Access-Control-Allow-Methods",
+            "GET, POST, PUT, DELETE, OPTIONS"
+        );
+
+        return res;
     },
     port: ENV.port,
 });
