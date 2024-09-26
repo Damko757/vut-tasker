@@ -28,11 +28,16 @@ ul {
     width: fit-content;
     height: 100vh;
     overflow: scroll;
-    padding: 1em;
+    padding: 1em 0em !important;
+    width: 4.5rem;
+    font-size: 1rem;
     margin: 0;
     position: fixed;
     top: 0;
+    height: fit-content;
+    border-radius: 0 0 1em 1em;
     li {
+        text-align: center;
         list-style: none;
         font-weight: bold;
         margin-top: 0.25em;
