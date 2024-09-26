@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import NavComponent from "../NavComponent.vue";
-import axios from "axios";
+import axios, { HttpStatusCode } from "axios";
+import type { Task } from "../../../../shared/Entities/Task";
 
 const dots = ref("");
 const dotInterval = setInterval(() => {
@@ -9,11 +10,17 @@ const dotInterval = setInterval(() => {
     if (loadState.value != 0) clearInterval(dotInterval);
 }, 500);
 
-const loadState = ref(1);
+const loadState = ref(0);
+const tasks = ref<Task[]>([]);
 
 onMounted(async () => {
-    const port = await axios.get<number>("http://127.0.0.1:3000");
-    console.log(port);
+    const response = await axios.get<Task[]>("http://localhost:3000/tasks");
+    if (response.status == HttpStatusCode.Ok) {
+        loadState.value = 1;
+        tasks.value = response.data;
+    } else {
+        loadState.value = -1;
+    }
 });
 </script>
 <template>
