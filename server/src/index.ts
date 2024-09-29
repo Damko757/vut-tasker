@@ -1,16 +1,29 @@
 import { serve } from "bun";
 import { ENV } from "./const.ts";
+import * as mongoose from "mongoose";
+import chalk from "chalk";
+import { Task } from "./Schemas/Task.ts";
+import express from "express";
+import { attachControllers } from "@decorators/express";
+import { MainRouter } from "./Routes/index.ts";
 
-serve({
-    fetch(request) {
-        const res = new Response(ENV.port.toString());
-        res.headers.set("Access-Control-Allow-Origin", "*");
-        res.headers.set(
-            "Access-Control-Allow-Methods",
-            "GET, POST, PUT, DELETE, OPTIONS"
+await mongoose
+    .connect(
+        `mongodb://${ENV.DATABASE_USER}:${ENV.DATABASE_PASSWORD}@${ENV.DATABASE_URI}:${ENV.DATABASE_PORT}`
+    )
+    .then(() => {
+        console.info(
+            chalk.green(
+                `Successfully connected to ${chalk.underline("Mongo")}!`
+            )
         );
+    })
+    .catch((err) => {
+        console.error("Unable to connect to MongoDB!");
+    });
 
-        return res;
-    },
-    port: ENV.port,
-});
+const app = express();
+
+app.use("/", MainRouter);
+
+app.listen(ENV.SERVER_PORT);
