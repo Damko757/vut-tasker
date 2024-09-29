@@ -16,3 +16,14 @@ services:
         ports:
             - 3000:3000
         restart: unless-stopped
+    mongodb:
+        container_name: mongodb
+        image: mongo
+        restart: always
+        ports:
+            - ${DATABASE_PORT}:27017
+        volumes:
+            - ./mongodb:/data/db
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${DATABASE_USER}
+            MONGO_INITDB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
