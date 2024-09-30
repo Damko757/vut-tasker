@@ -6,6 +6,11 @@ import { Task } from "./Schemas/Task.ts";
 import express from "express";
 import { attachControllers } from "@decorators/express";
 import { MainRouter } from "./Routes/index.ts";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import { errorHandler } from "./utils/error-handler.ts";
+import helmet from "helmet";
+import cors from "cors";
 
 await mongoose
     .connect(
@@ -24,6 +29,14 @@ await mongoose
 
 const app = express();
 
+app.use(helmet());
+app.use(cors());
+app.use(bodyParser.json());
+app.use(cookieParser());
+
 app.use("/", MainRouter);
 
-app.listen(ENV.SERVER_PORT);
+app.use(errorHandler);
+app.listen(ENV.SERVER_PORT).on("error", (e) => console.error(chalk.red(e)));
+
+console.log(chalk.blue(`Running at port ${chalk.underline(ENV.SERVER_PORT)}!`));

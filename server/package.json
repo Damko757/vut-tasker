@@ -9,13 +9,24 @@
     "build": "bun build src/index.ts"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/cors": "^2.8.17",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^5.0.0",
+    "@types/helmet": "^4.0.0",
+    "@types/node": "^22.7.4"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.6.2"
   },
   "dependencies": {
+    "@types/cookie-parser": "^1.4.7",
+    "body-parser": "^1.20.3",
     "bun": "^1.1.29",
-    "dotenv": "^16.4.5"
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "helmet": "^8.0.0",
+    "http-status-codes": "^2.3.0"
   }
 }
