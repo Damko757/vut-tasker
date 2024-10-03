@@ -1,8 +1,9 @@
-import mongoose from "mongoose";
+import mongoose, { type ObjectId } from "mongoose";
 import type { Task as _Task, TaskType } from "../../../shared/Entities/Task.ts";
-import { User } from "../../../shared/Entities/User.ts";
+import type { User } from "../../../shared/Entities/User.ts";
 
-const TaskSchema = new mongoose.Schema<_Task>({
+const TaskSchema = new mongoose.Schema<_Task & { _id: ObjectId }>({
+    _id: { type: mongoose.Types.ObjectId },
     subject: { type: String, required: true },
     type: { type: String, required: true } as unknown as TaskType,
     description: { type: String, required: false },
