@@ -1,15 +1,27 @@
+import mongoose, { type Error } from "mongoose";
 import type { NextFunction, Request, Response } from "express";
 import type { Routable, RoutingMap } from "../Utils/Router.ts";
 import { Controller } from "./Controller.ts";
 import { HttpStatusCodes } from "../Utils/HttpStatusCodes.ts";
 import { Task } from "../Schemas/Task.ts";
+import chalk from "chalk";
 
-export class TaskController extends Controller implements Routable {
+export class TaskController
+    extends Controller<typeof Task>
+    implements Routable
+{
     routes() {
         return {
             "/task/:id": {
-                GET: this.getByTaskId,
                 DELETE: this.deleteByTaskId,
+                PUT: this.putByTaskId,
+                PATCH: this.patchByTaskId,
+            },
+            "/task/:subject": {
+                GET: this.getByTaskSubjectAndType,
+            },
+            "/task/:subject/:type": {
+                GET: this.getByTaskSubjectAndType,
             },
             "/tasks": {
                 GET: this.getAllTasks,
@@ -18,11 +30,18 @@ export class TaskController extends Controller implements Routable {
         };
     }
 
-    getByTaskId(req: Request, res: Response, next: NextFunction) {
-        console.log("GET!");
-        // TODO
+    async getByTaskSubjectAndType(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) {
+        console.log(req.params);
+        const tasks = await Task.find({
+            subject: req.params.subject,
+            ...(req.params.type ? { type: req.params.type } : {}),
+        }).exec();
 
-        res.status(HttpStatusCodes.NOT_IMPLEMENTED).send("GET");
+        return res.status(HttpStatusCodes.OK).send(tasks);
     }
     async deleteByTaskId(req: Request, res: Response, next: NextFunction) {
         const task = await Task.findOne({ _id: req.params.id }).exec();
@@ -31,14 +50,50 @@ export class TaskController extends Controller implements Routable {
         const result = await Task.deleteOne({ _id: req.params.id }).exec();
         res.status(HttpStatusCodes.NO_CONTENT).send();
     }
-    postTask(req: Request, res: Response, next: NextFunction) {
-        // TODO
+    async postTask(req: Request, res: Response, next: NextFunction) {
+        const task = new Task(req.body);
 
-        res.status(HttpStatusCodes.NOT_IMPLEMENTED).send("POST");
+        return task
+            .save()
+            .catch((error) => {
+                return res
+                    .status(HttpStatusCodes.UNPROCESSABLE_ENTITY)
+                    .send(error);
+            })
+            .then(async () => {
+                return res.status(HttpStatusCodes.OK).send(task);
+            });
     }
     getAllTasks(req: Request, res: Response, next: NextFunction) {
         Task.find().then((tasks) => {
             res.status(HttpStatusCodes.OK).send(tasks);
         });
+    }
+
+    patchByTaskId(req: Request, res: Response, next: NextFunction) {
+        Controller.update(Task, { _id: req.params.id }, req.body)
+            .then((updated) => {
+                return updated
+                    ? res.status(HttpStatusCodes.OK).send(updated)
+                    : res.status(HttpStatusCodes.NOT_FOUND).send();
+            })
+            .catch((error) => {
+                return res
+                    .status(HttpStatusCodes.UNPROCESSABLE_ENTITY)
+                    .send(error);
+            });
+    }
+    putByTaskId(req: Request, res: Response, next: NextFunction) {
+        Controller.replace(Task, { _id: req.params.id }, req.body)
+            .then((updated) => {
+                return updated
+                    ? res.status(HttpStatusCodes.OK).send(updated)
+                    : res.status(HttpStatusCodes.NOT_FOUND).send();
+            })
+            .catch((error) => {
+                return res
+                    .status(HttpStatusCodes.UNPROCESSABLE_ENTITY)
+                    .send(error);
+            });
     }
 }
