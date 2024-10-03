@@ -1,9 +1,9 @@
-import chalk from "chalk";
 import type { Application, NextFunction, Request, Response } from "express";
 import type { HttpMethod } from "../Entities/HttpMethod.ts";
 import type { MiddlewareFunction } from "../Entities/MiddlewareFunction.ts";
 import { HttpStatusCodes } from "./HttpStatusCodes.ts";
 import type { ErrorResponse } from "../Entities/ErrorResponse.ts";
+import chalk from "chalk";
 
 export class Router {
     routables: Routable[];
@@ -22,8 +22,11 @@ export class Router {
         const handleInvalidMethod = this.handleInvalidMethod;
         const self = this;
 
+        this.routingMap = {};
+
         this.routables.forEach((routable) => {
             const allRoutes = routable.routes();
+            self.routingMap = { ...self.routingMap, ...allRoutes };
 
             const paths: string[][] = [];
 
@@ -59,7 +62,6 @@ export class Router {
                     const path = _path.join("/");
 
                     for (const method in allRoutes[path]) {
-                        console.log(method.toLowerCase(), path);
                         app[method.toLowerCase() as keyof typeof app](
                             path,
                             allRoutes[path][
@@ -79,6 +81,8 @@ export class Router {
                 );
             }
         });
+        console.log(chalk.cyan("Routes:"));
+        console.log(this.routingMap);
     }
 
     handleInvalidMethod(
