@@ -1,17 +1,36 @@
 import mongoose, { type ObjectId } from "mongoose";
-import type { Task as _Task, TaskType } from "../../../shared/Entities/Task.ts";
+import { TaskType, type Task as _Task } from "../../../shared/Entities/Task.ts";
 import type { User } from "../../../shared/Entities/User.ts";
 
-const TaskSchema = new mongoose.Schema<_Task & { _id: ObjectId }>({
+const taskTypes = [];
+for (const taskType in TaskType) {
+    if (isNaN(Number(taskType))) taskTypes.push(taskType.toLowerCase());
+}
+
+const TaskSchema = new mongoose.Schema({
     _id: { type: mongoose.Types.ObjectId },
     subject: { type: String, required: true },
-    type: { type: String, required: true } as unknown as TaskType,
-    description: { type: String, required: false },
-    due_date: { type: String, required: false },
-    registration_data_start: { type: String, required: false },
-    registration_data_end: { type: String, required: false },
-    link: { type: String, required: false },
-    completed_by: { type: Array, required: true } as unknown as User[],
+    type: {
+        type: String,
+        required: true,
+        enum: {
+            values: taskTypes,
+            message: `Type '{VALUE}' is not in allowed types: ${taskTypes.join(
+                ", "
+            )}.`,
+        },
+    },
+    description: { type: String, required: false, default: null },
+    due_date: { type: String, required: false, default: null },
+    registration_date_start: { type: String, required: false, default: null },
+    registration_date_end: { type: String, required: false, default: null },
+    link: { type: String, required: false, default: null },
+    completed_by: { type: [String], required: true },
 });
 
-export const Task = mongoose.model("Task", TaskSchema);
+TaskSchema.pre("validate", function (next, ...args) {
+    if (this.get("type")) this.set("type", this.get("type").toLowerCase());
+    next();
+});
+
+export const Task = mongoose.model<_Task>("Task", TaskSchema);
