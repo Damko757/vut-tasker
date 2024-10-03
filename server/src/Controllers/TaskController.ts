@@ -35,7 +35,6 @@ export class TaskController
         res: Response,
         next: NextFunction
     ) {
-        console.log(req.params);
         const tasks = await TaskModel.find({
             subject: req.params.subject,
             ...(req.params.type ? { type: req.params.type } : {}),
