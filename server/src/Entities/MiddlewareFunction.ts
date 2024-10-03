@@ -4,4 +4,4 @@ export type MiddlewareFunction = (
     req: Request,
     res: Response,
     next: NextFunction
-) => void;
+) => void | Promise<any>;
