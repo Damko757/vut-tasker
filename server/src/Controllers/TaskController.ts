@@ -3,11 +3,11 @@ import type { NextFunction, Request, Response } from "express";
 import type { Routable, RoutingMap } from "../Utils/Router.ts";
 import { Controller } from "./Controller.ts";
 import { HttpStatusCodes } from "../Utils/HttpStatusCodes.ts";
-import { Task } from "../Schemas/Task.ts";
+import { TaskModel } from "../Schemas/Task.ts";
 import chalk from "chalk";
 
 export class TaskController
-    extends Controller<typeof Task>
+    extends Controller<typeof TaskModel>
     implements Routable
 {
     routes() {
@@ -36,7 +36,7 @@ export class TaskController
         next: NextFunction
     ) {
         console.log(req.params);
-        const tasks = await Task.find({
+        const tasks = await TaskModel.find({
             subject: req.params.subject,
             ...(req.params.type ? { type: req.params.type } : {}),
         }).exec();
@@ -44,14 +44,14 @@ export class TaskController
         return res.status(HttpStatusCodes.OK).send(tasks);
     }
     async deleteByTaskId(req: Request, res: Response, next: NextFunction) {
-        const task = await Task.findOne({ _id: req.params.id }).exec();
+        const task = await TaskModel.findOne({ _id: req.params.id }).exec();
         if (!task) return res.status(HttpStatusCodes.NOT_FOUND).send();
 
-        const result = await Task.deleteOne({ _id: req.params.id }).exec();
+        const result = await TaskModel.deleteOne({ _id: req.params.id }).exec();
         res.status(HttpStatusCodes.NO_CONTENT).send();
     }
     async postTask(req: Request, res: Response, next: NextFunction) {
-        const task = new Task(req.body);
+        const task = new TaskModel(req.body);
 
         return task
             .save()
@@ -65,13 +65,13 @@ export class TaskController
             });
     }
     getAllTasks(req: Request, res: Response, next: NextFunction) {
-        Task.find().then((tasks) => {
+        TaskModel.find().then((tasks) => {
             res.status(HttpStatusCodes.OK).send(tasks);
         });
     }
 
     patchByTaskId(req: Request, res: Response, next: NextFunction) {
-        Controller.update(Task, { _id: req.params.id }, req.body)
+        Controller.update(TaskModel, { _id: req.params.id }, req.body)
             .then((updated) => {
                 return updated
                     ? res.status(HttpStatusCodes.OK).send(updated)
@@ -84,7 +84,7 @@ export class TaskController
             });
     }
     putByTaskId(req: Request, res: Response, next: NextFunction) {
-        Controller.replace(Task, { _id: req.params.id }, req.body)
+        Controller.replace(TaskModel, { _id: req.params.id }, req.body)
             .then((updated) => {
                 return updated
                     ? res.status(HttpStatusCodes.OK).send(updated)

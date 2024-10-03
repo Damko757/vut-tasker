@@ -1,12 +1,12 @@
-import { NextFunction, Router } from "express";
-import { Task } from "../Schemas/Task.ts";
+import { type NextFunction, Router } from "express";
+import { TaskModel } from "../Schemas/Task.ts";
 import { type Request, type Response } from "express";
 import HttpStatus from "http-status-codes";
 
 export const TaskRouter = Router();
 
 TaskRouter.get("/tasks", (req: Request, res: Response, next: NextFunction) => {
-    Task.find({}).then((tasks) => {
+    TaskModel.find({}).then((tasks) => {
         res.json(req.body);
 
         res.send();

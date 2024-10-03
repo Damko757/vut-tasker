@@ -32,4 +32,4 @@ TaskSchema.pre("validate", function (next, ...args) {
     next();
 });
 
-export const Task = mongoose.model<_Task>("Task", TaskSchema);
+export const TaskModel = mongoose.model<_Task>("Task", TaskSchema);
