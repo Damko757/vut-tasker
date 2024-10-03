@@ -9,21 +9,42 @@ export class Router {
     routables: Routable[];
     routingMap: RoutingMap;
 
+    allowedRouteMethods!: {
+        [url: string]: HttpMethod[];
+    };
+
     constructor(routables: Routable[]) {
         this.routables = routables;
         this.routingMap = {};
     }
 
     createRoutes(app: Application) {
-        const handleRequest = this.handleRequest;
+        const handleInvalidMethod = this.handleInvalidMethod;
+        const self = this;
 
         this.routables.forEach((routable) => {
-            const routes = routable.routes();
+            const allRoutes = routable.routes();
 
             const paths: string[][] = [];
 
-            for (const path in routes) {
-                paths.push(path.split("/"));
+            this.allowedRouteMethods = {};
+
+            for (const path in allRoutes) {
+                const parts = path.split("/");
+
+                paths.push(parts);
+
+                const newPath = parts
+                    .map((v, i) => (v[0] == ":" ? `:${i}` : v))
+                    .join("/");
+                if (!(newPath in this.allowedRouteMethods)) {
+                    this.allowedRouteMethods[newPath] = [];
+                }
+
+                this.allowedRouteMethods[newPath] = [
+                    ...this.allowedRouteMethods[newPath],
+                    ...(Object.keys(allRoutes[path]) as HttpMethod[]),
+                ];
             }
 
             //Sorting by url length
@@ -36,27 +57,42 @@ export class Router {
                 })
                 .forEach((_path) => {
                     const path = _path.join("/");
-                    app.use(path, function (...args) {
-                        handleRequest(routes[path], ...args);
-                    });
+
+                    for (const method in allRoutes[path]) {
+                        console.log(method.toLowerCase(), path);
+                        app[method.toLowerCase() as keyof typeof app](
+                            path,
+                            allRoutes[path][
+                                method as keyof (typeof allRoutes)["path"]
+                            ] as MiddlewareFunction
+                        );
+                    }
+
+                    // app.use(path, function (...args) {
+                    //     handleRequest(routes[path], ...args);
+                    // });
                 });
+
+            for (const path in this.allowedRouteMethods) {
+                app.use(path, (...args: Parameters<MiddlewareFunction>) =>
+                    self.handleInvalidMethod(path, ...args)
+                );
+            }
         });
     }
 
-    handleRequest(
-        methods: RoutingMapMethod,
+    handleInvalidMethod(
+        matchedPath: string,
         req: Request,
         res: Response,
         next: NextFunction
     ) {
-        if (req.method in methods) {
-            const callback = methods[req.method as HttpMethod]!;
-            return callback(req, res, next);
-        }
+        const methods = this.allowedRouteMethods[matchedPath];
+        methods.sort();
 
         const errorResponse: ErrorResponse = {
             message: `Invalid method: ${req.method}`,
-            detail: `Accepted methods are: ${Object.keys(methods).join(", ")}`,
+            detail: `Accepted methods are: ${methods.join(", ")}`,
         };
 
         // Website you wish to allow to connect
