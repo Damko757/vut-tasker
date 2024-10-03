@@ -3,14 +3,20 @@ import { ENV } from "./const.ts";
 import * as mongoose from "mongoose";
 import chalk from "chalk";
 import { Task } from "./Schemas/Task.ts";
-import express from "express";
-import { attachControllers } from "@decorators/express";
+import express, {
+    type NextFunction,
+    type Request,
+    type Response,
+} from "express";
 import { MainRouter } from "./Routes/index.ts";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import { errorHandler } from "./utils/error-handler.ts";
 import helmet from "helmet";
 import cors from "cors";
+import type { ErrorResponse } from "./Entities/ErrorResponse.ts";
+import { HttpStatusCodes } from "./Utils/HttpStatusCodes.ts";
+import { Router } from "./Utils/Router.ts";
+import { routableControllers } from "./Utils/RoutableControllers.ts";
 
 await mongoose
     .connect(
@@ -34,9 +40,26 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use("/", MainRouter);
+const router = new Router(routableControllers);
+router.createRoutes(app);
 
-app.use(errorHandler);
+app.use((req: Request, res: Response, next: NextFunction) => {
+    const errorMsg: ErrorResponse = {
+        message: `Unknown route: ${req.url}`,
+    };
+
+    res.status(HttpStatusCodes.BAD_REQUEST).send(errorMsg);
+});
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    console.error(chalk.red(err));
+
+    const errorMsg: ErrorResponse = {
+        message: "Something went wrong",
+    };
+
+    res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send(errorMsg);
+});
 app.listen(ENV.SERVER_PORT).on("error", (e) => console.error(chalk.red(e)));
 
 console.log(chalk.blue(`Running at port ${chalk.underline(ENV.SERVER_PORT)}!`));
