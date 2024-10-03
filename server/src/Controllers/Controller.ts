@@ -7,7 +7,7 @@ export class Controller<modelT extends Model<any>> {
 
     static async update<T extends Model<any>>(
         model: T,
-        filter: mongoose.RootFilterQuery<T> | undefined,
+        filter: mongoose.FilterQuery<T> | undefined,
         update: mongoose.UpdateQuery<T>
     ): Promise<T | null | mongoose.Error.ValidationError> {
         const doc = await model.findOneAndUpdate(filter, update, {
@@ -15,13 +15,11 @@ export class Controller<modelT extends Model<any>> {
             runValidators: true,
         });
 
-        console.log(doc);
-
         return doc;
     }
     static async replace<T extends Model<any>>(
         model: T,
-        filter: mongoose.RootFilterQuery<T> | undefined,
+        filter: mongoose.FilterQuery<T> | undefined,
         update: mongoose.UpdateQuery<T>
     ): Promise<T | null | mongoose.Error.ValidationError> {
         const doc = await model.findOneAndReplace(filter, update, {
@@ -29,8 +27,20 @@ export class Controller<modelT extends Model<any>> {
             runValidators: true,
         });
 
-        console.log(doc);
+        return doc;
+    }
+    static async delete<T extends Model<any>>(
+        model: T,
+        filter: mongoose.FilterQuery<T> | undefined
+    ): Promise<T | null | mongoose.Error.ValidationError> {
+        const doc = await model
+            .findOneAndDelete(filter, {
+                new: true,
+                runValidators: true,
+            })
+            .exec();
 
+        console.log(doc);
         return doc;
     }
 }
