@@ -1,4 +1,3 @@
-import { serve } from "bun";
 import { ENV } from "./const.ts";
 import * as mongoose from "mongoose";
 import chalk from "chalk";
@@ -7,7 +6,6 @@ import express, {
     type Request,
     type Response,
 } from "express";
-import { MainRouter } from "./Routes/index.ts";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
@@ -19,6 +17,7 @@ import { routableControllers } from "./Utils/RoutableControllers.ts";
 import { errorHandler } from "./Utils/ErrorHandler.ts";
 
 await mongoose
+    .set("strictQuery", false)
     .connect(
         `mongodb://${ENV.DATABASE_USER}:${ENV.DATABASE_PASSWORD}@${ENV.DATABASE_URI}:${ENV.DATABASE_PORT}`
     )

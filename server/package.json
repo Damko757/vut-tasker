@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@types/cookie-parser": "^1.4.7",
+    "@types/mongoose-unique-validator": "^1.0.9",
     "body-parser": "^1.20.3",
     "bun": "^1.1.29",
     "chalk": "^5.3.0",
@@ -28,6 +29,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "helmet": "^8.0.0",
-    "http-status-codes": "^2.3.0"
+    "http-status-codes": "^2.3.0",
+    "mongoose-unique-validator": "^4.0.1"
   }
 }
