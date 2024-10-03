@@ -8,7 +8,6 @@ for (const taskType in TaskType) {
 }
 
 const TaskSchema = new mongoose.Schema({
-    _id: { type: mongoose.Types.ObjectId },
     subject: { type: String, required: true },
     type: {
         type: String,
