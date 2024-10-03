@@ -12,3 +12,7 @@
 .no-select {
     @include noUserSelect();
 }
+
+.no-scrollbar {
+    @include hideScrollbar();
+}
