@@ -17,6 +17,7 @@ import type { ErrorResponse } from "./Entities/ErrorResponse.ts";
 import { HttpStatusCodes } from "./Utils/HttpStatusCodes.ts";
 import { Router } from "./Utils/Router.ts";
 import { routableControllers } from "./Utils/RoutableControllers.ts";
+import { errorHandler } from "./Utils/ErrorHandler.ts";
 
 await mongoose
     .connect(
@@ -45,21 +46,14 @@ router.createRoutes(app);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
     const errorMsg: ErrorResponse = {
-        message: `Unknown route: ${req.url}`,
+        message: `Unknown request: ${req.method} ${req.url}`,
     };
 
     res.status(HttpStatusCodes.BAD_REQUEST).send(errorMsg);
 });
 
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.error(chalk.red(err));
+app.use(errorHandler);
 
-    const errorMsg: ErrorResponse = {
-        message: "Something went wrong",
-    };
-
-    res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send(errorMsg);
-});
 app.listen(ENV.SERVER_PORT).on("error", (e) => console.error(chalk.red(e)));
 
 console.log(chalk.blue(`Running at port ${chalk.underline(ENV.SERVER_PORT)}!`));
