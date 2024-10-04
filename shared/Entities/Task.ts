@@ -15,5 +15,5 @@ export interface Task {
 export enum TaskType {
     PROJECT,
     HOMEWORK,
-    BOOK,
+    EXAM,
 }
