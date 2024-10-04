@@ -6,6 +6,10 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    greyOut: {
+        type: Boolean,
+        default: true,
+    },
 });
 
 const emit = defineEmits<{
@@ -15,7 +19,10 @@ const emit = defineEmits<{
 const changeState = (newState: boolean) => emit("stateChange", newState);
 </script>
 <template>
-    <div @click="changeState(!props.state)" :class="{ active: state }"></div>
+    <div
+        @click="changeState(!props.state)"
+        :class="{ active: state, grey: props.greyOut }"
+    ></div>
 </template>
 <style lang="scss" scoped>
 @import "/src/SCSS/main.scss";
@@ -47,7 +54,9 @@ div {
     }
 
     &.active {
-        --checkbox_color: #{darken($white, 30%)};
+        &.grey {
+            --checkbox_color: #{darken($white, 30%)};
+        }
         &::after {
             opacity: 1;
         }
