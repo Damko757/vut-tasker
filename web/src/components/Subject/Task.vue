@@ -3,23 +3,36 @@ import { computed, ref, type PropType } from "vue";
 import type { Task } from "../../../../shared/Entities/Task";
 import CheckBox from "./CheckBox.vue";
 import { useCookies } from "@vueuse/integrations/useCookies";
-import { CookieValue } from "../../const";
+import { API_URL, CookieValue } from "../../const";
 import TaskView from "./TaskView.vue";
 import TaskEdit from "./TaskEdit.vue";
+import axios from "axios";
 
 const cookies = useCookies([CookieValue.USER]);
 
 const nick = computed(() => cookies.get(CookieValue.USER) as string);
 
 const task = defineModel<Task>();
+const deleted = ref(false);
 
 const state = ref<boolean>(task.value!.completed_by.includes(nick.value));
 const isCollapsed = ref<boolean>(false);
 
 const action = ref<"view" | "update">("view");
+
+function deleteTask() {
+    if (!confirm("Really?")) return;
+
+    axios
+        .delete(API_URL + `/task/${task.value?._id}`)
+        .then((response) => {
+            deleted.value = true;
+        })
+        .catch(console.error);
+}
 </script>
 <template>
-    <div :class="{ completed: state }" class="row">
+    <div :class="{ completed: state }" class="row" v-if="!deleted">
         <div class="col-auto">
             <CheckBox :state="state" @state-change="(ns) => (state = ns)" />
         </div>
@@ -29,6 +42,7 @@ const action = ref<"view" | "update">("view");
                 :task="task!"
                 :is-collapsed="isCollapsed"
                 @update="action = 'update'"
+                @delete="deleteTask"
             />
             <TaskEdit
                 v-if="action == 'update'"
@@ -41,6 +55,8 @@ const action = ref<"view" | "update">("view");
                 "
             />
         </div>
+
+        <hr class="mt-2" />
     </div>
 </template>
 <style lang="scss">
