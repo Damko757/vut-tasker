@@ -14,9 +14,11 @@ String.prototype.ISOToFormattedDateTime = function (
     showSeconds: boolean = false
 ) {
     const d = new Date(this);
-    return `${d.getDate()}. ${
-        d.getMonth() + 1
-    }. ${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}` + showSeconds
-        ? `:${d.getSeconds()}`
-        : ``;
+
+    return (
+        `${d.getDate()}. ${
+            d.getMonth() + 1
+        }. ${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}` +
+        (showSeconds ? `:${d.getSeconds()}` : ``)
+    );
 };
