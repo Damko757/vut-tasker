@@ -23,14 +23,13 @@ export class Router {
         const self = this;
 
         this.routingMap = {};
+        this.allowedRouteMethods = {};
 
         this.routables.forEach((routable) => {
             const allRoutes = routable.routes();
             self.routingMap = { ...self.routingMap, ...allRoutes };
 
             const paths: string[][] = [];
-
-            this.allowedRouteMethods = {};
 
             for (const path in allRoutes) {
                 const parts = path.split("/");
