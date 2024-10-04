@@ -15,14 +15,14 @@ const emit = defineEmits<{
     (e: "delete", task: Task): void;
 }>();
 </script>
-<template>
+<template class="cursor-pointer">
     <h5 class="fw-bold position-relative">
         {{ task.required ? "*" : "" }}{{ task.description }}
         <div class="collapse-arrow" :class="{ collapsed: props.isCollapsed }">
             >
         </div>
     </h5>
-    <div v-if="task.due_date" class="text-muted fst-italic">
+    <div v-if="task.due_date" class="due-date fst-italic">
         &#40;{{ task.due_date?.ISOToFormattedDateTime() }}&#41;
     </div>
     <div class="h-0 overflow-hidden" :class="{ collapsed: props.isCollapsed }">
@@ -42,10 +42,13 @@ const emit = defineEmits<{
         </div>
 
         <div class="pt-2 fw-bold">
-            <button class="btn btn-success" @click="emit('update', task)">
+            <button class="btn btn-success" @click.stop="emit('update', task)">
                 Update
             </button>
-            <button class="btn btn-danger mx-3" @click="emit('delete', task)">
+            <button
+                class="btn btn-danger mx-3"
+                @click.stop="emit('delete', task)"
+            >
                 Delete
             </button>
         </div>
@@ -53,6 +56,10 @@ const emit = defineEmits<{
 </template>
 <style lang="scss" scoped>
 @import "/src/SCSS/main.scss";
+
+.due-date {
+    color: darken($white, 10%);
+}
 
 .collapsed {
     height: auto !important;
