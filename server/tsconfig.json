@@ -25,7 +25,7 @@
     "noPropertyAccessFromIndexSignature": false,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
   },
   "include": ["src/**/*.ts", "index.ts", "../shared/**/*.ts"],
   
