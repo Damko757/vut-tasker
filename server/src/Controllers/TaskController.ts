@@ -17,10 +17,10 @@ export class TaskController
                 PUT: this.putByTaskId,
                 PATCH: this.patchByTaskId,
             },
-            "/task/:subject": {
+            "/tasks/:subject/:type": {
                 GET: this.getByTaskSubjectAndType,
             },
-            "/task/:subject/:type": {
+            "/tasks/:subject": {
                 GET: this.getByTaskSubjectAndType,
             },
             "/tasks": {
@@ -38,7 +38,11 @@ export class TaskController
         const tasks = await TaskModel.find({
             subject: req.params.subject,
             ...(req.params.type ? { type: req.params.type } : {}),
-        }).exec();
+        })
+            .sort({
+                type: 1,
+            })
+            .exec();
 
         return res.status(HttpStatusCodes.OK).send(tasks);
     }
