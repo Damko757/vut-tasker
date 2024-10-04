@@ -19,6 +19,10 @@ const TaskSchema = new mongoose.Schema({
             )}.`,
         },
     },
+    required: {
+        type: Boolean,
+        default: true,
+    },
     description: { type: String, required: false, default: null },
     due_date: { type: String, required: false, default: null },
     registration_date_start: { type: String, required: false, default: null },
