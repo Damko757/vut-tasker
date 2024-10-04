@@ -15,42 +15,53 @@ const emit = defineEmits<{
     (e: "delete", task: Task): void;
 }>();
 </script>
-<template class="cursor-pointer">
-    <h5 class="fw-bold position-relative">
-        {{ task.required ? "*" : "" }}{{ task.description }}
-        <div class="collapse-arrow" :class="{ collapsed: props.isCollapsed }">
+<template>
+    <div class="cursor-pointer">
+        <h5 class="fw-bold position-relative">
+            {{ task.required ? "*" : "" }}{{ task.description }}
+            <div
+                class="collapse-arrow"
+                :class="{ collapsed: props.isCollapsed }"
             >
+                >
+            </div>
+        </h5>
+        <div v-if="task.due_date" class="due-date fst-italic">
+            &#40;{{ task.due_date?.ISOToFormattedDateTime() }}&#41;
         </div>
-    </h5>
-    <div v-if="task.due_date" class="due-date fst-italic">
-        &#40;{{ task.due_date?.ISOToFormattedDateTime() }}&#41;
-    </div>
-    <div class="h-0 overflow-hidden" :class="{ collapsed: props.isCollapsed }">
-        <div>
-            <span class="fw-bold">Registration: </span
-            ><span class="">{{
-                task.registration_date_start
-                    ? `${task.registration_date_start.ISOToFormattedDateTime()}` +
-                      (task.registration_date_end
-                          ? `- ${task.registration_date_end.ISOToFormattedDateTime()}`
-                          : ``)
-                    : "&lt;No term&gt;"
-            }}</span>
-            <br />
-            <span class="fw-bold">Link: </span
-            ><a :href="task.link ?? '#'">{{ task.link ?? "??" }}</a>
-        </div>
+        <div
+            class="h-0 overflow-hidden"
+            :class="{ collapsed: props.isCollapsed }"
+        >
+            <div>
+                <span class="fw-bold">Registration: </span
+                ><span class="">{{
+                    task.registration_date_start
+                        ? `${task.registration_date_start.ISOToFormattedDateTime()}` +
+                          (task.registration_date_end
+                              ? `- ${task.registration_date_end.ISOToFormattedDateTime()}`
+                              : ``)
+                        : "&lt;No term&gt;"
+                }}</span>
+                <br />
+                <span class="fw-bold">Link: </span
+                ><a :href="task.link ?? '#'">{{ task.link ?? "??" }}</a>
+            </div>
 
-        <div class="pt-2 fw-bold">
-            <button class="btn btn-success" @click.stop="emit('update', task)">
-                Update
-            </button>
-            <button
-                class="btn btn-danger mx-3"
-                @click.stop="emit('delete', task)"
-            >
-                Delete
-            </button>
+            <div class="pt-2 fw-bold">
+                <button
+                    class="btn btn-success"
+                    @click.stop="emit('update', task)"
+                >
+                    Update
+                </button>
+                <button
+                    class="btn btn-danger mx-3"
+                    @click.stop="emit('delete', task)"
+                >
+                    Delete
+                </button>
+            </div>
         </div>
     </div>
 </template>
