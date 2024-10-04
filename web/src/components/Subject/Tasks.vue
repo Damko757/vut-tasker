@@ -11,8 +11,8 @@ const props = defineProps({
 });
 </script>
 <template>
-    <div v-for="task in tasks" :key="task._id">
-        <Task :task="task" />
+    <div v-for="(task, i) in tasks" :key="task._id">
+        <Task v-model="tasks[i]" />
         <hr />
     </div>
     <div class="btn-success btn fw-bold">Add</div>
