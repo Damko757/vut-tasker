@@ -21,7 +21,7 @@ function redirect(subject: string) {
 }
 </script>
 <template>
-    <ul class="no-scrollbar">
+    <ul class="no-scrollbar pt-0">
         <li class="fs-5" @click="redirect('/')">
             <img src="/src/assets/black-home.png" alt="Home" />
         </li>
