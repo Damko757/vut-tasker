@@ -2,7 +2,6 @@
 import { useCookies } from "@vueuse/integrations/useCookies";
 import type { User } from "../../../shared/Entities/User";
 import { API_URL, CookieValue } from "../const";
-import { Globals } from "../../../shared/config/globals";
 import UserComponent from "../components/Main/UserComponent.vue";
 import axios from "axios";
 import { ref } from "vue";
