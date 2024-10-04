@@ -13,6 +13,7 @@ export const errorHandler = (
 
     const errorMsg: ErrorResponse = {
         message: "Could not complete request",
+        detail: err.message ?? undefined,
         error: err,
     };
 
