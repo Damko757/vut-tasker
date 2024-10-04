@@ -1,14 +1,20 @@
 <script setup lang="ts">
-import { computed, type PropType } from "vue";
+import axios from "axios";
+import { computed, ref, type PropType } from "vue";
+import { API_URL } from "../const";
 
 const props = defineProps({
     subjects: {
-        type: Object as PropType<string[]>,
-        default: ["IZP", "ISC", "..."],
+        type: Object as PropType<string[] | null>,
+        default: null,
     },
 });
 
-const subjects = computed(() => props.subjects.sort());
+const dynamicSubjects = ref<string[]>([]);
+axios
+    .get(API_URL + `/subjects`)
+    .then((response) => (dynamicSubjects.value = response.data));
+const subjects = computed(() => props.subjects ?? dynamicSubjects.value);
 
 function redirect(subject: string) {
     window.location.href = subject;
@@ -16,6 +22,9 @@ function redirect(subject: string) {
 </script>
 <template>
     <ul class="no-scrollbar">
+        <li class="fs-5" @click="redirect('/')">
+            <img src="/src/assets/black-home.png" alt="Home" />
+        </li>
         <li v-for="subject in subjects" class="fs-5" @click="redirect(subject)">
             {{ subject }}
         </li>
@@ -45,6 +54,22 @@ ul {
 
         &:hover {
             color: darken($white, 15%);
+        }
+
+        &:first-child {
+            max-width: 100%;
+            height: 1.5em;
+
+            &:hover {
+                opacity: 85%;
+            }
+
+            img {
+                object-fit: contain;
+                width: 100%;
+                height: 100%;
+                filter: invert(100%);
+            }
         }
     }
 }
