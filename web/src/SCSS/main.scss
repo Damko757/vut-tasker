@@ -16,3 +16,11 @@
 .no-scrollbar {
     @include hideScrollbar();
 }
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.h-0 {
+    height: 0 !important;
+}
