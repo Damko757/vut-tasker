@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import axios, { HttpStatusCode } from "axios";
 import type { Task } from "../../../shared/Entities/Task";
+import { API_URL } from "../const";
 
 defineExpose({
     load,
@@ -15,7 +16,7 @@ const tasks = ref<Task[]>([]);
 function load() {
     emit("loadStateChange", 0);
     axios
-        .get<Task[]>("http://localhost:3000/tasks")
+        .get<Task[]>(API_URL + "/tasks")
         .then(async (response) => {
             if (response.status == HttpStatusCode.Ok) {
                 emit("loadStateChange", 1);
