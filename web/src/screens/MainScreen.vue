@@ -62,7 +62,6 @@ onMounted(async () => {
                 :subject-name="subject"
                 @load-state-change="
                     (ns) => {
-                        console.info(ns);
                         loadState = ns;
                     }
                 "
@@ -72,7 +71,6 @@ onMounted(async () => {
                 ref="homeScreen"
                 @load-state-change="
                     (ns) => {
-                        console.info(ns);
                         loadState = ns;
                     }
                 "
