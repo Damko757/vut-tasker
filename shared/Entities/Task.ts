@@ -1,7 +1,7 @@
 import type { date } from "../Utils.ts";
 
 export interface Task {
-    _id: string;
+    _id?: string;
     subject: string;
     type: TaskType;
     required: boolean;
