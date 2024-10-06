@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, type PropType } from "vue";
+import { computed, ref, watch, watchEffect, type PropType } from "vue";
 import type { Task } from "../../../../shared/Entities/Task";
 import SimpleInput from "./SimpleInput.vue";
 import CheckBox from "./CheckBox.vue";
@@ -8,16 +8,23 @@ import { API_URL } from "../../const";
 
 const props = defineProps({
     task: {
-        type: Object as PropType<Task | null>,
+        type: Object as PropType<Partial<Task> | null>,
         required: false,
         default: null,
     },
+    addOrEdit: {
+        type: String,
+        default: "edit",
+    },
 });
 
-const edittedTask = computed<Partial<Task>>(() => props.task ?? {});
+const edittedTask = ref<Partial<Task>>({});
+watchEffect(() => {
+    edittedTask.value = props.task ?? {};
+});
 
 const submit = () => {
-    const promise = props.task
+    const promise = props.task?._id
         ? axios.patch<Task>(
               API_URL + `/task/${props.task._id}`,
               edittedTask.value
@@ -26,20 +33,25 @@ const submit = () => {
 
     promise
         .then((response) => {
-            console.log(response);
-            emit("done", props.task as Task);
+            emit("done", response.data as Task);
         })
         .catch((error) => {
             console.error(error);
         });
 };
 
+function stateChanged(ns: boolean) {
+    edittedTask.value.required = ns;
+}
+
 const emit = defineEmits<{
     (e: "done", task: Task | null): void;
 }>();
 </script>
 <template>
-    <h5 class="fw-bold position-relative">Edit task</h5>
+    <h5 class="fw-bold position-relative">
+        {{ addOrEdit == "edit" ? "Edit" : "Add" }} task
+    </h5>
     <div v-if="edittedTask.due_date" class="text-muted fst-italic">
         &#40;{{ edittedTask.due_date?.ISOToFormattedDateTime() }}&#41;
     </div>
@@ -60,7 +72,7 @@ const emit = defineEmits<{
                 ><CheckBox
                     :state="edittedTask.required"
                     :grey-out="false"
-                    @state-change="(ns) => (edittedTask.required = ns)"
+                    @state-change="stateChanged"
             /></span>
             <br />
             <span class="fw-bold">Registration: </span
