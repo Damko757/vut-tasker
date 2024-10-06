@@ -33,7 +33,7 @@ function redirect(subject: string) {
 <style lang="scss" scoped>
 @import "/src/SCSS/main.scss";
 ul {
-    background-color: lighten($black, 15%);
+    background-color: $dark-blue;
     width: fit-content;
     height: 100vh;
     overflow: scroll;
