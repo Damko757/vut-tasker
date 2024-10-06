@@ -12,6 +12,10 @@ export class TaskController
 {
     routes() {
         return {
+            "/task/:id/:nick": {
+                POST: this.addNick,
+                DELETE: this.removeNick,
+            },
             "/task/:id": {
                 DELETE: this.deleteByTaskId,
                 PUT: this.putByTaskId,
@@ -28,6 +32,38 @@ export class TaskController
                 POST: this.postTask,
             },
         };
+    }
+
+    async addNick(req: Request, res: Response, next: NextFunction) {
+        const task = await TaskModel.findOne({ _id: req.params.id }).exec(); //Should be session, but whatever;
+        if (!task) return res.status(HttpStatusCodes.NOT_FOUND);
+
+        const completedBy = task?.completed_by ?? [];
+        if (!completedBy?.includes(req.params.nick))
+            completedBy.push(req.params.nick);
+
+        res.status(HttpStatusCodes.OK).send(
+            await Controller.update(
+                TaskModel,
+                { _id: req.params.id },
+                { completed_by: completedBy }
+            )
+        );
+    }
+    async removeNick(req: Request, res: Response, next: NextFunction) {
+        const task = await TaskModel.findOne({ _id: req.params.id }).exec(); //Should be session, but whatever;
+        if (!task) return res.status(HttpStatusCodes.NOT_FOUND);
+
+        const completedBy =
+            task?.completed_by?.filter((n) => n != req.params.nick) ?? [];
+
+        res.status(HttpStatusCodes.OK).send(
+            await Controller.update(
+                TaskModel,
+                { _id: req.params.id },
+                { completed_by: completedBy }
+            )
+        );
     }
 
     async getByTaskSubjectAndType(
