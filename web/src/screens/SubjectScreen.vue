@@ -83,6 +83,8 @@ function load() {
                 <div>
                     <Tasks
                         :tasks="typeToTasks.get(taskType as unknown as TaskType)"
+                        :subject="subjectName"
+                        :type="taskType"
                     />
                 </div>
             </section>
