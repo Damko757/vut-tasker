@@ -1,4 +1,5 @@
 export interface User {
+    _id: string;
     nick: string;
     fullname: string;
     color: string; //Hex
