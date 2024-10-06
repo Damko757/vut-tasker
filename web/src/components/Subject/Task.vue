@@ -30,11 +30,22 @@ function deleteTask() {
         })
         .catch(console.error);
 }
+
+function todoCheck(ns: boolean) {
+    axios[ns ? "post" : "delete"](
+        API_URL + `/task/${task.value!._id}/${nick.value}`
+    ).then((response) => {
+        console.log(response);
+        state.value = ns;
+        if (response.data.completed_by)
+            task.value!.completed_by = response.data.completed_by as string[];
+    });
+}
 </script>
 <template>
     <div :class="{ completed: state }" class="row" v-if="!deleted">
         <div class="col-auto">
-            <CheckBox :state="state" @state-change="(ns) => (state = ns)" />
+            <CheckBox :state="state" @state-change="todoCheck" />
         </div>
         <div class="col ps-0" @click="isCollapsed = !isCollapsed">
             <TaskView
