@@ -78,7 +78,7 @@ function load() {
 }
 </script>
 <template>
-    <h1 class="fw-bold px-2">Najbližšie udalosti:</h1>
+    <h1 class="fw-bold px-2 mb-5">Najbližšie udalosti:</h1>
     <div class="types px-4">
         <section class="type mb-2">
             <!-- <h3 class="fw-bold w-fit-content">
