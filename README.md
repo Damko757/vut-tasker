@@ -11,7 +11,7 @@ git clone https://github.com/Damko757/vut-tasker.git
 cd vut-tasker
 ```
 
-You can run all development severs from root folder with `bun run all` or choose specifically `bun run web|server`
+You can run all development severs from root folder with `bun run all` or choose specifically `bun run web|server` (assuming you have [Bun installed](https://bun.sh/docs/installation))
 
 <a id="dev-web"></a>
 
