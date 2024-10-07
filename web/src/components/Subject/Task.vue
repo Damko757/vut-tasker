@@ -7,6 +7,7 @@ import { API_URL, CookieValue } from "../../const";
 import TaskView from "./TaskView.vue";
 import TaskEdit from "./TaskEdit.vue";
 import axios from "axios";
+import CompletedByDots from "./CompletedByDots.vue";
 
 const cookies = useCookies([CookieValue.USER]);
 
@@ -35,7 +36,6 @@ function todoCheck(ns: boolean) {
     axios[ns ? "post" : "delete"](
         API_URL + `/task/${task.value!._id}/${nick.value}`
     ).then((response) => {
-        console.log(response);
         state.value = ns;
         if (response.data.completed_by)
             task.value!.completed_by = response.data.completed_by as string[];
@@ -44,7 +44,10 @@ function todoCheck(ns: boolean) {
 </script>
 <template>
     <div :class="{ completed: state }" class="row" v-if="!deleted">
-        <div class="col-auto">
+        <div class="col-auto position-relative">
+            <div class="position-absolute" style="left: -0.5em">
+                <CompletedByDots :completed-by="task?.completed_by ?? []" />
+            </div>
             <CheckBox :state="state" @state-change="todoCheck" />
         </div>
         <div class="col ps-0" @click="isCollapsed = !isCollapsed">
