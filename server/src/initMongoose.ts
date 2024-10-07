@@ -30,7 +30,6 @@ export const initMongoose = async () => {
                 resolve();
             })
             .catch((err) => {
-                console.error("Unable to connect to MongoDB!");
                 rejected("Unable to connect to MongoDB!");
             });
     });
