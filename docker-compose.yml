@@ -12,7 +12,8 @@ services:
     api:
         container_name: vut-tasker-api
         build:
-            context: ./server/
+            dockerfile: ./server/Dockerfile
+            context: ./
         ports:
             - 3000:3000
         restart: unless-stopped

@@ -5,6 +5,10 @@ import { UserModel } from "./Schemas/User.ts";
 import { USERS } from "../../shared/config/users.ts";
 export const initMongoose = async () => {
     return new Promise<void>((resolve, rejected) => {
+        console.log(
+            "Connecting to:",
+            `mongodb://${ENV.DATABASE_USER}:${ENV.DATABASE_PASSWORD}@${ENV.DATABASE_URI}:${ENV.DATABASE_PORT}`
+        );
         mongoose
             .set("strictQuery", false)
             .connect(
@@ -30,7 +34,8 @@ export const initMongoose = async () => {
                 resolve();
             })
             .catch((err) => {
-                rejected("Unable to connect to MongoDB!");
+                console.error("Unable to connect to MongoDB!");
+                rejected(err);
             });
     });
 };
