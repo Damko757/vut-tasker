@@ -2,10 +2,15 @@
 import { computed, ref } from "vue";
 import axios, { HttpStatusCode } from "axios";
 import type { Task } from "../../../shared/Entities/Task";
-import { API_URL } from "../const";
-import TaskView from "../components/Subject/TaskView.vue";
-import Tasks from "../components/Subject/Tasks.vue";
+import { API_URL, CookieValue } from "../const";
+import TasksView from "../components/Home/TasksView.vue";
+import { useCookies } from "@vueuse/integrations/useCookies";
 
+const cookies = useCookies([CookieValue.USER]);
+
+const nick = computed<string>(() => {
+    return cookies.get(CookieValue.USER)!;
+});
 defineExpose({
     load,
 });
@@ -31,10 +36,20 @@ function getUpcomingDate(t: Task): string {
 
     return t.due_date ?? "";
 }
+function needsToBeShown(t: Task) {
+    return (
+        new Date(t.due_date ?? "") > new Date() ||
+        !t.completed_by.includes(nick.value)
+    );
+}
 const sortedTasks = computed(
     () =>
         allTasks.value
-            ?.filter((x) => getUpcomingDate(x))
+            ?.filter(
+                (x) =>
+                    getUpcomingDate(x) && // has some end date
+                    needsToBeShown(x) // if completed and after deadline, it should not be shown
+            )
             .sort((a, b) => {
                 const aVal = getUpcomingDate(a);
                 const bVal = getUpcomingDate(b);
@@ -73,7 +88,7 @@ function load() {
                 <div class="hr"></div>
             </h3> -->
             <div>
-                <Tasks :tasks="sortedTasks" subject="" type="" />
+                <TasksView :tasks="sortedTasks" />
             </div>
         </section>
     </div>
