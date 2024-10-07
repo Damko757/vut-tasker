@@ -42,7 +42,7 @@ bun run dev
 
 ### Initialization
 
-To install web modules (dependencies), enter web directory and run `bun i`:
+To install web (server) modules (dependencies), enter server directory and run `bun i`:
 
 ```bash
 cd server
@@ -63,13 +63,11 @@ bun run hot
 
 To build this project, you need to build web to a bundles and then mount the whole project to Docker
 
-1. Building Web (/dist will be created):
+1. Building Server (/dist will be created):
 
 ```bash
-bun run web build
+bun build src/index.ts
 ```
-
-> Note: from /web directory, you can use `bun run build` to achieve the same effect
 
 2. Starting docker
 
