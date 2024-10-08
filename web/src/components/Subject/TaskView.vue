@@ -8,6 +8,7 @@ const props = defineProps({
         required: true,
     },
     isCollapsed: { type: Boolean, required: true },
+    showAll: { type: Boolean, default: false },
 });
 
 const emit = defineEmits<{
@@ -19,6 +20,12 @@ const emit = defineEmits<{
     <div class="cursor-pointer">
         <h5 class="fw-bold position-relative">
             {{ task.required ? "*" : "" }}{{ task.description }}
+            <template v-if="showAll">
+                <span class="fw-bold"
+                    >(<u>{{ task.subject }}</u> -
+                    {{ (task.type as unknown as string).capitalize() }})</span
+                >
+            </template>
             <div
                 class="collapse-arrow"
                 :class="{ collapsed: props.isCollapsed }"

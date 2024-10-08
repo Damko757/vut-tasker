@@ -5,7 +5,7 @@ import { UserModel } from "./Schemas/User.ts";
 import { USERS } from "../../shared/config/users.ts";
 export const initMongoose = async () => {
     return new Promise<void>((resolve, rejected) => {
-        const connectString = `mongodb://${ENV.DATABASE_USER}:${ENV.DATABASE_PASSWORD}@${ENV.DATABASE_URI}`;
+        const connectString = `mongodb://${ENV.DATABASE_USER}:${ENV.DATABASE_PASSWORD}@${ENV.DATABASE_URI}:${ENV.DATABASE_PORT}`;
         mongoose
             .set("strictQuery", false)
             .connect(connectString)

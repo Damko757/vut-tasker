@@ -1,10 +1,7 @@
 FROM oven/bun:latest
+WORKDIR /usr/src/app
 
-COPY ./server/src ./src
 COPY ./server/package.json ./
-# COPY bun.lockb ./
-COPY ./shared ../shared
-COPY ./.env ../.env
 
 RUN bun install
 
