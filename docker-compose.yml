@@ -10,12 +10,18 @@ services:
             - 80:80
         restart: unless-stopped
     api:
+        depends_on:
+            - mongodb
         container_name: vut-tasker-api
         build:
             dockerfile: ./server/Dockerfile
             context: ./
         ports:
             - 3000:3000
+        volumes:
+            - ./server/src:/usr/src/app/src
+            - ./shared:/usr/src/shared
+            - ./.env:/usr/src/.env
         restart: unless-stopped
     mongodb:
         container_name: mongodb
