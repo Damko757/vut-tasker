@@ -42,7 +42,7 @@ function load() {
         .then(async (response) => {
             emit("loadStateChange", 1);
 
-            subjectTasks.value = response.data.length ? response.data : null;
+            subjectTasks.value = [];
         })
         .catch((response) => {
             if (response.status == HttpStatusCode.NotFound) {
@@ -56,15 +56,16 @@ function load() {
 </script>
 <template>
     <div
-        v-if="subjectTasks === null"
+        v-if="subjectTasks?.length == 0"
         class="fs-2 fw-bold text-center text-danger"
     >
+        !!!
         <em
             ><u>{{ subjectName }}</u></em
         >
-        neexistuje :/
+        neexistuje :/ !!!
     </div>
-    <div v-else>
+    <div>
         <h1 class="fw-bold px-2">
             {{ subjectName }}
         </h1>
