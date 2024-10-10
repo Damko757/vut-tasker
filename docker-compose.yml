@@ -4,6 +4,7 @@ services:
         image: nginx:latest
         volumes:
             - ./web/dist:/usr/share/nginx/html
+            - ./web/default.conf:/etc/nginx/conf.d/default.conf
         environment:
             - NGINX_PORT=80
         ports:
