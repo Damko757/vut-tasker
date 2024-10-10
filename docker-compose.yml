@@ -1,8 +1,8 @@
 services:
     web:
         depends_on:
-            - mongodb
-        container_name: vut-tasker-webserver
+            - vut-tasker-mongodb
+        container_name: vut-tasker-web
         build:
             dockerfile: ./server/Dockerfile
             context: ./
@@ -16,7 +16,7 @@ services:
             - ./shared:/usr/src/shared
             - ./.env:/usr/src/app/.env
         restart: unless-stopped
-    mongodb:
+    vut-tasker-mongodb:
         container_name: mongodb
         image: mongo
         restart: always
