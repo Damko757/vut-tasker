@@ -1,10 +1,20 @@
-FROM oven/bun:latest
+FROM nginx:latest
 WORKDIR /usr/src/app
+ARG backend=bun
 
-COPY ./server/package.json ./
+RUN if ["${backend}" = "bun"] ; then curl -fsSL https://bun.sh/install | bash ; else if ["${backend}" = "springboot"] ; then curl -fsSL https://bun.sh/install | bash ; else curl -fsSL https://bun.sh/install | bash ; fi
 
-RUN bun install
+COPY ./web/* ./web
+WORKDIR /usr/src/app/web
+RUN bun i && bun run build && mv ./dist /usr/share/nginx/html
 
-USER bun
-EXPOSE 3000/tcp
-ENTRYPOINT [ "bun", "run", "src/index.ts" ]
+WORKDIR /usr/src/app
+COPY ./server/* ./server
+WORKDIR /usr/src/app/server
+RUN bun i
+
+USER nginx
+EXPOSE 80/tcp 3000/tcp
+COPY ./server/entrypoint.sh /
+RUN ["chmod", "+x", "entrypoint.sh"]
+CMD ["./entrypoint.sh"]
