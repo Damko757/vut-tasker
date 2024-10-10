@@ -1,0 +1,11 @@
+**/node_modules/
+README.md
+!.env
+.git/
+.gitignore
+TODO/
+mongodb/
+docs/
+!shared/
+!web/
+!server/
