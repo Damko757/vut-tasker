@@ -61,7 +61,7 @@ function todoCheck(ns: boolean) {
         <hr class="mt-2" />
     </div>
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
 @import "/src/SCSS/main.scss";
 
 .completed h5 {
