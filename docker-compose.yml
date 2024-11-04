@@ -1,37 +1,29 @@
 services:
     web:
-        container_name: vut-tasker-web
-        image: nginx:latest
-        volumes:
-            - ./web/dist:/usr/share/nginx/html
-            - ./web/default.conf:/etc/nginx/conf.d/default.conf
-        environment:
-            - NGINX_PORT=80
-        ports:
-            - 80:80
-        restart: unless-stopped
-    api:
         depends_on:
-            - mongodb
-        container_name: vut-tasker-api
+            - vut-tasker-mongodb
+        container_name: vut-tasker-web
         build:
             dockerfile: ./server/Dockerfile
             context: ./
         ports:
+            - 80:80
             - 3000:3000
+        environment:
+            - NGINX_PORT=80
         volumes:
             - ./server/src:/usr/src/app/src
             - ./shared:/usr/src/shared
-            - ./.env:/usr/src/.env
+            - ./.env:/usr/src/app/.env
         restart: unless-stopped
-    mongodb:
+    vut-tasker-mongodb:
         container_name: mongodb
         image: mongo
         restart: always
         ports:
             - ${DATABASE_PORT}:27017
         volumes:
-            - ./mongodb:/data/db
+            - ./mongodb:/data/db:rw
         environment:
             MONGO_INITDB_ROOT_USERNAME: ${DATABASE_USER}
             MONGO_INITDB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
