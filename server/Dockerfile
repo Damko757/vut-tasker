@@ -17,5 +17,6 @@ WORKDIR /
 USER root
 EXPOSE 80/tcp 3000/tcp
 COPY ./server/entrypoint.sh ./
-#RUN ["chmod", "+x", "./entrypoint.sh"]
+
+RUN ["chmod", "+x", "./entrypoint.sh"]
 CMD ["./entrypoint.sh"]
