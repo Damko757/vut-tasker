@@ -4,7 +4,7 @@ This is production version of **[vut-tasker](https://github.com/Damko757/vut-tas
 
 Every development change should be created at **vut-tasker**, and then merged here.
 
-> To add vut-tasker as another remote, type: `git remote add https://github.com/Damko757/vut-tasker dev`
+> To add vut-tasker as another remote, type: `git remote add dev https://github.com/Damko757/vut-tasker`
 > Current branch can be merged with `dev/main`
 
 ## Running
