@@ -24,9 +24,9 @@ services:
   mongodb:
     container_name: vut-tasker-prod-mongodb
     image: mongo
-    restart: always
-    # ports:
-    # - ${DATABASE_PORT}:27017
+    restart: unless-stopped
+    ports:
+      - ${DATABASE_PORT}:27017
     volumes:
       - ./mongodb:/data/db:rw
     environment:
