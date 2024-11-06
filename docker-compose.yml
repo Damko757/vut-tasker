@@ -2,6 +2,7 @@ services:
   web:
     depends_on:
       - mongodb
+      - cloudflare
     container_name: vut-tasker-prod-web
     build:
       dockerfile: ./server/Dockerfile
@@ -16,14 +17,41 @@ services:
       - ./shared:/usr/src/shared
       - ./.env:/usr/src/app/.env
     restart: unless-stopped
+    networks:
+      servers-network:
+        ipv4_address: 192.168.0.202
+      # vut-tasker-prod-network:
   mongodb:
     container_name: vut-tasker-prod-mongodb
     image: mongo
     restart: always
-    ports:
-      - ${DATABASE_PORT}:27017
+    # ports:
+    # - ${DATABASE_PORT}:27017
     volumes:
       - ./mongodb:/data/db:rw
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${DATABASE_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+    networks:
+      servers-network:
+        ipv4_address: 192.168.0.203
+      # vut-tasker-prod-network:
+  cloudflare:
+    container_name: vut-tasker-prod-cloudflare
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run --token eyJhIjoiNmMxMWNjMWRmN2Q5OTI4YzA5NzI0ZGYwMjE0NzUwZWMiLCJ0IjoiYThkNWE4ZmUtMTc4NS00MTNiLWEyNDQtM2M5NzE1MDQ3ZjJiIiwicyI6Ik1HVXdZVGcwWkRjdE5qUm1ZeTAwWm1SbExUaGlPVE10TmpjNU9UbGhaR1psTmpBeCJ9
+    networks:
+      servers-network:
+        ipv4_address: 192.168.0.201
+networks:
+  servers-network:
+    external: true
+    # vut-tasker-prod-network:
+    #   name: vut-tasker-prod-network
+    # driver: macvlan
+    # driver_opts:
+    # parent: eth0
+    # ipam:
+    # config:
+    # - subnet: "192.168.0.0/24"
+    # gateway: "192.168.0.1"
