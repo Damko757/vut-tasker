@@ -42,7 +42,7 @@ function load() {
         .then(async (response) => {
             emit("loadStateChange", 1);
 
-            subjectTasks.value = [];
+            subjectTasks.value = response.data;
         })
         .catch((response) => {
             if (response.status == HttpStatusCode.NotFound) {
