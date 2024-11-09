@@ -78,7 +78,6 @@ ul {
 
 @include media-breakpoint-down(md){
     ul {
-        background-color: lighten($black, 10%) !important;
         top: unset !important;
         bottom: 0;
         border-radius: 0 !important;
