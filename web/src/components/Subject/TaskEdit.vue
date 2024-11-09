@@ -52,7 +52,7 @@ const emit = defineEmits<{
     <h5 class="fw-bold position-relative">
         {{ addOrEdit == "edit" ? "Edit" : "Add" }} task
     </h5>
-    <div v-if="edittedTask.due_date" class="text-muted fst-italic">
+    <div v-if="edittedTask.due_date" class="due-date fst-italic">
         &#40;{{ edittedTask.due_date?.ISOToFormattedDateTime() }}&#41;
     </div>
     <div class="editables">
@@ -110,6 +110,9 @@ const emit = defineEmits<{
 </template>
 <style lang="scss" scoped>
 @import "/src/SCSS/main.scss";
+.due-date{
+    color: darken($white, 10%);
+}
 .editables {
     text-decoration: none !important;
 }

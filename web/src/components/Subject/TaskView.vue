@@ -18,7 +18,7 @@ const emit = defineEmits<{
 </script>
 <template>
     <div class="cursor-pointer">
-        <h5 class="fw-bold position-relative">
+        <h5 class="fw-bold position-relative pe-3">
             {{ task.required ? "*" : "" }}{{ task.description }}
             <template v-if="showAll">
                 <span class="fw-bold"
@@ -52,7 +52,7 @@ const emit = defineEmits<{
                 }}</span>
                 <br />
                 <span class="fw-bold">Link: </span
-                ><a :href="task.link ?? '#'">{{ task.link ?? "??" }}</a>
+                ><a :href="task.link ?? '#'">{{ task.link ?? "-" }}</a>
             </div>
 
             <div class="pt-2 fw-bold">

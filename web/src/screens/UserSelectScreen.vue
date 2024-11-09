@@ -26,7 +26,7 @@ axios.get<User[]>(API_URL + "/users").then((response) => {
 </script>
 <template>
     <h1 class="fw-bold p-2">Hello! Who are you?</h1>
-    <div class="d-flex justify-content-center align-items-center">
+    <div class="d-flex justify-content-center align-items-center flex-wrap">
         <UserComponent
             v-if="users != undefined"
             v-for="user in users"
