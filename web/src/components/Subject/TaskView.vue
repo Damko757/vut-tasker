@@ -52,7 +52,7 @@ const emit = defineEmits<{
                 }}</span>
                 <br />
                 <span class="fw-bold">Link: </span
-                ><a :href="task.link ?? '#'">{{ task.link ?? "??" }}</a>
+                ><a :href="task.link ?? '#'">{{ task.link ?? "-" }}</a>
             </div>
 
             <div class="pt-2 fw-bold">
