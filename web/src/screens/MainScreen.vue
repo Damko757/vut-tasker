@@ -81,6 +81,7 @@ onMounted(async () => {
 <style lang="scss" scoped>
 @import "/src/SCSS/main.scss";
 main {
+    margin-top: 1em;
     @include media-breakpoint-up(md){
         padding-left: 5rem;
     }
