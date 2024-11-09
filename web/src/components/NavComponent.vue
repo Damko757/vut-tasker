@@ -21,8 +21,8 @@ function redirect(subject: string) {
 }
 </script>
 <template>
-    <ul class="no-scrollbar pt-0">
-        <li class="fs-5" @click="redirect('/')">
+    <ul class="no-scrollbar">
+        <li class="fs-5 d-flex" @click="redirect('/')">
             <img src="/src/assets/black-home.png" alt="Home" />
         </li>
         <li v-for="subject in subjects" class="fs-5" @click="redirect(subject)">
@@ -45,6 +45,8 @@ ul {
     top: 0;
     height: fit-content;
     border-radius: 0 0 1em 1em;
+
+    padding-top: 0;
     li {
         text-align: center;
         list-style: none;
@@ -70,6 +72,28 @@ ul {
                 height: 100%;
                 filter: invert(100%);
             }
+        }
+    }
+}
+
+@include media-breakpoint-down(md){
+    ul {
+        background-color: lighten($black, 10%) !important;
+        top: unset !important;
+        bottom: 0;
+        border-radius: 0 !important;
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        padding: 0.5em 0 !important;
+
+        width: 100vw;
+
+        li{
+            margin: 0 0.25em;
         }
     }
 }
