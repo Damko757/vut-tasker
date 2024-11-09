@@ -18,7 +18,7 @@ const emit = defineEmits<{
 </script>
 <template>
     <div class="cursor-pointer">
-        <h5 class="fw-bold position-relative">
+        <h5 class="fw-bold position-relative pe-3">
             {{ task.required ? "*" : "" }}{{ task.description }}
             <template v-if="showAll">
                 <span class="fw-bold"
