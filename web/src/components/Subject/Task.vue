@@ -45,7 +45,7 @@ function todoCheck(ns: boolean) {
 <template>
     <div :class="{ completed: state }" class="row" v-if="!deleted">
         <div class="col-auto position-relative pb-2">
-            <div class="position-absolute" style="left: -0.5em">
+            <div class="position-absolute" style="left: -0.75em">
                 <CompletedByDots :completed-by="task?.completed_by ?? []" />
             </div>
             <CheckBox :state="state" @state-change="todoCheck" />
