@@ -37,6 +37,7 @@ services:
         ipv4_address: 192.168.0.203
       # vut-tasker-prod-network:
   cloudflare:
+    restart: unless-stopped
     container_name: vut-tasker-prod-cloudflare
     image: cloudflare/cloudflared:latest
     command: tunnel --no-autoupdate run --token eyJhIjoiNmMxMWNjMWRmN2Q5OTI4YzA5NzI0ZGYwMjE0NzUwZWMiLCJ0IjoiYThkNWE4ZmUtMTc4NS00MTNiLWEyNDQtM2M5NzE1MDQ3ZjJiIiwicyI6Ik1HVXdZVGcwWkRjdE5qUm1ZeTAwWm1SbExUaGlPVE10TmpjNU9UbGhaR1psTmpBeCJ9
