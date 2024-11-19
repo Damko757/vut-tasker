@@ -18,7 +18,7 @@ String.prototype.ISOToFormattedDateTime = function (
     return (
         `${d.getDate()}. ${
             d.getMonth() + 1
-        }. ${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}` +
-        (showSeconds ? `:${d.getSeconds()}` : ``)
+        }. ${d.getFullYear()} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}` +
+        (showSeconds ? `:${d.getSeconds().toString().padStart(2, "0")}` : ``)
     );
 };
