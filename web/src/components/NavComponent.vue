@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import axios from "axios";
-import { computed, ref, type PropType } from "vue";
+import { computed, inject, ref, type PropType } from "vue";
 import { API_URL } from "../const";
+import type { StoreType } from "../store/store";
 
 const props = defineProps({
   subjects: {
@@ -9,12 +10,29 @@ const props = defineProps({
     default: null,
   },
 });
+const store: StoreType = inject("store") as unknown as StoreType;
 
 const dynamicSubjects = ref<string[]>([]);
 axios
   .get(API_URL + `/subjects`)
-  .then((response) => (dynamicSubjects.value = response.data));
+  .then((response) => (dynamicSubjects.value = response.data.sort()));
 const subjects = computed(() => props.subjects ?? dynamicSubjects.value);
+const specifiedSubjects = computed(() => {
+  const out = {
+    subscribed: <string[]>[],
+    unsubscribed: <string[]>[],
+  };
+
+  subjects.value.forEach((subject) =>
+    out[
+      store.getters.getUser().value?.subscribed_subjects.includes(subject)
+        ? "subscribed"
+        : "unsubscribed"
+    ].push(subject)
+  );
+
+  return out;
+});
 
 function redirect(subject: string) {
   window.location.href = subject;
@@ -25,7 +43,19 @@ function redirect(subject: string) {
     <li class="fs-5 d-flex" @click="redirect('/')">
       <img src="/src/assets/black-home.png" alt="Home" />
     </li>
-    <li v-for="subject in subjects" class="fs-5" @click="redirect(subject)">
+    <li
+      v-for="subject in specifiedSubjects.subscribed"
+      class="fs-5"
+      @click="redirect(subject)"
+    >
+      {{ subject }}
+    </li>
+    <div class="divider"></div>
+    <li
+      v-for="subject in specifiedSubjects.unsubscribed"
+      class="fs-5"
+      @click="redirect(subject)"
+    >
       {{ subject }}
     </li>
   </ul>
@@ -45,6 +75,15 @@ ul {
   top: 0;
   height: fit-content;
   border-radius: 0 0 1em 1em;
+
+  .divider {
+    background-color: $white;
+    height: 2px;
+    border-radius: 1px;
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 0.25em;
+  }
 
   padding-top: 0;
   li {
