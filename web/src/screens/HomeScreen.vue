@@ -90,8 +90,6 @@ function load() {
   emit("loadStateChange", 0);
   store.getters.getUser();
 }
-
-const user = ref<User | undefined>();
 </script>
 <template>
   <h1 class="fw-bold px-2 mb-5">Najbližšie udalosti:</h1>
