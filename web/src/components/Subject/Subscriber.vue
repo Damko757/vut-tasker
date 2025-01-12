@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { useCookies } from "@vueuse/integrations/useCookies";
 import { API_URL, CookieValue } from "../../const";
-import { computed, ref } from "vue";
+import { computed, inject, ref } from "vue";
 import axios, { type AxiosResponse } from "axios";
 import type { User } from "../../../../shared/Entities/User";
+import type { StoreType } from "../../store/store";
 
 const props = defineProps({
   subjectName: {
@@ -12,16 +13,13 @@ const props = defineProps({
   },
 });
 
+const store: StoreType = inject("store") as unknown as StoreType;
 const cookies = useCookies([CookieValue.USER]);
 
 const nick = computed<string>(() => {
   return cookies.get(CookieValue.USER)!;
 });
-const user = ref<User>();
-axios
-  .get<User>(`${API_URL}/user/${nick.value}`)
-  .then((response) => (user.value = response.data))
-  .catch(() => alert("Couldn't fetch user!"));
+const user = computed(() => store.getters.getUser().value);
 const subscribed = computed(() =>
   user.value?.subscribed_subjects.includes(props.subjectName)
 );
@@ -35,7 +33,7 @@ function changeSubscribedSubjects(newSubjects: string[]) {
       }
     )
     .then((response) => {
-      user.value = response.data;
+      store.state.user.value = response.data;
     });
 }
 
