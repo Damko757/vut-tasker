@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, inject, ref, watch, watchEffect } from "vue";
 import axios, { HttpStatusCode } from "axios";
 import type { Task } from "../../../shared/Entities/Task";
 import { API_URL, CookieValue } from "../const";
 import TasksView from "../components/Home/TasksView.vue";
 import { useCookies } from "@vueuse/integrations/useCookies";
 import type { User } from "../../../shared/Entities/User";
+import type { StoreType } from "../store/store";
 
+const store: StoreType = inject("store") as unknown as StoreType;
 const cookies = useCookies([CookieValue.USER]);
 
 const nick = computed<string>(() => {
@@ -48,7 +50,9 @@ const sortedTasks = computed(
     allTasks.value
       ?.filter(
         (x) =>
-          user.value?.subscribed_subjects.includes(x.subject) &&
+          store.getters
+            .getUser()
+            .value?.subscribed_subjects.includes(x.subject) &&
           getUpcomingDate(x) && // has some end date
           needsToBeShown(x) // if completed and after deadline, it should not be shown
       )
@@ -62,27 +66,25 @@ const sortedTasks = computed(
       }) ?? []
 );
 
+watch(store.state.user, () => {
+  axios
+    .get<Task[]>(API_URL + "/tasks")
+    .then(async (response) => {
+      if (response.status == HttpStatusCode.Ok) {
+        emit("loadStateChange", 1);
+        allTasks.value = response.data;
+      } else {
+        emit("loadStateChange", -1);
+      }
+    })
+    .catch(() => {
+      emit("loadStateChange", -1);
+    });
+});
 function load() {
   emit("loadStateChange", 0);
-  axios.get<User>(`${API_URL}/user/${nick.value}`).then((response) => {
-    user.value = response.data;
-    axios
-      .get<Task[]>(API_URL + "/tasks")
-      .then(async (response) => {
-        if (response.status == HttpStatusCode.Ok) {
-          emit("loadStateChange", 1);
-          allTasks.value = response.data;
-        } else {
-          emit("loadStateChange", -1);
-        }
-      })
-      .catch(() => {
-        emit("loadStateChange", -1);
-      });
-  });
+  store.getters.getUser();
 }
-
-const user = ref<User | undefined>();
 </script>
 <template>
   <h1 class="fw-bold px-2 mb-5">Najbližšie udalosti:</h1>
