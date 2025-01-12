@@ -15,7 +15,7 @@ const store: StoreType = inject("store") as unknown as StoreType;
 const dynamicSubjects = ref<string[]>([]);
 axios
   .get(API_URL + `/subjects`)
-  .then((response) => (dynamicSubjects.value = response.data));
+  .then((response) => (dynamicSubjects.value = response.data.sort()));
 const subjects = computed(() => props.subjects ?? dynamicSubjects.value);
 const specifiedSubjects = computed(() => {
   const out = {
