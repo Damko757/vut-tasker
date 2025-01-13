@@ -6,7 +6,7 @@ import { USERS } from "../../shared/config/users.ts";
 export const initMongoose = async () => {
     return new Promise<void>((resolve, rejected) => {
         const connectString = `mongodb://${ENV.DATABASE_USER}:${ENV.DATABASE_PASSWORD}@${ENV.DATABASE_URI}/test?authSource=admin`;
-        // const connectString = `mongodb://root:root@mongodb:27017/test?authSource=admin`;
+        // const connectString = `mongodb://root:root@192.168.0.204/test?authSource=admin`;
 
         mongoose
             .set("strictQuery", false)

@@ -4,4 +4,4 @@ bun run vite build
 cd ../server
 bun i
 cd ..
-sudo docker compose up -d --force-recreate --build web
+sudo docker compose up -d --force-recreate --build web api

@@ -5,8 +5,11 @@ services:
     volumes:
       - ./web/dist:/usr/share/nginx/html
       - ./web/default.conf:/etc/nginx/conf.d/default.conf
-    environment:
-      - NGINX_PORT=80
+      # environment:
+      # - NGINX_PORT=80
+    networks:
+      servers-network:
+        ipv4_address: 192.168.0.202
     ports:
       - 80:80
     restart: unless-stopped
@@ -26,10 +29,10 @@ services:
     restart: unless-stopped
     networks:
       servers-network:
-        ipv4_address: 192.168.0.202
+        ipv4_address: 192.168.0.203
       # vut-tasker-prod-network:
   mongodb:
-    container_name: mongodb
+    container_name: vut-tasker-prod-mongodb
     image: mongo
     restart: unless-stopped
     ports:
@@ -41,13 +44,13 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
     networks:
       servers-network:
-        ipv4_address: 192.168.0.203
+        ipv4_address: 192.168.0.204
       # vut-tasker-prod-network:
   cloudflare:
     restart: unless-stopped
     container_name: vut-tasker-prod-cloudflare
     image: cloudflare/cloudflared:latest
-    command: tunnel --no-autoupdate run --token eyJhIjoiNmMxMWNjMWRmN2Q5OTI4YzA5NzI0ZGYwMjE0NzUwZWMiLCJ0IjoiYThkNWE4ZmUtMTc4NS00MTNiLWEyNDQtM2M5NzE1MDQ3ZjJiIiwicyI6Ik1HVXdZVGcwWkRjdE5qUm1ZeTAwWm1SbExUaGlPVE10TmpjNU9UbGhaR1psTmpBeCJ9
+    command: tunnel --no-autoupdate run --token eyJhIjoiMjgwN2ZmYzk3NDBjZWE0YjQ0NTFmNzUxMjY3MWJhYmUiLCJ0IjoiNDZiNWY3MDAtMzM1YS00MjVkLWIwYTktZDQxMjNjODM1OTdiIiwicyI6Ik1XUTJZVFUzWVRrdE1tVTJaQzAwTXpNNExUazNNamN0TWpabVlUUXlZalE1T1dWayJ9
     networks:
       servers-network:
         ipv4_address: 192.168.0.201
