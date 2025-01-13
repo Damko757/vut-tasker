@@ -11,6 +11,7 @@ export interface Task {
   personal: boolean;
   link: string | null;
   completed_by: string[]; // nicks
+  created_by: string;
 }
 export enum TaskType {
   PROJECT,
