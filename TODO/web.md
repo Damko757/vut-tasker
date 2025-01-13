@@ -1,2 +1,1 @@
-1. Implement subscription to subjects model
 2. Implement switches to enable/disable user prefs for showing stats next to checkbox
