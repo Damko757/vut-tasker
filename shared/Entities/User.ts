@@ -5,4 +5,5 @@ export interface User {
     color: string; //Hex
     show_my_progress: boolean;
     show_me_progress: boolean;
+    subscribed_subjects: string[];
 }

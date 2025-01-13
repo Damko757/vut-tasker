@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
     color: { type: String, required: true }, //Hex
     show_my_progress: { type: Boolean, default: true },
     show_me_progress: { type: Boolean, default: true },
+    subscribed_subjects: { type: Array, default: [] },
 });
 
 UserSchema.plugin(uniqueValidator);
