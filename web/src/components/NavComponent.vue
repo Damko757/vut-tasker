@@ -130,6 +130,14 @@ ul {
 
     width: 100vw;
 
+    .divider {
+      width: 2px;
+      height: 1.5rem;
+      // margin: 0 auto;
+      margin: 0 0.25em;
+      // margin-top: 0.25em;
+    }
+
     li {
       margin: 0 0.25em;
     }
