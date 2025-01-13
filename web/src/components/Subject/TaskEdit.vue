@@ -68,19 +68,19 @@ const emit = defineEmits<{
       <br />
       <span class="fw-bold">Required: </span
       ><span class="d-inline-block ps-2 my-2"
-        ><CheckBox :state="edittedTask.required" :grey-out="false" <<<<<<< HEAD
-        @state-change="(ns) => (edittedTask.required = ns)" =======
-        @state-change="stateChanged" >>>>>>> e428fa3 (Implemented simplier task
-        system) /></span
-      >
+        ><CheckBox
+          :state="edittedTask.required"
+          :grey-out="false"
+          @state-change="(ns) => (edittedTask.required = ns)"
+      /></span>
       <span class="d-inline-block" style="width: 2em"></span>
       <span class="fw-bold">Personal only: </span
       ><span class="d-inline-block ps-2 my-2"
-        ><CheckBox :state="edittedTask.personal" :grey-out="false" <<<<<<< HEAD
-        @state-change="(ns) => (edittedTask.personal = ns)" =======
-        @state-change="stateChanged" >>>>>>> e428fa3 (Implemented simplier task
-        system) /></span
-      >
+        ><CheckBox
+          :state="edittedTask.personal"
+          :grey-out="false"
+          @state-change="(ns) => (edittedTask.personal = ns)"
+      /></span>
       <br />
       <span class="fw-bold">Link: </span
       ><a
