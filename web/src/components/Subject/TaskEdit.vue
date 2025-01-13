@@ -37,10 +37,6 @@ const submit = () => {
     });
 };
 
-function stateChanged(ns: boolean) {
-  edittedTask.value.required = ns;
-}
-
 const emit = defineEmits<{
   (e: "done", task: Task | null): void;
 }>();
@@ -75,7 +71,7 @@ const emit = defineEmits<{
         ><CheckBox
           :state="edittedTask.required"
           :grey-out="false"
-          @state-change="stateChanged"
+          @state-change="(ns) => (edittedTask.required = ns)"
       /></span>
       <span class="d-inline-block" style="width: 2em"></span>
       <span class="fw-bold">Personal only: </span
@@ -83,7 +79,7 @@ const emit = defineEmits<{
         ><CheckBox
           :state="edittedTask.personal"
           :grey-out="false"
-          @state-change="stateChanged"
+          @state-change="(ns) => (edittedTask.personal = ns)"
       /></span>
       <br />
       <span class="fw-bold">Link: </span
