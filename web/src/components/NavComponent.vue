@@ -92,6 +92,7 @@ ul {
     font-weight: bold;
     margin-top: 0.25em;
     cursor: pointer;
+    color: white;
 
     &:hover {
       color: darken($white, 15%);
