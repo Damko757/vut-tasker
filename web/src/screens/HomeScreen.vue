@@ -31,14 +31,14 @@ const allTasks = ref<Task[]>([]);
  * 3. Due Data
  * 4. ""
  */
-function getUpcomingDate(t: Task): string {
-  if (t.registration_date_start) return t.registration_date_start;
+// function getUpcomingDate(t: Task): string {
+//   if (t.registration_date_start) return t.registration_date_start;
 
-  const last = t.registration_date_end || t.registration_date_start;
-  if (last && new Date(last) > new Date()) return last;
+//   const last = t.registration_date_end || t.registration_date_start;
+//   if (last && new Date(last) > new Date()) return last;
 
-  return t.due_date ?? "";
-}
+//   return t.due_date ?? "";
+// }
 function needsToBeShown(t: Task) {
   return (
     new Date(t.due_date ?? "") > new Date() ||
@@ -53,15 +53,20 @@ const sortedTasks = computed(
           store.getters
             .getUser()
             .value?.subscribed_subjects.includes(x.subject) &&
-          getUpcomingDate(x) && // has some end date
+          x.due_date && // has some end date
           needsToBeShown(x) // if completed and after deadline, it should not be shown
       )
       .sort((a, b) => {
-        const aVal = getUpcomingDate(a);
-        const bVal = getUpcomingDate(b);
+        const aDueDate = a.due_date ?? "";
+        const bDueDate = b.due_date ?? "";
 
-        if (aVal < bVal) return -1;
-        if (aVal > bVal) return 1;
+        if (aDueDate < bDueDate) return -1;
+        if (aDueDate > bDueDate) return 1;
+
+        const aDueDateEnd = a.due_date_end ?? "";
+        const bDueDateEnd = b.due_date_end ?? "";
+        if (aDueDateEnd < bDueDateEnd) return -1;
+        if (aDueDateEnd > bDueDateEnd) return 1;
         return 0;
       }) ?? []
 );
