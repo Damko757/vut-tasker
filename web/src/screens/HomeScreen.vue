@@ -3,6 +3,7 @@ import { computed, inject, ref, watch, watchEffect } from "vue";
 import axios, { HttpStatusCode } from "axios";
 import type { Task } from "../../../shared/Entities/Task";
 import TasksView from "../components/Home/TasksView.vue";
+import RainbowText from "../components/Home/RainbowText.vue";
 import type { StoreType } from "../store/store";
 import { API_URL } from "../const";
 
@@ -89,15 +90,14 @@ function load() {
 }
 </script>
 <template>
-  <h1 class="fw-bold px-2 mb-5">Najbližšie udalosti:</h1>
+  <h1 class="fw-bold px-2 mb-5">Upcoming tasks:</h1>
   <div class="types px-4">
     <section class="type mb-2">
-      <!-- <h3 class="fw-bold w-fit-content">
-                <div class="ps-1 pe-5">
-                    {{ (taskType as unknown as string).capitalize() }}
-                </div>
-                <div class="hr"></div>
-            </h3> -->
+      <div v-if="!sortedTasks.length" class="fw-bold fs-1">
+        <span style="color: orangered" class="fst-italic">
+          <RainbowText text="YaaY! Nothing to do :)"
+        /></span>
+      </div>
       <div>
         <TasksView :tasks="sortedTasks" />
       </div>
