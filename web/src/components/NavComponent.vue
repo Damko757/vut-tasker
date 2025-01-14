@@ -68,6 +68,7 @@ ul {
   height: 100vh;
   overflow: scroll;
   padding: 1em 0em !important;
+  padding-top: 0 !important;
   width: 4.5rem;
   font-size: 1rem;
   margin: 0;
@@ -122,6 +123,7 @@ ul {
     bottom: 0;
     border-radius: 0 !important;
     margin-bottom: 0 !important;
+    padding-top: 1em !important;
     padding-bottom: 0 !important;
 
     display: flex;
