@@ -6,6 +6,7 @@ import { HttpStatusCodes } from "../Utils/HttpStatusCodes.ts";
 import type { MiddlewareFunction } from "../Entities/MiddlewareFunction.ts";
 import { TaskModel } from "../Schemas/Task.ts";
 import { CookieValue } from "../Utils/Utils.ts";
+import { ENV } from "../const.ts";
 
 export class UserController
   extends Controller<typeof UserModel>
@@ -17,13 +18,45 @@ export class UserController
         GET: this.getAllUsers,
         POST: this.postUser,
       },
+      "/user": {
+        GET: this.getUserByNick,
+      },
       "/user/:nick": {
         GET: this.getUserByNick,
         PUT: this.putUserByNick,
         PATCH: this.patchUserByNick,
         DELETE: this.deleteUserByNick,
       },
+      "/login/:nick": {
+        POST: this.loginUserByNick,
+      },
+      "/logoff": {
+        POST: this.logoff,
+      },
     };
+  }
+
+  async logoff(req: Request, res: Response) {
+    res.clearCookie(CookieValue.USER);
+  }
+
+  async loginUserByNick(req: Request, res: Response) {
+    const nick = req.params.nick ?? null;
+    const user = await UserModel.findOne({ nick: req.params.nick }).exec();
+    if (!user) return res.status(HttpStatusCodes.NOT_FOUND).send();
+
+    res.cookie(CookieValue.USER, nick, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 365 * 24 * 3600 * 1000,
+      sameSite: "none",
+      expires: (function (d = new Date()) {
+        d.setDate(d.getDate() + 365);
+        return d;
+      })(),
+      partitioned: true,
+    });
+    res.status(HttpStatusCodes.OK).send(user);
   }
 
   async getAllUsers(req: Request, res: Response, next: NextFunction) {
