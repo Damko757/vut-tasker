@@ -41,7 +41,7 @@ function redirect(subject: string) {
 <template>
   <ul class="no-scrollbar">
     <li class="fs-5 d-flex" @click="redirect('/')">
-      <img src="/src/assets/black-home.png" alt="Home" />
+      <img src="/src/assets/logo.png" alt="Home" />
     </li>
     <li
       v-for="subject in specifiedSubjects.subscribed"
@@ -100,7 +100,7 @@ ul {
 
     &:first-child {
       max-width: 100%;
-      height: 1.5em;
+      height: 2em;
 
       &:hover {
         opacity: 85%;
@@ -110,7 +110,7 @@ ul {
         object-fit: contain;
         width: 100%;
         height: 100%;
-        filter: invert(100%);
+        // filter: invert(100%);
       }
     }
   }
