@@ -5,7 +5,7 @@ export const USERS: User[] = [
     nick: "DamDam",
     fullname: "Damián",
     subscribed_subjects: [],
-    color: "orangered",
+    color: "#f96004",
     show_my_progress: true,
     show_me_progress: true,
   },
