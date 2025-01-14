@@ -24,6 +24,7 @@ watchEffect(() => {
 });
 
 const submit = () => {
+  console.log(axios.defaults);
   const promise = props.task?._id
     ? axios.patch<Task>(API_URL + `/task/${props.task._id}`, edittedTask.value)
     : axios.post<Task>(API_URL + `/tasks`, edittedTask.value);
