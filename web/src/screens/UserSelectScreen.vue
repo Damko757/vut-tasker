@@ -1,20 +1,16 @@
 <script setup lang="ts">
-import { useCookies } from "@vueuse/integrations/useCookies";
 import type { User } from "../../../shared/Entities/User";
-import { API_URL, CookieValue } from "../const";
+import { API_URL } from "../const";
 import UserComponent from "../components/Main/UserComponent.vue";
 import axios from "axios";
 import { ref } from "vue";
+import { getStore } from "../store/store";
 
-const cookies = useCookies([CookieValue.USER]);
+const store = getStore();
 
 function onUserClick(user: User) {
-  cookies.set(CookieValue.USER, user.nick, {
-    sameSite: "strict",
-    expires: (function (d = new Date()) {
-      d.setDate(d.getDate() + 365);
-      return d;
-    })(),
+  axios.post<User>(API_URL + `/login/${user.nick}`).then((response) => {
+    store.state.user.value = response.data;
   });
 }
 

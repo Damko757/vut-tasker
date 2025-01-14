@@ -1,18 +1,13 @@
 <script setup lang="ts">
-import { useCookies } from "@vueuse/integrations/useCookies";
-import { CookieValue } from "./const";
-import { computed } from "vue";
 import UserSelectScreen from "./screens/UserSelectScreen.vue";
 import MainScreen from "./screens/MainScreen.vue";
+import { getStore } from "./store/store";
 
-const cookies = useCookies([CookieValue.USER]);
-
-const user = computed<string | undefined>(() => {
-  return cookies.get(CookieValue.USER);
-});
+getStore().mutations.loadUser();
+const user = getStore().getters.getUser();
 </script>
 <template>
-  <MainScreen v-if="user" />
+  <MainScreen v-if="user !== null" />
   <UserSelectScreen v-else />
 </template>
 

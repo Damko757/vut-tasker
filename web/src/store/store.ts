@@ -1,13 +1,14 @@
-import { computed, ref } from "vue";
+import { computed, inject, ref } from "vue";
 import type { User } from "../../../shared/Entities/User.ts";
 import axios from "axios";
-import { API_URL, CookieValue } from "../const.ts";
-import { useCookies } from "@vueuse/integrations/useCookies";
+import { API_URL } from "../const.ts";
+
+export const getStore = () => inject("store") as unknown as StoreType;
 
 export const Store = {
   state: {
     allUsers: ref<User[]>([]),
-    user: ref<User>(),
+    user: ref<User | null>(),
   },
 
   getters: {
@@ -16,7 +17,6 @@ export const Store = {
       return Store.state.allUsers;
     },
     getUser: () => {
-      if (!Store.state.user.value) Store.mutations.loadUser();
       return Store.state.user;
     },
   },
@@ -28,13 +28,10 @@ export const Store = {
         .then((response) => (Store.state.allUsers.value = response.data));
     },
     loadUser: () => {
-      const cookies = useCookies([CookieValue.USER]);
-      const nick = computed<string>(() => {
-        return cookies.get(CookieValue.USER)!;
-      });
       axios
-        .get<User>(`${API_URL}/user/${nick.value}`)
-        .then((response) => (Store.state.user.value = response.data));
+        .get<User>(`${API_URL}/user`)
+        .then((response) => (Store.state.user.value = response.data))
+        .catch(() => (Store.state.user.value = null));
     },
   },
 

@@ -2,18 +2,13 @@
 import { computed, inject, ref, watch, watchEffect } from "vue";
 import axios, { HttpStatusCode } from "axios";
 import type { Task } from "../../../shared/Entities/Task";
-import { API_URL, CookieValue } from "../const";
 import TasksView from "../components/Home/TasksView.vue";
-import { useCookies } from "@vueuse/integrations/useCookies";
-import type { User } from "../../../shared/Entities/User";
 import type { StoreType } from "../store/store";
+import { API_URL } from "../const";
 
 const store: StoreType = inject("store") as unknown as StoreType;
-const cookies = useCookies([CookieValue.USER]);
 
-const nick = computed<string>(() => {
-  return cookies.get(CookieValue.USER)!;
-});
+const user = store.getters.getUser();
 defineExpose({
   load,
 });
@@ -42,7 +37,7 @@ const allTasks = ref<Task[]>([]);
 function needsToBeShown(t: Task) {
   return (
     new Date(t.due_date ?? "") > new Date() ||
-    !t.completed_by.includes(nick.value)
+    !t.completed_by.includes(user.value!.nick)
   );
 }
 const sortedTasks = computed(
@@ -71,7 +66,7 @@ const sortedTasks = computed(
       }) ?? []
 );
 
-watch(store.state.user, () => {
+function loadTasks() {
   axios
     .get<Task[]>(API_URL + "/tasks")
     .then(async (response) => {
@@ -85,10 +80,12 @@ watch(store.state.user, () => {
     .catch(() => {
       emit("loadStateChange", -1);
     });
-});
+}
+
+watch(store.state.user, loadTasks);
 function load() {
   emit("loadStateChange", 0);
-  store.getters.getUser();
+  if (store.getters.getUser().value) loadTasks();
 }
 </script>
 <template>
