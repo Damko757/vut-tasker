@@ -1,47 +1,40 @@
 <script setup lang="ts">
-import { ref, type PropType } from "vue";
-import { TaskType, type Task as TaskT } from "../../../../shared/Entities/Task";
+import { computed, type PropType } from "vue";
+import { type Task as TaskT } from "../../../../shared/Entities/Task";
 import Task from "./Task.vue";
-import TaskEdit from "./TaskEdit.vue";
+import { getStore } from "../../store/store";
+
+const store = getStore();
+const user = store.getters.getUser();
 
 const props = defineProps({
-    tasks: {
-        type: Object as PropType<TaskT[]>,
-        default: [],
-    },
-    type: {
-        type: String,
-    },
-    subject: {
-        type: String,
-    },
+  tasks: {
+    type: Object as PropType<TaskT[]>,
+    default: [],
+  },
+  type: {
+    type: String,
+  },
+  subject: {
+    type: String,
+  },
 });
+const sortedTasks = computed(() => {
+  const completed: TaskT[] = [];
+  const uncompleted: TaskT[] = [];
 
-const adding = ref(false);
+  props.tasks.forEach((task) => {
+    task.completed_by.includes(user.value?.nick ?? "")
+      ? completed.push(task)
+      : uncompleted.push(task);
+  });
 
-function addTask(newTask: TaskT | null) {
-    adding.value = false;
-    if (!newTask) return;
-
-    props.tasks.push(newTask);
-}
+  return [...uncompleted, ...completed];
+});
 </script>
 <template>
-    <div v-for="(task, i) in tasks" :key="task._id">
-        <Task v-model="tasks[i]" @delete="" />
-    </div>
-    <TaskEdit
-        v-if="adding"
-        :add-or-edit="'add'"
-        @done="addTask"
-        :task="{ type: props.type as unknown as TaskType, subject: props.subject, required: true }"
-    />
-    <div
-        class="btn-success btn fw-bold"
-        @click="adding = true"
-        v-show="!adding"
-    >
-        Add
-    </div>
+  <div v-for="(task, i) in sortedTasks" :key="task._id">
+    <Task v-model="sortedTasks[i]" @delete="" />
+  </div>
 </template>
 <style lang="scss" scoped></style>
