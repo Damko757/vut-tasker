@@ -71,7 +71,7 @@ const typeToTasks = computed(() => {
     <em
       ><u>{{ subjectName }}</u></em
     >
-    neexistuje :/ !!!
+    does not exist :/ !!!
   </div>
   <div>
     <h1 class="fw-bold px-2 d-flex align-items-center">
