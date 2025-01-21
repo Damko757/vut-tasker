@@ -6,45 +6,47 @@ import type { User } from "../../../../shared/Entities/User";
 const store: StoreType = inject("store") as unknown as StoreType;
 const _users = store.getters.getAllUsers();
 const users = computed(() => {
-    const m: { [nick: string]: User } = {};
-    _users.value.forEach((user) => (m[user.nick] = user));
-    return m;
+  const m: { [nick: string]: User } = {};
+  _users.value.forEach((user) => (m[user.nick] = user));
+  return m;
 });
 
 const props = defineProps({
-    completedBy: {
-        type: Object as PropType<string[]>,
-        default: [],
-    },
+  completedBy: {
+    type: Object as PropType<string[]>,
+    default: [],
+  },
 });
 
 const availableCompletedBy = computed(() =>
-    props.completedBy.sort().filter((u) => users.value[u])
+  props.completedBy.sort().filter((u) => users.value[u])
 );
 </script>
 <template>
+  <div
+    class="d-flex flex-shrink-0 flex-row flex-wrap justify-content-start align-items-center wrapper"
+  >
     <div
-        class="d-flex flex-shrink-0 flex-row flex-wrap justify-content-start align-items-center wrapper"
-    >
-        <div
-            v-for="nick in availableCompletedBy"
-            :key="nick"
-            class="dot"
-            :style="{ background: users[nick]?.color ?? '' }"
-        ></div>
-    </div>
+      v-for="nick in availableCompletedBy"
+      :key="nick"
+      class="dot"
+      :style="{ background: users[nick]?.color ?? '' }"
+      @mouseover="() => {}"
+      :title="nick"
+    ></div>
+  </div>
 </template>
 <style lang="scss" scoped>
 .wrapper {
-    max-height: 1.5em;
-    width: fit-content;
-    writing-mode: vertical-lr;
-    position: relative;
-    .dot {
-        width: 0.5em;
-        height: 0.5em;
-        margin: 0.1em;
-        border-radius: 1em;
-    }
+  max-height: 1.5em;
+  width: fit-content;
+  writing-mode: vertical-lr;
+  position: relative;
+  .dot {
+    width: 0.5em;
+    height: 0.5em;
+    margin: 0.1em;
+    border-radius: 1em;
+  }
 }
 </style>
