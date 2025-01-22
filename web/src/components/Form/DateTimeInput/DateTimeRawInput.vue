@@ -18,6 +18,9 @@ const emit = defineEmits<{
     :style="{ width: `${inputData.max.toString().length * 11}px` }"
     :value="inputData.realValue"
     :ref="(el) => (inputData.element = el as HTMLInputElement)"
+    @focus="
+      inputData.realValue = inputData.value == null ? `` : inputData.realValue
+    "
     @input="
       (e) => {
         inputData.realValue = (e.target as HTMLInputElement).value;
@@ -29,13 +32,14 @@ const emit = defineEmits<{
                 Math.min(inputData.max, inputData.value ?? 0)
               )
             : null;
-        inputData.realValue = inputData.value?.toString() ?? ``;
+        inputData.realValue = inputData.value?.toString() ?? inputData.default;
         
         emit(`input`, inputData);
       }
     "
     @blur="
-      inputData.realValue = inputData.value?.toString().padStart(2, '0') ?? ``
+      inputData.realValue =
+        inputData.value?.toString().padStart(2, '0') ?? inputData.default
     "
   />
 </template>
@@ -43,7 +47,7 @@ const emit = defineEmits<{
 @import "/src/SCSS/main.scss";
 
 input {
-  min-width: 1.5em;
+  min-width: 2.2em;
   width: fit-content;
   border: none;
   // border-bottom: 3px solid $white;
