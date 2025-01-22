@@ -57,4 +57,12 @@ export const USERS: User[] = [
     show_my_progress: true,
     show_me_progress: true,
   },
+  {
+    nick: "Džimo",
+    fullname: "Andrej",
+    subscribed_subjects: [],
+    color: "#FF69B4",
+    show_my_progress: true,
+    show_me_progress: true,
+  },
 ];
