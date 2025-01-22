@@ -34,7 +34,7 @@ function addTask(newTask: Task | null) {
 </script>
 <template>
   <h3 class="fw-bold w-fit-content position-relative">
-    <div class="ps-1 pe-5">
+    <div class="ps-1 pe-3">
       {{ taskType.capitalize() }}
     </div>
     <div
@@ -73,6 +73,6 @@ function addTask(newTask: Task | null) {
   position: absolute;
   top: 0;
   right: 0;
-  translate: 100% 0;
+  translate: calc(100% + 0.75rem) 0;
 }
 </style>

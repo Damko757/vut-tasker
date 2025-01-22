@@ -5,6 +5,7 @@ import SimpleInput from "./SimpleInput.vue";
 import CheckBox from "./CheckBox.vue";
 import axios from "axios";
 import { API_URL } from "../../const";
+import DateTimeInput from "../Form/DateTimeInput/DateTimeInput.vue";
 
 const props = defineProps({
   task: {
@@ -61,11 +62,13 @@ const emit = defineEmits<{
       <br />
       <span class="fw-bold">Due date: </span
       ><span
-        ><SimpleInput v-model="edittedTask.due_date" type="datetime-local" /> -
-      </span>
-      <span
-        ><SimpleInput v-model="edittedTask.due_date_end" type="datetime-local"
-      /></span>
+        ><DateTimeInput v-model:datetime="edittedTask.due_date" /><span
+          class="fw-bold"
+        >
+          -
+        </span></span
+      >
+      <span><DateTimeInput v-model:datetime="edittedTask.due_date_end" /></span>
       <br />
       <span class="fw-bold">Required: </span
       ><span class="d-inline-block ps-2 my-2"
