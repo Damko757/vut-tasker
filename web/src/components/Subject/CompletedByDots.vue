@@ -31,7 +31,6 @@ const availableCompletedBy = computed(() =>
       :key="nick"
       class="dot"
       :style="{ background: users[nick]?.color ?? '' }"
-      @mouseover="() => {}"
       :title="nick"
     ></div>
   </div>
