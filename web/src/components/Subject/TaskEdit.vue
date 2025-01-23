@@ -26,7 +26,6 @@ watchEffect(() => {
 });
 
 const submit = () => {
-  console.log(axios.defaults);
   const promise = props.task?._id
     ? axios.patch<Task>(API_URL + `/task/${props.task._id}`, edittedTask.value)
     : axios.post<Task>(API_URL + `/tasks`, edittedTask.value);
@@ -43,6 +42,18 @@ const submit = () => {
 const emit = defineEmits<{
   (e: "done", task: Task | null): void;
 }>();
+
+// Copying start-date to end-date
+watch(
+  () => edittedTask.value.due_date,
+  () => {
+    if (!edittedTask.value.due_date || edittedTask.value.due_date_end) return;
+    edittedTask.value.due_date_end = (function () {
+      const parts = edittedTask.value.due_date?.split(" ")!;
+      return `${parts[0]} `;
+    })();
+  }
+);
 </script>
 <template>
   <h5 class="fw-bold position-relative">
