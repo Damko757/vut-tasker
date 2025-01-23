@@ -2,12 +2,9 @@
 import type { PropType } from "vue";
 import type { InputData } from "./DateTimeInput.vue";
 
-const props = defineProps({
-  inputData: {
-    required: true,
-    type: Object as PropType<InputData>,
-  },
-});
+const props = defineProps<{
+  inputData: InputData;
+}>();
 const emit = defineEmits<{
   (e: "input", inputData: InputData): void;
 }>();
@@ -19,7 +16,11 @@ const emit = defineEmits<{
     :value="inputData.realValue"
     :ref="(el) => (inputData.element = el as HTMLInputElement)"
     @focus="
-      inputData.realValue = inputData.value == null ? `` : inputData.realValue
+      () => {
+        inputData.realValue =
+          inputData.value == null ? `` : inputData.realValue;
+        inputData.element?.select();
+      }
     "
     @input="
       (e) => {
@@ -32,7 +33,7 @@ const emit = defineEmits<{
                 Math.min(inputData.max, inputData.value ?? 0)
               )
             : null;
-        inputData.realValue = inputData.value?.toString() ?? inputData.default;
+        inputData.realValue = inputData.value?.toString() ?? ``;
         
         emit(`input`, inputData);
       }

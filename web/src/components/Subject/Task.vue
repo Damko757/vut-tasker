@@ -21,6 +21,9 @@ const state = computed(() =>
 const isCollapsed = ref<boolean>(false);
 
 const action = ref<"view" | "update">("view");
+defineExpose({
+  action,
+});
 
 function deleteTask() {
   if (!confirm("Really?")) return;

@@ -6,6 +6,7 @@ import CheckBox from "./CheckBox.vue";
 import axios from "axios";
 import { API_URL } from "../../const";
 import DateTimeInput from "../Form/DateTimeInput/DateTimeInput.vue";
+import SimpleTextArea from "./SimpleTextArea.vue";
 
 const props = defineProps({
   task: {
@@ -25,7 +26,6 @@ watchEffect(() => {
 });
 
 const submit = () => {
-  console.log(axios.defaults);
   const promise = props.task?._id
     ? axios.patch<Task>(API_URL + `/task/${props.task._id}`, edittedTask.value)
     : axios.post<Task>(API_URL + `/tasks`, edittedTask.value);
@@ -42,6 +42,18 @@ const submit = () => {
 const emit = defineEmits<{
   (e: "done", task: Task | null): void;
 }>();
+
+// Copying start-date to end-date
+watch(
+  () => edittedTask.value.due_date,
+  () => {
+    if (!edittedTask.value.due_date || edittedTask.value.due_date_end) return;
+    edittedTask.value.due_date_end = (function () {
+      const parts = edittedTask.value.due_date?.split(" ")!;
+      return `${parts[0]} `;
+    })();
+  }
+);
 </script>
 <template>
   <h5 class="fw-bold position-relative">
@@ -57,8 +69,8 @@ const emit = defineEmits<{
   </div>
   <div class="editables">
     <div>
-      <span class="fw-bold">Description: </span
-      ><span><SimpleInput v-model="edittedTask.description" /></span>
+      <span class="fw-bold">Name: </span
+      ><span><SimpleInput v-model="edittedTask.name" /></span>
       <br />
       <span class="fw-bold">Due date: </span
       ><span
@@ -93,6 +105,15 @@ const emit = defineEmits<{
           type="text"
           style="color: cyan"
       /></a>
+      <br />
+      <span class="fw-bold">Description: </span>
+      <div>
+        <SimpleTextArea
+          v-model="edittedTask.description"
+          type="text"
+          style="width: 100%"
+        />
+      </div>
     </div>
 
     <div class="pt-2 fw-bold">
