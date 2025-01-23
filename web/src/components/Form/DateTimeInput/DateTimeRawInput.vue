@@ -16,7 +16,11 @@ const emit = defineEmits<{
     :value="inputData.realValue"
     :ref="(el) => (inputData.element = el as HTMLInputElement)"
     @focus="
-      inputData.realValue = inputData.value == null ? `` : inputData.realValue
+      () => {
+        inputData.realValue =
+          inputData.value == null ? `` : inputData.realValue;
+        inputData.element?.select();
+      }
     "
     @input="
       (e) => {
