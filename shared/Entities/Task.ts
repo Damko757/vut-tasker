@@ -5,6 +5,7 @@ export interface Task {
   subject: string;
   type: TaskType;
   required: boolean;
+  name: string;
   description: string;
   due_date: date | null;
   due_date_end: date | null;

@@ -24,6 +24,7 @@ const TaskSchema = new mongoose.Schema({
     default: true,
   },
   description: { type: String, required: false, default: null },
+  name: { type: String, required: true, default: null },
   due_date: { type: String, required: false, default: null },
   due_date_end: { type: String, required: false, default: null },
   personal: { type: Boolean, default: false },
