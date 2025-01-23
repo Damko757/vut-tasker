@@ -9,6 +9,7 @@ import TasksView from "../components/Home/TasksView.vue";
 import RainbowText from "../components/Home/RainbowText.vue";
 import type { StoreType } from "../store/store";
 import { API_URL } from "../const";
+import SanityBar from "../components/Etc/SanityBar/SanityBar.vue";
 
 const store: StoreType = inject("store") as unknown as StoreType;
 
@@ -82,6 +83,7 @@ function load() {
 </script>
 <template>
   <h1 class="fw-bold px-2 mb-5">Upcoming tasks:</h1>
+  <SanityBar :tasks="sortedTasks" />
   <div class="types px-4">
     <section class="type mb-2">
       <div v-if="!sortedTasks.length" class="fw-bold fs-1">
