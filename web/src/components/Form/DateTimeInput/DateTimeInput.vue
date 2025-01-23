@@ -34,35 +34,42 @@ const inputs = ref<InputData[]>(
     };
   })
 );
-const datetime = defineModel<string | null | undefined>("datetime", {
-  // required: true,
-  type: Object as PropType<string | null | undefined>,
-});
+const datetime = defineModel<string | null | undefined>("datetime");
 function updateInputsByDateTime(datetime: string | null | undefined) {
-  console.log("Here!", datetime);
   if (!datetime) return;
 
-  const [date, time] = datetime.split(" ");
+  const [date, time] = datetime.replace("T", " ").split(" ");
   const dateParts = date.split("-");
-  const timeParts = time.split(":");
+  const timeParts = time?.split(":") ?? [];
 
-  [...dateParts.reverse(), ...timeParts].forEach((v, i) => {
-    console.log(i, v);
+  [
+    ...dateParts.reverse(),
+    ...(timeParts.length > 1 ? timeParts : [null, null, null]),
+  ].forEach((v, i) => {
     if (!inputs.value[i]) return;
-    inputs.value[i].value = Number(v);
-    inputs.value[i].realValue = inputs.value[i].value
-      .toString()
-      .padStart(2, "0");
+    inputs.value[i].value = v == null ? null : Number(v);
+    inputs.value[i].realValue =
+      inputs.value[i].value?.toString().padStart(2, "0") ??
+      inputs.value[i].default;
   });
 }
 
-watch(datetime, () => updateInputsByDateTime(datetime.value));
+watch(datetime, () => {
+  updateInputsByDateTime(datetime.value);
+  datetime.value = buildDateTimeString();
+});
 onMounted(() => {
   updateInputsByDateTime(datetime.value);
+  datetime.value = buildDateTimeString();
 });
 
 function buildDateTimeString(): string | null {
-  if (inputs.value.some((inputData) => inputData.value == null)) return null;
+  if (
+    inputs.value.some(
+      (inputData) => inputData.value == null || Number.isNaN(inputData.value)
+    )
+  )
+    return null;
 
   const v = inputs.value.map((inputData) =>
     inputData.value?.toString().padStart(2, "0")
