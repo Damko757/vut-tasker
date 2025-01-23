@@ -20,3 +20,17 @@ export enum TaskType {
   EXAM,
   REGISTRATION,
 }
+
+export function compareTasksByDueDate(a: Task, b: Task): -1 | 0 | 1 {
+  const aDueDate = a.due_date ?? "";
+  const bDueDate = b.due_date ?? "";
+
+  if (aDueDate < bDueDate) return -1;
+  if (aDueDate > bDueDate) return 1;
+
+  const aDueDateEnd = a.due_date_end ?? "";
+  const bDueDateEnd = b.due_date_end ?? "";
+  if (aDueDateEnd < bDueDateEnd) return -1;
+  if (aDueDateEnd > bDueDateEnd) return 1;
+  return 0;
+}
