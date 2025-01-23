@@ -15,18 +15,24 @@ const emit = defineEmits<{
   (e: "update", task: Task): void;
   (e: "delete", task: Task): void;
 }>();
+
+const extraInfo: (keyof Task)[] = ["link", "description"];
 </script>
 <template>
   <div class="cursor-pointer">
     <h5 class="fw-bold position-relative pe-3">
-      {{ task.required ? "*" : "" }}{{ task.description }}
+      {{ task.required ? "*" : "" }}{{ task.name }}
       <template v-if="showAll">
         <span class="fw-bold"
           >(<u>{{ task.subject }}</u> -
           {{ (task.type as unknown as string).capitalize() }})</span
         >
       </template>
-      <div class="collapse-arrow" :class="{ collapsed: props.isCollapsed }">
+      <div
+        class="collapse-arrow"
+        :class="{ collapsed: props.isCollapsed }"
+        v-if="!showAll || extraInfo.some((x) => task[x])"
+      >
         >
       </div>
     </h5>
@@ -39,9 +45,15 @@ const emit = defineEmits<{
       }}&#41;
     </div>
     <div class="h-0 overflow-hidden" :class="{ collapsed: props.isCollapsed }">
-      <div>
+      <div v-if="task.link">
         <span class="fw-bold">Link: </span
         ><a :href="task.link ?? '#'">{{ task.link ?? "&hyphen;" }}</a>
+      </div>
+      <div v-if="task.description">
+        <span class="fw-bold">Description: </span>
+        <div>
+          {{ task.description }}
+        </div>
       </div>
 
       <div class="pt-2 fw-bold" v-if="!showAll">
