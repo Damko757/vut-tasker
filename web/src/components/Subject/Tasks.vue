@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed, type PropType } from "vue";
-import { type Task as TaskT } from "../../../../shared/Entities/Task";
+import {
+  compareTasksByDueDate,
+  type Task as TaskT,
+} from "../../../../shared/Entities/Task";
 import Task from "./Task.vue";
 import { getStore } from "../../store/store";
 
@@ -23,7 +26,9 @@ const sortedTasks = computed(() => {
   const completed: TaskT[] = [];
   const uncompleted: TaskT[] = [];
 
-  props.tasks.forEach((task) => {
+  const sortedTasks = props.tasks.slice().sort(compareTasksByDueDate);
+
+  sortedTasks.forEach((task) => {
     task.completed_by.includes(user.value?.nick ?? "")
       ? completed.push(task)
       : uncompleted.push(task);

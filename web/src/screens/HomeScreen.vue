@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { computed, inject, ref, watch, watchEffect } from "vue";
 import axios, { HttpStatusCode } from "axios";
-import type { Task } from "../../../shared/Entities/Task";
+import {
+  compareTasksByDueDate,
+  type Task,
+} from "../../../shared/Entities/Task";
 import TasksView from "../components/Home/TasksView.vue";
 import RainbowText from "../components/Home/RainbowText.vue";
 import type { StoreType } from "../store/store";
@@ -52,19 +55,7 @@ const sortedTasks = computed(
           x.due_date && // has some end date
           needsToBeShown(x) // if completed and after deadline, it should not be shown
       )
-      .sort((a, b) => {
-        const aDueDate = a.due_date ?? "";
-        const bDueDate = b.due_date ?? "";
-
-        if (aDueDate < bDueDate) return -1;
-        if (aDueDate > bDueDate) return 1;
-
-        const aDueDateEnd = a.due_date_end ?? "";
-        const bDueDateEnd = b.due_date_end ?? "";
-        if (aDueDateEnd < bDueDateEnd) return -1;
-        if (aDueDateEnd > bDueDateEnd) return 1;
-        return 0;
-      }) ?? []
+      .sort(compareTasksByDueDate) ?? []
 );
 
 function loadTasks() {
