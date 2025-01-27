@@ -41,7 +41,7 @@ function redirect(subject: string) {
 <template>
   <ul class="no-scrollbar">
     <li class="fs-5 d-flex" @click="redirect('/')">
-      <img src="/src/assets/logo.png" alt="Home" />
+      <img src="/logo.png" alt="Home" />
     </li>
     <li
       v-for="subject in specifiedSubjects.subscribed"
