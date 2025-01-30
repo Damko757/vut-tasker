@@ -18,8 +18,10 @@
     "vue": "^3.4.37"
   },
   "devDependencies": {
+    "@types/bun": "^1.2.1",
     "@types/node": "^22.5.5",
     "@vitejs/plugin-vue": "^5.1.2",
+    "bun-types": "^1.2.1",
     "sass": "~1.64.2",
     "sass-embedded": "~1.64.2",
     "typescript": "^5.5.3",
