@@ -1,5 +1,5 @@
+import { smallerFirstSort } from "../Utils";
 import type { User } from "./User";
-import { smallerFirstSort } from "../../web/src/Utils.ts";
 
 export interface Room {
   task_id: string;
@@ -8,17 +8,71 @@ export interface Room {
   range_end: string;
 }
 
+interface RoomLink {
+  // room: Room;
+  index: number;
+  next: RoomLink | null;
+}
+
+/**
+ * RoomLink DEBUG print
+ * @param rooms
+ * @param roomLink
+ */
+function printLink(rooms: Room[], roomLink: RoomLink | null) {
+  let o: string[] = [];
+  while (roomLink) {
+    o.push(rooms[roomLink.index].room_name);
+    roomLink = roomLink.next;
+  }
+  o.push("NULL");
+}
+
 /**
  * Finds, which indexes (after space splitting) are valid for sorting
  * It enables to differentiate between having Surname first or second
  * @param rooms
- * @returns
+ * @returns Linked rooms in order or null if none index is valid
  */
-function getRoomsSortIndexes(rooms: Room[]): number[] {
+export function createRoomSortLink(rooms: Room[]): RoomLink | null {
+  /**
+   *
+   * @param startIndex
+   * @param endIndex
+   * @param valueIndex
+   * @param indexPart
+   * @returns false - invalid, true - continue, null - continue
+   */
+  function isBetween(
+    startIndex: number | null,
+    endIndex: number,
+    valueIndex: number,
+    indexPart: number
+  ) {
+    const second = [
+      names[endIndex][0][indexPart],
+      names[endIndex][1][indexPart],
+    ];
+    const value = [
+      names[valueIndex][0][indexPart],
+      names[valueIndex][1][indexPart],
+    ];
+    if (value[0] < second[0]) {
+      if (value[1] < second[0]) return true; // XxxxX S-s
+      return false; // XxxxxxSxX s ...
+    }
+    if (value[0] < second[1]) return false; // S Xxxs
+    return null;
+  }
+
+  if (rooms.length == 0) return null;
+  /**
+   * It tries every index of value (["Name1Part1", "Name1Part2"])
+   * to create linked map by sorted names
+   */
   const names = rooms.map((room) =>
     [room.range_start, room.range_end].map((x) => x?.trim().split(" "))
   );
-  const indexes: number[] = [];
   const maxSize = names.reduce(
     (a, pair) =>
       Math.min(
@@ -27,27 +81,59 @@ function getRoomsSortIndexes(rooms: Room[]): number[] {
       ),
     Number.MAX_SAFE_INTEGER
   );
-  for (let i = 0; i < maxSize; i++) {
+  for (let indexPart = 0; indexPart < maxSize; indexPart++) {
+    const list: RoomLink = {
+      index: 0,
+      next: null,
+    };
     if (
-      names.every((room) => {
-        return room[0][i] < room[1][i];
+      names.every((roomPart, i) => {
+        if (i == 0) return true;
+        printLink(rooms, list);
+        if (roomPart[0][indexPart] > roomPart[1][indexPart]) return false;
+
+        // Looping and finding match
+        let currentRoom: RoomLink | null = null; // Ability to insert first
+        let nextRoom: RoomLink | null = list;
+        while (nextRoom != null) {
+          const res = isBetween(
+            currentRoom?.index ?? null,
+            nextRoom.index,
+            i,
+            indexPart
+          );
+          if (res === false) return false;
+          if (res === true) break;
+          currentRoom = nextRoom;
+          nextRoom = nextRoom.next;
+        }
+
+        if (currentRoom == null) {
+          list.next = {
+            index: list.index,
+            next: list.next,
+          };
+          list.index = i;
+        } else currentRoom.next = { next: currentRoom.next, index: i };
+        return true;
       })
     )
-      indexes.push(i);
+      return list;
   }
 
-  return indexes;
+  return null;
 }
 export function toSortedRooms(rooms: Room[]): Room[] {
-  const sortIndex = getRoomsSortIndexes(rooms)[0] ?? null;
-  if (sortIndex === null)
+  if (rooms.length == 0) return [];
+  const sortLink = createRoomSortLink(rooms);
+  if (sortLink === null)
     return rooms.sort((a, b) => smallerFirstSort(a.room_name, b.room_name));
-
-  return rooms.sort((a, b) =>
-    smallerFirstSort(
-      a.range_start.split(" ")[sortIndex],
-      b.range_start.split(" ")[sortIndex]
-    )
-  );
+  const sortedRooms = [];
+  let currentRoom: RoomLink | null = sortLink;
+  while (currentRoom != null) {
+    sortedRooms.push(rooms[currentRoom.index]);
+    currentRoom = currentRoom.next;
+  }
+  return sortedRooms;
 }
 export function userInRoom(room: Room, user: User): boolean {}
