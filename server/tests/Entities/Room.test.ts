@@ -44,6 +44,44 @@ describe("Room linking", () => {
       },
     ]);
   });
+  test("Forename first", () => {
+    const rooms: Room[] = [
+      {
+        task_id: "",
+        room_name: "A",
+        range_start: "Martin Blažko",
+        range_end: "Ján Feruš",
+      },
+      {
+        task_id: "",
+        room_name: "B",
+        range_start: "Peter Grál",
+        range_end: "Anna Matejovičová",
+      },
+      {
+        task_id: "",
+        room_name: "C",
+        range_start: "Dominik Nimný",
+        range_end: "Alžbeta Rojná",
+      },
+    ];
+
+    expect(createRoomSortLink(rooms)).toEqual([
+      {
+        partIndex: 1,
+        list: {
+          index: 0,
+          next: {
+            index: 1,
+            next: {
+              index: 2,
+              next: null,
+            },
+          },
+        },
+      },
+    ]);
+  });
   test("Reversed", () => {
     expect(
       createRoomSortLink([rooms.at(-1)!, rooms.at(-2)!, rooms.at(-3)!])
