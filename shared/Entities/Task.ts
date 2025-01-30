@@ -1,4 +1,5 @@
 import type { date } from "../Utils.ts";
+import type { Room } from "./Room.ts";
 
 export interface Task {
   _id?: string;
@@ -13,6 +14,7 @@ export interface Task {
   link: string | null;
   completed_by: string[]; // nicks
   created_by: string;
+  rooms: Room[];
 }
 export enum TaskType {
   PROJECT,
