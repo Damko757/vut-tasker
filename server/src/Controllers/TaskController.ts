@@ -105,10 +105,8 @@ export class TaskController
     res.status(HttpStatusCodes.NO_CONTENT).send();
   }
   async postTask(req: Request, res: Response, next: NextFunction) {
-    console.log(req.body);
     req.body.created_by = req.cookies[CookieValue.USER] ?? "";
     const task = new TaskModel(req.body);
-    console.log(task);
 
     return task
       .save()
