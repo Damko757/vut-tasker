@@ -1,6 +1,23 @@
 # VUT TASKER
 
-This project is for subject-based TODOs, where every user has his/her own instance of tasks. It is meant for a close group of friends with the same (but very own) responsibilities, so they can track what everyone had already done and what they should do :)
+Self-hostable TODO list, with _shared_ tasks and more simple school responsibilites management. It is themed in a VUT FIT style.
+
+## How it works?
+
+Tasks are defined under (school) subjects, which identified mainly by 3 to 4 letters and number(s). Each task has specific type (Homework, Exam, Project, Registration, ...). Every task is shared between users (if it is not _personal task_), so only one needs to create it (this way it is less probable that some forgets something).
+
+To show tasks on a HomePage (MainPage), you need to subscribe to the subject(s), you want to see and track. The tasks will be shown there, until they are not completed (completed tasks before due_date are still shown - it is handy for project, where you can still re-submit you work)
+
+There are also dots next to tasks. They say, who have already done this task.
+
+### Sanity Bar
+
+On HomePage, there is SanityBar in a upper-right corner. It show, how much of (uncompleted) upcoming tasks there is. There are max 10 points. Each uncompleted task adds number depending on its type:
+
+- Exam: +2
+- Project: +1.5
+- Homework: +1
+- Registration: +0.5
 
 # Development
 
