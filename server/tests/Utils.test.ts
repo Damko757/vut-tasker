@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { permutations } from "../src/Utils";
-
+import { permutations, smallerFirstSort } from "../../shared/Utils";
 describe("Permutations", () => {
   test("Single element", () => {
     expect(permutations([1])).toEqual([[1]]);
@@ -28,5 +27,14 @@ describe("Permutations", () => {
     expect(permutations(Array.from(Array(10)).map((_, i) => i)).length).toBe(
       factorialOf10
     );
+  });
+});
+
+describe("SmallerFirstSort", () => {
+  test("ABC", () => {
+    expect("BAC".split("").sort(smallerFirstSort).join("")).toBe("ABC");
+  });
+  test("XYZ", () => {
+    expect("ZYX".split("").sort(smallerFirstSort).join("")).toBe("XYZ");
   });
 });
