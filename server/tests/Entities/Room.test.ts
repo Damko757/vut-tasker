@@ -28,30 +28,40 @@ describe("Room linking", () => {
     },
   ];
   test("Same in, same out", () => {
-    expect(createRoomSortLink(rooms)).toEqual({
-      index: 0,
-      next: {
-        index: 1,
-        next: {
-          index: 2,
-          next: null,
+    expect(createRoomSortLink(rooms)).toEqual([
+      {
+        partIndex: 0,
+        list: {
+          index: 0,
+          next: {
+            index: 1,
+            next: {
+              index: 2,
+              next: null,
+            },
+          },
         },
       },
-    });
+    ]);
   });
   test("Reversed", () => {
     expect(
       createRoomSortLink([rooms.at(-1)!, rooms.at(-2)!, rooms.at(-3)!])
-    ).toEqual({
-      index: 2,
-      next: {
-        index: 1,
-        next: {
-          index: 0,
-          next: null,
+    ).toEqual([
+      {
+        partIndex: 0,
+        list: {
+          index: 2,
+          next: {
+            index: 1,
+            next: {
+              index: 0,
+              next: null,
+            },
+          },
         },
       },
-    });
+    ]);
   });
 
   test("Invalid", () => {
@@ -77,22 +87,27 @@ describe("Room linking", () => {
     ];
 
     permutations(rooms).forEach((permutedRoom) =>
-      expect(createRoomSortLink(permutedRoom)).toBeNull()
+      expect(createRoomSortLink(permutedRoom)).toBeEmpty()
     );
   });
 
   test("Permutations", () => {
     permutations(rooms).forEach((permutedRoom) => {
-      expect(createRoomSortLink(permutedRoom)).toEqual({
-        index: permutedRoom.indexOf(rooms[0]),
-        next: {
-          index: permutedRoom.indexOf(rooms[1]),
-          next: {
-            index: permutedRoom.indexOf(rooms[2]),
-            next: null,
+      expect(createRoomSortLink(permutedRoom)).toEqual([
+        {
+          partIndex: 0,
+          list: {
+            index: permutedRoom.indexOf(rooms[0]),
+            next: {
+              index: permutedRoom.indexOf(rooms[1]),
+              next: {
+                index: permutedRoom.indexOf(rooms[2]),
+                next: null,
+              },
+            },
           },
         },
-      });
+      ]);
     });
   });
   test("xLogin", () => {
@@ -117,16 +132,21 @@ describe("Room linking", () => {
       },
     ];
     permutations(rooms).forEach((permutedRoom) => {
-      expect(createRoomSortLink(permutedRoom)).toEqual({
-        index: permutedRoom.indexOf(rooms[0]),
-        next: {
-          index: permutedRoom.indexOf(rooms[1]),
-          next: {
-            index: permutedRoom.indexOf(rooms[2]),
-            next: null,
+      expect(createRoomSortLink(permutedRoom)).toEqual([
+        {
+          partIndex: 0,
+          list: {
+            index: permutedRoom.indexOf(rooms[0]),
+            next: {
+              index: permutedRoom.indexOf(rooms[1]),
+              next: {
+                index: permutedRoom.indexOf(rooms[2]),
+                next: null,
+              },
+            },
           },
         },
-      });
+      ]);
     });
   });
 });
