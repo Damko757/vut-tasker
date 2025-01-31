@@ -3,10 +3,14 @@ import { computed, ref, watch, watchEffect, type PropType } from "vue";
 import type { Task } from "../../../../shared/Entities/Task";
 import SimpleInput from "./SimpleInput.vue";
 import CheckBox from "./CheckBox.vue";
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 import { API_URL } from "../../const";
 import DateTimeInput from "../Form/DateTimeInput/DateTimeInput.vue";
 import SimpleTextArea from "./SimpleTextArea.vue";
+import { getStore } from "../../store/store";
+
+const store = getStore();
+const user = store.getters.getUser();
 
 const props = defineProps({
   task: {
@@ -24,14 +28,40 @@ const edittedTask = ref<Partial<Task>>({});
 watchEffect(() => {
   edittedTask.value = props.task ?? {};
 });
+const originalRoom = ref(
+  edittedTask.value.rooms?.[user.value?.nick ?? ""] ?? ""
+);
+const modifiableRoom = ref(`${originalRoom.value}`);
+watch(originalRoom, () => {
+  console.log("Changed", originalRoom.value);
+});
 
 const submit = () => {
+  const taskToSend = edittedTask.value;
+  delete taskToSend["rooms"];
+
   const promise = props.task?._id
-    ? axios.patch<Task>(API_URL + `/task/${props.task._id}`, edittedTask.value)
-    : axios.post<Task>(API_URL + `/tasks`, edittedTask.value);
+    ? axios.patch<Task>(API_URL + `/task/${props.task._id}`, taskToSend)
+    : axios.post<Task>(API_URL + `/tasks`, taskToSend);
 
   promise
-    .then((response) => {
+    .then(async (response) => {
+      try {
+        if (modifiableRoom.value != originalRoom.value) {
+          const roomResponse = modifiableRoom.value
+            ? await axios.post(
+                `${API_URL}/task/${response.data._id}/room/${user.value?.nick}`,
+                { room: modifiableRoom.value }
+              )
+            : await axios.delete(
+                `${API_URL}/task/${response.data._id}/room/${user.value?.nick}`
+              );
+
+          return emit("done", roomResponse.data as Task);
+        }
+      } catch (e) {
+        console.error(e);
+      }
       emit("done", response.data as Task);
     })
     .catch((error) => {
@@ -114,6 +144,10 @@ watch(
           style="width: 100%"
         />
       </div>
+      <span class="fw-bold">Room: </span>
+      <span>
+        <SimpleInput v-model="modifiableRoom" type="text" />
+      </span>
     </div>
 
     <div class="pt-2 fw-bold">
