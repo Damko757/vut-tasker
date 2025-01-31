@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach, afterEach } from "bun:test";
+import { describe, test, expect, beforeAll, afterAll } from "bun:test";
 import { TaskController } from "../../src/Controllers/TaskController";
 import { TaskType, type Task } from "../../../shared/Entities/Task";
 import axios, { HttpStatusCode } from "axios";
@@ -46,7 +46,54 @@ describe("Task CRUD", () => {
   test.todo("PUT", () => {});
 });
 describe("Room CRUD", () => {
-  beforeEach(async () => {
-    // taskawait axios.post("/tasks", task);
+  let actualTask: Task;
+  beforeAll(async () => {
+    actualTask = (await axios.post(`${API_URL}/tasks`, task)).data;
+  });
+  afterAll(async () => {
+    await axios.delete(`${API_URL}/task/${actualTask._id}`);
+  });
+
+  test("Adding", () => {
+    expect(
+      axios.post(`${API_URL}/task/${actualTask._id}/room/ABC`, {
+        room: "RoomABC",
+      })
+    ).resolves.toMatchObject({
+      data: {
+        rooms: {
+          ABC: "RoomABC",
+        },
+      },
+    });
+    expect(
+      axios.post(`${API_URL}/task/${actualTask._id}/room/XYZ`, {
+        room: "RoomXYZ",
+      })
+    ).resolves.toMatchObject({
+      data: {
+        rooms: {
+          ABC: "RoomABC",
+          XYZ: "RoomXYZ",
+        },
+      },
+    });
+  });
+  test("Deleting", async () => {
+    expect(
+      axios.delete(`${API_URL}/task/${actualTask._id}/room/ABC`)
+    ).resolves.toMatchObject({
+      data: {
+        rooms: {
+          XYZ: "RoomXYZ",
+        },
+      },
+    });
+
+    const response = await axios.delete(
+      `${API_URL}/task/${actualTask._id}/room/XYZ`
+    );
+
+    expect(response.data.rooms).toBeUndefined();
   });
 });

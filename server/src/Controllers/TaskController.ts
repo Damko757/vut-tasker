@@ -114,7 +114,7 @@ export class TaskController
   static async getTaskById(req: Request, res: Response, next: NextFunction) {
     TaskModel.findById(req.params.id)
       .then((task) => {
-        if (task) res.status(200).send(task);
+        if (task) res.send(task);
         else res.sendStatus(HttpStatusCode.NotFound);
       })
       .catch(() => res.sendStatus(HttpStatusCode.NotFound));
@@ -132,12 +132,24 @@ export class TaskController
       rooms: newRooms,
     })
       .exec()
-      .then((task) => res.send(task))
+      .then(async (_) => res.send(await TaskModel.findById(task._id).exec()))
       .catch(() => res.sendStatus(HttpStatusCode.InternalServerError));
   }
-  static async removeRoom(
-    ...[req, res, next]: Parameters<MiddlewareFunction>
-  ) {}
+  static async removeRoom(...[req, res, next]: Parameters<MiddlewareFunction>) {
+    const nick = req.params.nick;
+
+    const task = await TaskModel.findOne({ _id: req.params.id }).exec(); //Should be session, but whatever;
+    if (!task) return res.status(HttpStatusCode.NotFound);
+
+    const newRooms = { ...task.rooms };
+    delete newRooms[nick];
+    TaskModel.findByIdAndUpdate(task._id, {
+      rooms: newRooms,
+    })
+      .exec()
+      .then(async (_) => res.send(await TaskModel.findById(task._id).exec()))
+      .catch(() => res.sendStatus(HttpStatusCode.InternalServerError));
+  }
 
   static async getByTaskSubjectAndType(
     req: Request,
