@@ -11,14 +11,15 @@ export interface Task {
   due_date_end: date | null;
   personal: boolean;
   link: string | null;
-  completed_by: string[]; // nicks
+  completed_by: string[]; // nick[]
   created_by: string;
+  rooms?: Record<string, string>; // nick: <roomNumber>
 }
 export enum TaskType {
-  PROJECT,
-  HOMEWORK,
-  EXAM,
-  REGISTRATION,
+  PROJECT = "project",
+  HOMEWORK = "homework",
+  EXAM = "exam",
+  REGISTRATION = "registration",
 }
 
 export function compareTasksByDueDate(a: Task, b: Task): -1 | 0 | 1 {

@@ -1,6 +1,5 @@
 import mongoose, { type ObjectId } from "mongoose";
 import { TaskType, type Task as _Task } from "../../../shared/Entities/Task.ts";
-import type { User } from "../../../shared/Entities/User.ts";
 
 const taskTypes = [];
 for (const taskType in TaskType) {
@@ -32,7 +31,8 @@ const TaskSchema = new mongoose.Schema({
   // registration_date_end: { type: String, required: false, default: null },
   link: { type: String, required: false, default: null },
   completed_by: { type: [String], required: true },
-  created_by: { type: String, required: true },
+  created_by: { type: String, required: false, default: "" },
+  rooms: { type: Object, default: {} },
 });
 
 TaskSchema.pre("validate", function (next, ...args) {
