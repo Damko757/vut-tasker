@@ -6,6 +6,7 @@ const value = defineModel({
 });
 const props = defineProps({
   type: { type: String, default: "text" },
+  placeholder: { type: String, default: "" },
 });
 
 const resize = () => {
@@ -27,7 +28,12 @@ onMounted(() => {
 const inputRef = ref<HTMLInputElement | null>(null);
 </script>
 <template>
-  <textarea v-model="value" :type="type" ref="inputRef"></textarea>
+  <textarea
+    v-model="value"
+    :type="type"
+    :placeholder="placeholder"
+    ref="inputRef"
+  ></textarea>
 </template>
 <style lang="scss" scoped>
 @import "/src/SCSS/main.scss";
