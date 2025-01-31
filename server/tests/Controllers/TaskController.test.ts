@@ -24,6 +24,7 @@ describe("Task CRUD", () => {
     actualTask = (await axios.post<Task>(`${API_URL}/tasks`, task)).data;
     expect(actualTask).toMatchObject(task);
   });
+
   test("GET", () => {
     expect(
       axios.get(`${API_URL}/task/${actualTask?._id}`)
@@ -31,6 +32,18 @@ describe("Task CRUD", () => {
       data: task,
     });
   });
+
+  test("PATCH", () => {
+    expect(
+      axios.patch(`${API_URL}/task/${actualTask?._id}`, { name: "Test123" })
+    ).resolves.toMatchObject({
+      status: HttpStatusCode.Ok,
+      data: {
+        name: "Test123",
+      },
+    });
+  });
+
   test("DELETE", async () => {
     expect(
       axios.delete(`${API_URL}/task/${actualTask?._id}`)
@@ -42,9 +55,9 @@ describe("Task CRUD", () => {
     });
   });
 
-  test.todo("PATCH", () => {});
   test.todo("PUT", () => {});
 });
+
 describe("Room CRUD", () => {
   let actualTask: Task;
   beforeAll(async () => {
