@@ -16,10 +16,10 @@ export interface Task {
   rooms: Record<string, string>; // nick: <roomNumber>
 }
 export enum TaskType {
-  PROJECT,
-  HOMEWORK,
-  EXAM,
-  REGISTRATION,
+  PROJECT = "project",
+  HOMEWORK = "homework",
+  EXAM = "exam",
+  REGISTRATION = "registration",
 }
 
 export function compareTasksByDueDate(a: Task, b: Task): -1 | 0 | 1 {
