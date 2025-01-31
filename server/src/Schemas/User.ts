@@ -3,8 +3,8 @@ import uniqueValidator from "mongoose-unique-validator";
 import { type User } from "../../../shared/Entities/User.ts";
 const UserSchema = new mongoose.Schema({
   nick: { type: String, unique: true, required: true },
-  forename: { type: String, required: true },
-  surname: { type: String, required: true },
+  forename: { type: String, required: false },
+  surname: { type: String, required: false },
   xlogin: { type: String, required: false },
   color: { type: String, required: true }, //Hex
   show_my_progress: { type: Boolean, default: true },

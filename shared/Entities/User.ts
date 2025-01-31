@@ -1,8 +1,8 @@
 export interface User {
   _id?: string;
   nick: string;
-  forename: string;
-  surname: string;
+  forename: string | null;
+  surname: string | null;
   xlogin: string | null;
   color: string; //Hex
   show_my_progress: boolean;
