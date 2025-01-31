@@ -1,6 +1,5 @@
 import mongoose, { type ObjectId } from "mongoose";
 import { TaskType, type Task as _Task } from "../../../shared/Entities/Task.ts";
-import type { User } from "../../../shared/Entities/User.ts";
 
 const taskTypes = [];
 for (const taskType in TaskType) {

@@ -13,7 +13,7 @@ export interface Task {
   link: string | null;
   completed_by: string[]; // nick[]
   created_by: string;
-  rooms: Record<string, string>; // nick: <roomNumber>
+  rooms?: Record<string, string>; // nick: <roomNumber>
 }
 export enum TaskType {
   PROJECT = "project",
