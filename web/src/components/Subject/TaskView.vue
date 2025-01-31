@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import type { PropType } from "vue";
+import { computed, type PropType } from "vue";
 import type { Task } from "../../../../shared/Entities/Task";
+import { getStore } from "../../store/store";
+const store = getStore();
+const user = store.getters.getUser();
 
 const props = defineProps({
   task: {
@@ -10,6 +13,8 @@ const props = defineProps({
   isCollapsed: { type: Boolean, required: true },
   showAll: { type: Boolean, default: false },
 });
+
+const room = computed(() => props.task.rooms?.[user?.value?.nick ?? ""]);
 
 const emit = defineEmits<{
   (e: "update", task: Task): void;
@@ -42,7 +47,7 @@ const extraInfo: (keyof Task)[] = ["link", "description"];
         task.due_date_end
           ? ` &hyphen; ${task.due_date_end.ISOToFormattedDateTime()}`
           : ``
-      }}&#41;
+      }}&#41; <span v-if="room">at {{ room }}</span>
     </div>
     <div class="h-0 overflow-hidden" :class="{ collapsed: props.isCollapsed }">
       <div v-if="task.link">
