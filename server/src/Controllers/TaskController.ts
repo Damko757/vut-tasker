@@ -14,7 +14,6 @@ export class TaskController
   implements Routable
 {
   routes() {
-    const self = this;
     return {
       "/task/:id/:nick": {
         POST: TaskController.addNick,
@@ -24,6 +23,7 @@ export class TaskController
         DELETE: TaskController.deleteByTaskId,
         PUT: TaskController.putByTaskId,
         PATCH: TaskController.patchByTaskId,
+        GET: TaskController.getTaskById,
       },
       "/task/:id/room/:nick": {
         POST: TaskController.addRoom,
@@ -82,7 +82,7 @@ export class TaskController
     const task = await TaskModel.findOne({ _id: req.params.id }).exec();
     if (!task) return res.status(HttpStatusCode.NotFound).send();
 
-    const result = await TaskModel.deleteOne({ _id: req.params.id }).exec();
+    const result = await TaskModel.findByIdAndDelete(req.params.id).exec();
     res.status(HttpStatusCode.NoContent).send();
   }
   static async postTask(req: Request, res: Response, next: NextFunction) {
@@ -100,14 +100,24 @@ export class TaskController
       });
   }
   static async getAllTasks(req: Request, res: Response, next: NextFunction) {
-    const self = this;
     TaskModel.find().then((tasks) => {
       res
         .status(HttpStatusCode.Ok)
         .send(
-          self.filterPersonalTasks(tasks, req.cookies[CookieValue.USER] ?? "")
+          TaskController.filterPersonalTasks(
+            tasks,
+            req.cookies[CookieValue.USER] ?? ""
+          )
         );
     });
+  }
+  static async getTaskById(req: Request, res: Response, next: NextFunction) {
+    TaskModel.findById(req.params.id)
+      .then((task) => {
+        if (task) res.status(200).send(task);
+        else res.sendStatus(HttpStatusCode.NotFound);
+      })
+      .catch(() => res.sendStatus(HttpStatusCode.NotFound));
   }
 
   static async addRoom(...[req, res, next]: Parameters<MiddlewareFunction>) {
