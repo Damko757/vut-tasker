@@ -33,6 +33,7 @@ const TaskSchema = new mongoose.Schema({
   link: { type: String, required: false, default: null },
   completed_by: { type: [String], required: true },
   created_by: { type: String, required: true },
+  rooms: { type: Object, default: {} },
 });
 
 TaskSchema.pre("validate", function (next, ...args) {

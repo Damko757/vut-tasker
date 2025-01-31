@@ -11,8 +11,9 @@ export interface Task {
   due_date_end: date | null;
   personal: boolean;
   link: string | null;
-  completed_by: string[]; // nicks
+  completed_by: string[]; // nick[]
   created_by: string;
+  rooms: Record<string, string>; // nick: <roomNumber>
 }
 export enum TaskType {
   PROJECT,
