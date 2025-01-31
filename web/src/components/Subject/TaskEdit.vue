@@ -7,6 +7,7 @@ import axios from "axios";
 import { API_URL } from "../../const";
 import DateTimeInput from "../Form/DateTimeInput/DateTimeInput.vue";
 import SimpleTextArea from "./SimpleTextArea.vue";
+import RoomInputs from "../Form/RoomInputs/RoomInputs.vue";
 
 const props = defineProps({
   task: {
@@ -113,6 +114,10 @@ watch(
           type="text"
           style="width: 100%"
         />
+      </div>
+      <span class="fw-bold">Rooms: </span>
+      <div>
+        <RoomInputs v-model="edittedTask.rooms" />
       </div>
     </div>
 
