@@ -32,10 +32,6 @@ const originalRoom = ref(
   edittedTask.value.rooms?.[user.value?.nick ?? ""] ?? ""
 );
 const modifiableRoom = ref(`${originalRoom.value}`);
-watch(originalRoom, () => {
-  console.log("Changed", originalRoom.value);
-});
-
 const submit = () => {
   const taskToSend = edittedTask.value;
   delete taskToSend["rooms"];
