@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-
     "target": "ES2020",
     "useDefineForClassFields": true,
     "module": "ESNext",
@@ -22,5 +21,11 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "../shared/**/*.ts"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "../shared/**/*.ts",
+    "tests/**/*.ts"
+  ]
 }
