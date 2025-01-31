@@ -32,7 +32,7 @@ const TaskSchema = new mongoose.Schema({
   // registration_date_end: { type: String, required: false, default: null },
   link: { type: String, required: false, default: null },
   completed_by: { type: [String], required: true },
-  created_by: { type: String, required: true },
+  created_by: { type: String, required: false, default: "" },
   rooms: { type: Object, default: {} },
 });
 

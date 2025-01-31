@@ -86,18 +86,17 @@ export class TaskController
     res.status(HttpStatusCode.NoContent).send();
   }
   static async postTask(req: Request, res: Response, next: NextFunction) {
-    console.log(req.body);
-    req.body.created_by = req.cookies[CookieValue.USER] ?? "";
+    req.body.created_by =
+      req.body.created_by ?? req.cookies[CookieValue.USER] ?? "";
     const task = new TaskModel(req.body);
-    console.log(task);
 
     return task
       .save()
-      .catch((error) => {
-        return res.status(HttpStatusCode.UnprocessableEntity).send(error);
-      })
       .then(async () => {
         return res.status(HttpStatusCode.Ok).send(task);
+      })
+      .catch((error) => {
+        return res.status(HttpStatusCode.UnprocessableEntity).send(error);
       });
   }
   static async getAllTasks(req: Request, res: Response, next: NextFunction) {
