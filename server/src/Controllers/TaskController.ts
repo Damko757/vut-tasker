@@ -179,6 +179,10 @@ export class TaskController
       return res.status(HttpStatusCode.BadRequest).send({
         reason: "Rooms are patched by POST/DELETE /task/:id/room/:nick",
       }) as unknown as void;
+    if (req.body.completed_by)
+      return res.status(HttpStatusCode.BadRequest).send({
+        reason: "Completed-by are patched by POST/DELETE /task/:id/:nick",
+      }) as unknown as void;
     Controller.update(TaskModel, { _id: req.params.id }, req.body)
       .then((updated) => {
         return updated
