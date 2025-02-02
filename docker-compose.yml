@@ -11,6 +11,7 @@ services:
       - 80:80
     restart: unless-stopped
   api:
+    tty: true
     depends_on:
       - mongodb
     container_name: vut-tasker-api
