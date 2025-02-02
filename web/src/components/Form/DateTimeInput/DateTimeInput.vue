@@ -19,13 +19,14 @@ const props = defineProps({
   },
 });
 const maxLimits = [31, 12, 9999, 23, 59, 59];
+const minLimits = [1, 1, 0, 0, 0, 0];
 const defaultPlaceholders = ["dd", "mm", "yyyy", "hh", "mm", "ss"];
 const inputs = ref<InputData[]>(
   Array.from(Array(5 + Number(props.seconds))).map((_, i) => {
     return {
       width: 0,
       value: null,
-      min: 1,
+      min: minLimits[i],
       max: maxLimits[i],
       element: null,
       index: i,
@@ -79,7 +80,7 @@ function buildDateTimeString(): string | null {
 
 function onInput(inputData: InputData): void {
   const moreSignificantValue = (inputData.value ?? 0) * 10;
-  if (moreSignificantValue > inputData.max)
+  if (moreSignificantValue > inputData.max || inputData.value === 0)
     inputs.value.at(inputData.index + 1)?.element?.focus() ??
       inputs.value[inputData.index]!.element?.blur();
 

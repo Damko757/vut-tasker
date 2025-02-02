@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { PropType } from "vue";
 import type { InputData } from "./DateTimeInput.vue";
 
 const props = defineProps<{
@@ -24,10 +23,10 @@ const emit = defineEmits<{
     "
     @input="
       (e) => {
-        inputData.realValue = (e.target as HTMLInputElement).value;
+        inputData.realValue = (e.target as HTMLInputElement).value.trim();
         inputData.value = Number(inputData.realValue);
         inputData.value =
-          inputData.value && !Number.isNaN(inputData.value)
+          inputData.realValue != `` && !Number.isNaN(inputData.value)
             ? Math.max(
                 inputData.min,
                 Math.min(inputData.max, inputData.value ?? 0)
