@@ -82,8 +82,8 @@ function load() {
 }
 </script>
 <template>
-  <h1 class="fw-bold px-2 mb-5">Upcoming tasks:</h1>
   <SanityBar :tasks="sortedTasks" />
+  <h1 class="fw-bold px-2 mb-5">Upcoming tasks:</h1>
   <div class="types px-4">
     <section class="type mb-2">
       <div v-if="!sortedTasks.length" class="fw-bold fs-1">
