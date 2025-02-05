@@ -33,14 +33,19 @@ const originalRoom = ref(
 );
 const modifiableRoom = ref(`${originalRoom.value}`);
 const submit = () => {
-  const taskToSend: Partial<Task> = {
-    name: edittedTask.value.name?.trim(),
-    description: edittedTask.value.description?.trim(),
-    due_date: edittedTask.value.due_date,
-    due_date_end: edittedTask.value.due_date_end,
-    link: edittedTask.value.link?.trim(),
-    personal: edittedTask.value.personal,
-    required: edittedTask.value.required,
+  const taskToSend: Omit<
+    Task,
+    "created_by" | "rooms" | "completed_by" | "_id"
+  > = {
+    name: edittedTask.value.name!.trim(),
+    description: edittedTask.value.description!.trim(),
+    due_date: edittedTask.value.due_date!,
+    due_date_end: edittedTask.value.due_date_end!,
+    link: edittedTask.value.link!.trim(),
+    personal: edittedTask.value.personal!,
+    required: edittedTask.value.required!,
+    subject: edittedTask.value.subject!,
+    type: edittedTask.value.type!,
   };
 
   const promise = props.task?._id
