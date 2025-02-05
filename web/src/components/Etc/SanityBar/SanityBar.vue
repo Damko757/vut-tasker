@@ -82,7 +82,8 @@ const bgColor = computed<RGB>(() =>
 @import "/src/SCSS/main.scss";
 
 .bar-wrapper {
-  border: 0.5em solid $white;
+  border: 0.5em solid lighten($black, 10%);
+  background-color: lighten($black, 5%);
   width: 30em;
   height: 3em;
   position: absolute;
@@ -133,6 +134,26 @@ const bgColor = computed<RGB>(() =>
     }
     100% {
       background-color: red;
+    }
+  }
+}
+
+@include media-breakpoint-down(lg) {
+  .bar-wrapper {
+    position: relative !important;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-width: 0.25em;
+    height: 2em;
+    margin-bottom: 1em;
+
+    .ratio {
+      position: absolute;
+      bottom: 0;
+      left: 100%;
+      transform: translate(50%, 0%);
+      white-space: nowrap;
     }
   }
 }
