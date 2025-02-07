@@ -76,6 +76,7 @@ ul {
   top: 0;
   height: fit-content;
   border-radius: 0 0 1em 1em;
+  z-index: 1000;
 
   .divider {
     background-color: $white;
