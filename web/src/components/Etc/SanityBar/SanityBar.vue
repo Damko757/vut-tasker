@@ -85,6 +85,7 @@ const bgColor = computed<RGB>(() =>
   border: 0.5em solid lighten($black, 10%);
   background-color: lighten($black, 5%);
   width: 30em;
+  max-width: 80%;
   height: 3em;
   position: absolute;
   top: 1em;
