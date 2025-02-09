@@ -1,4 +1,2 @@
 1. [ ] Implement switches to enable/disable user prefs for showing stats next to checkbox
-2. [x] SanityBar only takes tasks in 31-day span
-3. [ ] Copy-Paste tasks
-4. [x] Auto-Tab to end-time in EditTask
+2. [ ] Copy-Paste tasks
