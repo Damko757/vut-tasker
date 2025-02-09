@@ -12,7 +12,7 @@ There are also dots next to tasks. They say, who have already done this task.
 
 ### Sanity Bar
 
-On HomePage, there is SanityBar in a upper-right corner. It show, how much of (uncompleted) upcoming tasks there is. There are max 10 points. Each uncompleted task adds number depending on its type:
+On HomePage, there is SanityBar in a upper-right corner. It shows, how much of (uncompleted) upcoming tasks there is. There are max 10 points. Each uncompleted task, that is due in 14 days (technically 15) adds number depending on its type:
 
 - Exam: +2
 - Project: +1.5
