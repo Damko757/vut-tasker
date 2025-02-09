@@ -2,6 +2,9 @@
 import { onMounted, ref, watch, type PropType } from "vue";
 import DateTimeRawInput from "./DateTimeRawInput.vue";
 
+const emit = defineEmits<{
+  (e: "done"): void;
+}>();
 export interface InputData {
   width: number;
   realValue: string;
@@ -59,6 +62,13 @@ watch(datetime, () => {
   updateInputsByDateTime(datetime.value);
   datetime.value = buildDateTimeString();
 });
+
+defineExpose({
+  focusTime: () => {
+    inputs.value.at(3)?.element?.focus();
+  },
+});
+
 onMounted(() => {
   updateInputsByDateTime(datetime.value);
   datetime.value = buildDateTimeString();
@@ -80,9 +90,11 @@ function buildDateTimeString(): string | null {
 
 function onInput(inputData: InputData): void {
   const moreSignificantValue = (inputData.value ?? 0) * 10;
-  if (moreSignificantValue > inputData.max || inputData.value === 0)
+  if (moreSignificantValue > inputData.max || inputData.value === 0) {
     inputs.value.at(inputData.index + 1)?.element?.focus() ??
       inputs.value[inputData.index]!.element?.blur();
+    if (inputData.index + 1 >= inputs.value.length) emit("done");
+  }
 
   datetime.value = buildDateTimeString();
 }

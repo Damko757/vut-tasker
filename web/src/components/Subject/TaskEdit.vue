@@ -86,6 +86,11 @@ const emit = defineEmits<{
   (e: "done", task: Task | null): void;
 }>();
 
+const dueDates = ref<(InstanceType<typeof DateTimeInput> | null)[]>([
+  null,
+  null,
+]);
+
 // Copying start-date to end-date
 watch(
   () => edittedTask.value.due_date,
@@ -117,13 +122,21 @@ watch(
       <br />
       <span class="fw-bold">Due date: </span
       ><span
-        ><DateTimeInput v-model:datetime="edittedTask.due_date" /><span
-          class="fw-bold"
-        >
-          -
-        </span></span
+        ><DateTimeInput
+          v-model:datetime="edittedTask.due_date"
+          :ref="(el) => (dueDates[0] = el as typeof dueDates[0])"
+          @done="
+            () => {
+              dueDates[1]?.focusTime();
+            }
+          "
+        /><span class="fw-bold"> - </span></span
       >
-      <span><DateTimeInput v-model:datetime="edittedTask.due_date_end" /></span>
+      <span
+        ><DateTimeInput
+          v-model:datetime="edittedTask.due_date_end"
+          :ref="(el) => (dueDates[1] = el as typeof dueDates[1])"
+      /></span>
       <br />
       <span class="fw-bold">Required: </span
       ><span class="d-inline-block ps-2 my-2"

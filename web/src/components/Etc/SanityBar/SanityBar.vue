@@ -21,7 +21,17 @@ const multipliers: Record<keyof typeof TaskType, number> = {
 const maxPoints = 10;
 const points = computed(() =>
   props.tasks
-    .filter((task) => !task.completed_by.includes(user.value?.nick ?? ""))
+    .filter((task) => {
+      const isCompleted = task.completed_by.includes(user.value?.nick ?? ""); // Task should be uncompleted
+      if (task.due_date == null) {
+        return !isCompleted;
+      }
+
+      const dueDate = new Date(task.due_date.split(" ")[0]); // Due date in less that 14 days (and no-date too)
+      const today = new Date();
+      today.setDate(today.getDate() + 15); // One day is not a bad idea
+      return !isCompleted && dueDate.getTime() <= today.getTime();
+    })
     .reduce(
       (a, b) =>
         a + multipliers[`${b.type}`.toUpperCase() as keyof typeof multipliers],
