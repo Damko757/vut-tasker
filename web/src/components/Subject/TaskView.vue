@@ -26,7 +26,8 @@ const extraInfo: (keyof Task)[] = ["link", "description"];
 <template>
   <div class="cursor-pointer">
     <h5 class="fw-bold position-relative pe-3">
-      {{ task.required ? "*" : "" }}{{ task.name }}
+      {{ task.personal ? "# " : "" }}{{ task.required ? "*" : ""
+      }}{{ task.name }}
       <template v-if="showAll">
         <span class="fw-bold"
           >(<u>{{ task.subject }}</u> -
