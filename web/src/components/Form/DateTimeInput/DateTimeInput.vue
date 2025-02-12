@@ -14,6 +14,7 @@ export interface InputData {
   element: HTMLInputElement | null;
   index: number;
   default: string;
+  preWrittenValue: string;
 }
 const props = defineProps({
   seconds: {
@@ -35,6 +36,7 @@ const inputs = ref<InputData[]>(
       index: i,
       default: defaultPlaceholders[i],
       realValue: defaultPlaceholders[i],
+      preWrittenValue: defaultPlaceholders[i] == "yyyy" ? "20" : "",
     };
   })
 );
@@ -76,6 +78,7 @@ onMounted(() => {
 
 function buildDateTimeString(): string | null {
   if (
+    (inputs.value[2].value ?? 0) < 100 || // Year needs to be at least 3 digit for Date object to work
     inputs.value.some(
       (inputData) => inputData.value == null || Number.isNaN(inputData.value)
     )

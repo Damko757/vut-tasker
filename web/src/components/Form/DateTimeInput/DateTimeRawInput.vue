@@ -17,7 +17,9 @@ const emit = defineEmits<{
     @focus="
       () => {
         inputData.realValue =
-          inputData.value == null ? `` : inputData.realValue;
+          inputData.value == null
+            ? inputData.preWrittenValue
+            : inputData.realValue;
         inputData.element?.select();
       }
     "
