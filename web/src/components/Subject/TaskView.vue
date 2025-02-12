@@ -26,8 +26,8 @@ const extraInfo: (keyof Task)[] = ["link", "description"];
 <template>
   <div class="cursor-pointer">
     <h5 class="fw-bold position-relative pe-3">
-      {{ task.personal ? "# " : "" }}{{ task.required ? "*" : ""
-      }}{{ task.name }}
+      <span class="personal" v-if="task.personal"># </span
+      >{{ task.required ? "*" : "" }}{{ task.name }}
       <template v-if="showAll">
         <span class="fw-bold"
           >(<u>{{ task.subject }}</u> -
@@ -97,5 +97,9 @@ const extraInfo: (keyof Task)[] = ["link", "description"];
   &.collapsed {
     rotate: -90deg !important;
   }
+}
+
+span.personal {
+  color: darken($white, 30%);
 }
 </style>
