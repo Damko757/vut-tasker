@@ -9,7 +9,7 @@ services:
       - NGINX_PORT=80
     ports:
       - 80:80
-    restart: unless-stopped
+    restart: no
   api:
     tty: true
     depends_on:
@@ -24,11 +24,11 @@ services:
       - ./server/src:/usr/src/app/src
       - ./shared:/usr/src/shared
       - ./.env:/usr/src/.env
-    restart: unless-stopped
+    restart: no
   mongodb:
     container_name: mongodb
     image: mongo
-    restart: unless-stopped
+    restart: no
     ports:
       - ${DATABASE_PORT}:27017
     volumes:
