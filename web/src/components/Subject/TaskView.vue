@@ -22,10 +22,29 @@ const emit = defineEmits<{
 }>();
 
 const extraInfo: (keyof Task)[] = ["link", "description"];
+
+const incomingExclamations = computed(() => {
+  if (!props.task.due_date) return "";
+
+  const date = new Date(props.task.due_date);
+  const today = new Date();
+  const timeDiff = date.getTime() - today.getTime();
+  const timeDiffInHours = timeDiff / (3600 * 1000);
+
+  let timeLimit = 48; // h
+
+  let out = "";
+  for (let i = 0; i < 3; i++) {
+    if (timeDiffInHours < timeLimit + 1) out += "!";
+    timeLimit /= 2; // 48 -> 24 -> 12;
+  }
+
+  return out;
+});
 </script>
 <template>
   <div class="cursor-pointer">
-    <h5 class="fw-bold position-relative pe-3">
+    <h5 class="fw-bold position-relative pe-3 d-flex align-items-start">
       <span class="personal" v-if="task.personal"># </span
       >{{ task.required ? "*" : "" }}{{ task.name }}
       <template v-if="showAll">
@@ -34,6 +53,9 @@ const extraInfo: (keyof Task)[] = ["link", "description"];
           {{ (task.type as unknown as string).capitalize() }})</span
         >
       </template>
+      <span class="incoming text-danger ms-2 fw-bold fs-3">{{
+        incomingExclamations
+      }}</span>
       <div
         class="collapse-arrow"
         :class="{ collapsed: props.isCollapsed }"
