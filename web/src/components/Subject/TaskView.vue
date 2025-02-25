@@ -24,9 +24,10 @@ const emit = defineEmits<{
 const extraInfo: (keyof Task)[] = ["link", "description"];
 
 const incomingExclamations = computed(() => {
-  if (!props.task.due_date) return "";
+  const dueDate = props.task.due_date_end ?? props.task.due_date;
+  if (!dueDate) return "";
 
-  const date = new Date(props.task.due_date);
+  const date = new Date(dueDate);
   const today = new Date();
   const timeDiff = date.getTime() - today.getTime();
   const timeDiffInHours = timeDiff / (3600 * 1000);
