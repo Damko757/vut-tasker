@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, type PropType } from "vue";
+import { computed, onMounted, ref, type PropType, watch } from "vue";
 import type { Task } from "../../../../shared/Entities/Task";
 import { getStore } from "../../store/store";
 const store = getStore();
@@ -42,6 +42,79 @@ const incomingExclamations = computed(() => {
 
   return out;
 });
+
+const countdown = ref<number | null>(null);
+
+const countdownText = computed(() => {
+  if (countdown.value == null) return "";
+
+  const diff = countdown.value;
+
+  const obj: {
+    s: number;
+    min: number;
+    h: number;
+    d: number;
+    w: number;
+  } = {
+    s: -1,
+    min: -1,
+    h: -1,
+    d: -1,
+    w: -1,
+  };
+
+  obj.s = Math.abs(diff);
+
+  obj.min = obj.s / 60;
+  obj.s = Math.floor(obj.s % 60);
+
+  obj.h = obj.min / 60;
+  obj.min = Math.floor(obj.min % 60);
+
+  obj.d = obj.h / 24;
+  obj.h = Math.floor(obj.h % 24);
+
+  obj.w = Math.floor(obj.h / 14);
+  obj.d = Math.floor(obj.d % 14);
+
+  let out = [
+    [obj.w, "W"],
+    [obj.d, obj.d == 1 ? " day " : " days "],
+    [obj.h, ":"],
+    [obj.min, ":"],
+    [obj.s, ""],
+  ];
+
+  while ((out[0][0] as number) <= 0) {
+    out.splice(0, 1);
+  }
+
+  const res =
+    (diff > 0 ? "" : "-") +
+    out.reduce((a, b) => a + `${b[0].toString().padStart(2, "0")}${b[1]}`, "");
+
+  return res ? `(${res})` : "";
+});
+
+const setCountdown = () => {
+  const date = props.task.due_date_end ?? props.task.due_date;
+  if (!date) {
+    countdown.value = null;
+    return;
+  }
+
+  const today = new Date();
+  countdown.value = (new Date(date).getTime() - today.getTime()) / 1000; // s
+};
+onMounted(() => {
+  setCountdown();
+
+  setInterval(function () {
+    if (countdown.value != null) countdown.value--;
+  }, 1000);
+});
+watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
 </script>
 <template>
   <div class="cursor-pointer">
@@ -72,6 +145,7 @@ const incomingExclamations = computed(() => {
           ? ` &hyphen; ${task.due_date_end.ISOToFormattedDateTime()}`
           : ``
       }}&#41; <span v-if="room">at {{ room }}</span>
+      <span>{{ countdownText }}</span>
     </div>
     <div class="h-0 overflow-hidden" :class="{ collapsed: props.isCollapsed }">
       <div v-if="task.link">
