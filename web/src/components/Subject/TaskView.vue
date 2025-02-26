@@ -45,7 +45,7 @@ const incomingExclamations = computed(() => {
 </script>
 <template>
   <div class="cursor-pointer">
-    <h5 class="fw-bold position-relative pe-3 d-flex align-items-start">
+    <h5 class="fw-bold position-relative pe-3">
       <span class="personal" v-if="task.personal"># </span
       >{{ task.required ? "*" : "" }}{{ task.name }}
       <template v-if="showAll">
@@ -100,6 +100,12 @@ const incomingExclamations = computed(() => {
 </template>
 <style lang="scss" scoped>
 @import "/src/SCSS/main.scss";
+
+.incoming {
+  vertical-align: top;
+  display: inline-block;
+  height: 0 !important;
+}
 
 .due-date {
   color: darken($white, 10%);
