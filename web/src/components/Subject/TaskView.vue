@@ -75,26 +75,24 @@ const countdownText = computed(() => {
   obj.d = obj.h / 24;
   obj.h = Math.floor(obj.h % 24);
 
-  obj.w = Math.floor(obj.h / 14);
-  obj.d = Math.floor(obj.d % 14);
+  obj.w = Math.floor(obj.d / 7);
+  obj.d = Math.floor(obj.d % 7);
 
   let out = [
-    [obj.w, "W"],
-    [obj.d, obj.d == 1 ? " day " : " days "],
-    [obj.h, ":"],
-    [obj.min, ":"],
-    [obj.s, ""],
+    [obj.w, "w "],
+    [obj.d, "d "],
+    [obj.h.toString().padStart(2, "0"), ":"],
+    [obj.min.toString().padStart(2, "0"), ":"],
+    [obj.s.toString().padStart(2, "0"), ""],
   ];
 
-  while ((out[0][0] as number) <= 0) {
+  while (Number(out[0][0]) <= 0) {
     out.splice(0, 1);
   }
 
-  const res =
-    (diff > 0 ? "" : "-") +
-    out.reduce((a, b) => a + `${b[0].toString().padStart(2, "0")}${b[1]}`, "");
+  const res = (diff > 0 ? "" : "-") + out.reduce((a, b) => a + b.join(""), "");
 
-  return res ? `(${res})` : "";
+  return res ? `${res}` : "";
 });
 
 const setCountdown = () => {
@@ -105,6 +103,7 @@ const setCountdown = () => {
   }
 
   const today = new Date();
+  console.log(new Date(date), today);
   countdown.value = (new Date(date).getTime() - today.getTime()) / 1000; // s
 };
 onMounted(() => {
@@ -118,13 +117,13 @@ watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
 </script>
 <template>
   <div class="cursor-pointer">
-    <h5 class="fw-bold position-relative pe-3">
-      <span class="personal" v-if="task.personal"># </span
-      >{{ task.required ? "*" : "" }}{{ task.name }}
+    <h5 class="position-relative pe-3">
+      <span class="fw-bold">
+        {{ task.required ? "*" : "" }}{{ task.subject }}: </span
+      >{{ task.name }}
       <template v-if="showAll">
         <span class="fw-bold"
-          >(<u>{{ task.subject }}</u> -
-          {{ (task.type as unknown as string).capitalize() }})</span
+          >({{ (task.type as unknown as string).capitalize() }})</span
         >
       </template>
       <span class="incoming text-danger ms-2 fw-bold fs-3">{{
@@ -138,6 +137,7 @@ watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
         >
       </div>
     </h5>
+    <span class="personal" v-if="task.personal"># </span>
     <div v-if="task.due_date" class="due-date fst-italic">
       &#40;{{ task.due_date?.ISOToFormattedDateTime()
       }}{{
@@ -145,7 +145,13 @@ watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
           ? ` &hyphen; ${task.due_date_end.ISOToFormattedDateTime()}`
           : ``
       }}&#41; <span v-if="room">at {{ room }}</span>
-      <span>{{ countdownText }}</span>
+      <span
+        :class="{
+          'text-danger': countdown != null && countdown <= 0,
+        }"
+        class="countdown fw-bold"
+        >{{ countdownText }}</span
+      >
     </div>
     <div class="h-0 overflow-hidden" :class="{ collapsed: props.isCollapsed }">
       <div v-if="task.link">
@@ -174,6 +180,10 @@ watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
 </template>
 <style lang="scss" scoped>
 @import "/src/SCSS/main.scss";
+
+.countdown {
+  color: $white;
+}
 
 .incoming {
   vertical-align: top;
@@ -205,6 +215,10 @@ watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
 }
 
 span.personal {
-  color: darken($white, 30%);
+  color: darken($white, 15%);
+  display: block;
+  position: absolute;
+  transform: translateX(-150%);
+  font-weight: bold;
 }
 </style>

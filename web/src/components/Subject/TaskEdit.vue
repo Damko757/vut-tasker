@@ -146,14 +146,16 @@ watch(
           @state-change="(ns) => (edittedTask.required = ns)"
       /></span>
       <span class="d-inline-block" style="width: 2em"></span>
-      <span class="fw-bold">Personal only: </span
-      ><span class="d-inline-block ps-2 my-2"
-        ><CheckBox
-          :state="edittedTask.personal"
-          :grey-out="false"
-          @state-change="(ns) => (edittedTask.personal = ns)"
-      /></span>
-      <br />
+      <template v-if="task?.created_by == user?.nick">
+        <span class="fw-bold">Personal only: </span
+        ><span class="d-inline-block ps-2 my-2"
+          ><CheckBox
+            :state="edittedTask.personal"
+            :grey-out="false"
+            @state-change="(ns) => (edittedTask.personal = ns)"
+        /></span>
+        <br />
+      </template>
       <span class="fw-bold">Link: </span
       ><a
         ><SimpleInput
