@@ -6,7 +6,9 @@
     "web": "cd ./web && bun run dev && cd ..",
     "web build": "cd ./web && bun run build && cd ..",
     "server": "cd ./server && bun run hot && cd ..",
-    "all": "bun run web & bun run server"
+    "all": "bun run web & bun run server",
+    "mongo": "sudo docker compose up mongodb -d",
+    "mongodb": "sudo docker compose up mongodb"
   },
   "devDependencies": {
     "@types/bun": "latest"
