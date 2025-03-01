@@ -126,9 +126,11 @@ watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
           >({{ (task.type as unknown as string).capitalize() }})</span
         >
       </template>
-      <span class="incoming text-danger ms-2 fw-bold fs-3">{{
-        incomingExclamations
-      }}</span>
+      <span
+        class="incoming text-danger ms-2 fw-bold fs-3"
+        v-if="!task.completed_by.includes(user?.nick ?? ``)"
+        >{{ incomingExclamations }}</span
+      >
       <div
         class="collapse-arrow"
         :class="{ collapsed: props.isCollapsed }"
