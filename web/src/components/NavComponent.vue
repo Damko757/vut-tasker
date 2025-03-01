@@ -101,7 +101,7 @@ ul {
     }
 
     &:first-child {
-      max-width: 100%;
+      min-width: 2em;
       height: 2em;
 
       &:hover {
@@ -135,7 +135,7 @@ ul {
     width: 100vw;
 
     .divider {
-      width: 2px;
+      min-width: 2px;
       height: 1.5rem;
       // margin: 0 auto;
       margin: 0 0.25em;
