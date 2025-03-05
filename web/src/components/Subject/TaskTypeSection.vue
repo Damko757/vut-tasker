@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { computed, ref, type PropType } from "vue";
-import type { Task, TaskType } from "../../../../shared/Entities/Task";
+import {
+  taskTypeToColor,
+  type Task,
+  type TaskType,
+} from "../../../../shared/Entities/Task";
 import Tasks from "./Tasks.vue";
 import TaskEdit from "./TaskEdit.vue";
 
@@ -34,7 +38,10 @@ function addTask(newTask: Task | null) {
 </script>
 <template>
   <h3 class="fw-bold w-fit-content position-relative">
-    <div class="ps-1 pe-3">
+    <div
+      class="ps-1 pe-3"
+      :style="{ color: taskTypeToColor[taskType as TaskType] }"
+    >
       {{ taskType.capitalize() }}
     </div>
     <div
@@ -44,7 +51,10 @@ function addTask(newTask: Task | null) {
     >
       Add
     </div>
-    <div class="hr"></div>
+    <div
+      class="hr"
+      :style="{ 'background-color': taskTypeToColor[taskType as TaskType] }"
+    ></div>
   </h3>
   <div>
     <div class="mb-3">

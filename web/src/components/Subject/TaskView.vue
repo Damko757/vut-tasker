@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, type PropType, watch } from "vue";
-import type { Task } from "../../../../shared/Entities/Task";
+import { taskTypeToColor, type Task } from "../../../../shared/Entities/Task";
 import { getStore } from "../../store/store";
 const store = getStore();
 const user = store.getters.getUser();
@@ -122,7 +122,7 @@ watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
         {{ task.required ? "*" : "" }}{{ task.subject }}: </span
       >{{ task.name }}
       <template v-if="showAll">
-        <span class="fw-bold"
+        <span class="fw-bold" :style="{ color: taskTypeToColor[task.type] }"
           >({{ (task.type as unknown as string).capitalize() }})</span
         >
       </template>
