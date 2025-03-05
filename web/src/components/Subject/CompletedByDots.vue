@@ -24,13 +24,13 @@ const availableCompletedBy = computed(() =>
 </script>
 <template>
   <div
-    class="d-flex flex-shrink-0 flex-row flex-wrap justify-content-start align-items-center wrapper"
+    class="d-flex flex-shrink-0 flex-wrap justify-content-start align-items-center wrapper"
   >
     <div
       v-for="nick in availableCompletedBy"
       :key="nick"
       class="dot"
-      :style="{ background: users[nick]?.color ?? '' }"
+      :style="{ background: users[nick]?.color ?? 'red' }"
       :title="nick"
     ></div>
   </div>
@@ -38,8 +38,8 @@ const availableCompletedBy = computed(() =>
 <style lang="scss" scoped>
 .wrapper {
   max-height: 1.5em;
-  width: fit-content;
-  writing-mode: vertical-lr;
+  width: 1.5em;
+  // writing-mode: vertical-lr;
   position: relative;
   .dot {
     width: 0.5em;
