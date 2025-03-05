@@ -1,6 +1,6 @@
 1. [x] Fix overflowing compleeters dots
 2. [x] Fix countdown wrapping
-3. [ ] Fix personal only missing when creating task
+3. [x] Fix personal only missing when creating task
 4. [ ] Fix Link overflow in editting
 5. [ ] Add deterministic colors by subject name
 6. [ ] Add type colors
