@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, type PropType, watch } from "vue";
-import type { Task } from "../../../../shared/Entities/Task";
+import { taskTypeToColor, type Task } from "../../../../shared/Entities/Task";
 import { getStore } from "../../store/store";
+import stc from "string-to-color";
+import fontColorContrast from "font-color-contrast";
 const store = getStore();
 const user = store.getters.getUser();
 
@@ -114,15 +116,36 @@ onMounted(() => {
   }, 1000);
 });
 watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
+
+const backgroundColor = computed(() =>
+  props.task ? stc(props.task.subject) : ""
+);
+const isForegroundColorBlack = computed(
+  () => fontColorContrast(backgroundColor.value) == "#000000"
+);
 </script>
 <template>
   <div class="cursor-pointer">
     <h5 class="position-relative pe-3">
-      <span class="fw-bold">
-        {{ task.required ? "*" : "" }}{{ task.subject }}: </span
+      <!-- Show subject name -->
+      <span
+        v-if="showAll"
+        class="fw-bold me-2 px-1 rounded-2"
+        :style="{
+          background: backgroundColor,
+        }"
+        :class="{
+          'text-black': isForegroundColorBlack,
+          'text-white': !isForegroundColorBlack,
+        }"
+      >
+        {{ task.required ? "*" : "" }}{{ task.subject }}:</span
+      >
+      <!-- Show only basic task -->
+      <span class="fw-bold" v-else>{{ task.required ? "*" : "" }}</span
       >{{ task.name }}
       <template v-if="showAll">
-        <span class="fw-bold"
+        <span class="fw-bold" :style="{ color: taskTypeToColor[task.type] }"
           >({{ (task.type as unknown as string).capitalize() }})</span
         >
       </template>
@@ -139,7 +162,6 @@ watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
         >
       </div>
     </h5>
-    <span class="personal" v-if="task.personal"># </span>
     <div v-if="task.due_date" class="due-date fst-italic">
       &#40;{{ task.due_date?.ISOToFormattedDateTime()
       }}{{
@@ -151,7 +173,7 @@ watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
         :class="{
           'text-danger': countdown != null && countdown <= 0,
         }"
-        class="countdown fw-bold"
+        class="countdown fw-bold text-nowrap"
         >{{ countdownText }}</span
       >
     </div>
@@ -214,13 +236,5 @@ watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
   &.collapsed {
     rotate: -90deg !important;
   }
-}
-
-span.personal {
-  color: darken($white, 15%);
-  display: block;
-  position: absolute;
-  transform: translateX(-150%);
-  font-weight: bold;
 }
 </style>

@@ -7,6 +7,8 @@ import "../Utils.ts";
 import Tasks from "../components/Subject/Tasks.vue";
 import Subscriber from "../components/Subject/Subscriber.vue";
 import TaskTypeSection from "../components/Subject/TaskTypeSection.vue";
+import stc from "string-to-color";
+import fontColorContrast from "font-color-contrast";
 
 defineExpose({
   load,
@@ -61,6 +63,11 @@ const typeToTasks = computed(() => {
 
   return map;
 });
+
+const backgroundColor = computed(() => stc(props.subjectName));
+const isForegroundColorBlack = computed(
+  () => fontColorContrast(backgroundColor.value) == "#000000"
+);
 </script>
 <template>
   <div
@@ -75,7 +82,18 @@ const typeToTasks = computed(() => {
   </div>
   <div>
     <h1 class="fw-bold px-2 d-flex align-items-center">
-      {{ subjectName }}
+      <span
+        class="px-3 rounded-3"
+        :style="{
+          background: backgroundColor,
+        }"
+        :class="{
+          'text-black': isForegroundColorBlack,
+          'text-white': !isForegroundColorBlack,
+        }"
+      >
+        {{ subjectName }}
+      </span>
       <div class="d-inline-block">
         <Subscriber :subject-name="subjectName" />
       </div>

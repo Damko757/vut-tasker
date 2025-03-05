@@ -22,6 +22,13 @@ export enum TaskType {
   REGISTRATION = "registration",
 }
 
+export const taskTypeToColor: Record<TaskType, string> = {
+  [TaskType.PROJECT]: "dodgerblue",
+  [TaskType.HOMEWORK]: "fuchsia",
+  [TaskType.EXAM]: "orangered",
+  [TaskType.REGISTRATION]: "yellowgreen",
+};
+
 export function compareTasksByDueDate(a: Task, b: Task): -1 | 0 | 1 {
   const aDueDate = a.due_date ?? "";
   const bDueDate = b.due_date ?? "";
