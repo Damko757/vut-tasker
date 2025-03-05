@@ -2,6 +2,8 @@
 import { computed, onMounted, ref, type PropType, watch } from "vue";
 import { taskTypeToColor, type Task } from "../../../../shared/Entities/Task";
 import { getStore } from "../../store/store";
+import stc from "string-to-color";
+import fontColorContrast from "font-color-contrast";
 const store = getStore();
 const user = store.getters.getUser();
 
@@ -114,12 +116,33 @@ onMounted(() => {
   }, 1000);
 });
 watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
+
+const backgroundColor = computed(() =>
+  props.task ? stc(props.task.subject) : ""
+);
+const isForegroundColorBlack = computed(
+  () => fontColorContrast(backgroundColor.value) == "#000000"
+);
 </script>
 <template>
   <div class="cursor-pointer">
     <h5 class="position-relative pe-3">
-      <span class="fw-bold">
-        {{ task.required ? "*" : "" }}{{ task.subject }}: </span
+      <!-- Show subject name -->
+      <span
+        v-if="showAll"
+        class="fw-bold me-2 px-1 rounded-2"
+        :style="{
+          background: backgroundColor,
+        }"
+        :class="{
+          'text-black': isForegroundColorBlack,
+          'text-white': !isForegroundColorBlack,
+        }"
+      >
+        {{ task.required ? "*" : "" }}{{ task.subject }}:</span
+      >
+      <!-- Show only basic task -->
+      <span class="fw-bold" v-else>{{ task.required ? "*" : "" }}</span
       >{{ task.name }}
       <template v-if="showAll">
         <span class="fw-bold" :style="{ color: taskTypeToColor[task.type] }"
