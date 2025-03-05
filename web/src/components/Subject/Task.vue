@@ -49,7 +49,8 @@ function todoCheck(ns: boolean) {
   <div :class="{ completed: state }" class="row" v-if="!deleted">
     <div class="col-auto position-relative pb-2">
       <div class="position-absolute" style="left: -0.75em">
-        <CompletedByDots :completed-by="task?.completed_by ?? []" />
+        <div class="personal" v-if="task?.personal">#</div>
+        <CompletedByDots :completed-by="task?.completed_by ?? []" v-else />
       </div>
       <CheckBox :state="state" @state-change="todoCheck" />
     </div>
@@ -82,5 +83,14 @@ function todoCheck(ns: boolean) {
 .completed h5 {
   text-decoration: line-through;
   color: darken($white, 30%);
+}
+
+.personal {
+  color: darken($white, 15%);
+  display: block;
+  position: absolute;
+  font-size: 1.75rem;
+  transform: translateY(-25%);
+  font-weight: bold;
 }
 </style>

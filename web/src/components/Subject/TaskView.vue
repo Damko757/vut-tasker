@@ -139,7 +139,6 @@ watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
         >
       </div>
     </h5>
-    <span class="personal" v-if="task.personal"># </span>
     <div v-if="task.due_date" class="due-date fst-italic">
       &#40;{{ task.due_date?.ISOToFormattedDateTime()
       }}{{
@@ -214,13 +213,5 @@ watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
   &.collapsed {
     rotate: -90deg !important;
   }
-}
-
-span.personal {
-  color: darken($white, 15%);
-  display: block;
-  position: absolute;
-  transform: translateX(-150%);
-  font-weight: bold;
 }
 </style>
