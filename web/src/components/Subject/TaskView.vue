@@ -151,7 +151,7 @@ watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
         :class="{
           'text-danger': countdown != null && countdown <= 0,
         }"
-        class="countdown fw-bold"
+        class="countdown fw-bold text-nowrap"
         >{{ countdownText }}</span
       >
     </div>
