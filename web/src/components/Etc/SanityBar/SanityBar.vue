@@ -39,12 +39,12 @@ const points = computed(() =>
     )
 );
 const ratio = computed(() => points.value / maxPoints);
-watch(ratio, () => {
-  if (ratio.value >= 1)
-    document.getElementsByTagName("body")[0].classList.add("epilepsy-mode");
-  else
-    document.getElementsByTagName("body")[0].classList.remove("epilepsy-mode");
-});
+// watch(ratio, () => {
+//   if (ratio.value >= 1)
+//     document.getElementsByTagName("body")[0].classList.add("epilepsy-mode");
+//   else
+//     document.getElementsByTagName("body")[0].classList.remove("epilepsy-mode");
+// });
 
 const colors: RGB[] = [
   {
@@ -82,7 +82,7 @@ const bgColor = computed<RGB>(() =>
           backgroundColor: Color.rgbToHex(bgColor),
           width: `${ratio * 100}%`,
         }"
-        :class="{ 'epilepsy-mode': ratio >= 1 }"
+        :class="{ 'epilepsy-mode': /*ratio >= 1*/ false }"
       ></div>
     </div>
     <div class="ratio">{{ roundTo(ratio * 100, 2) }} %</div>
