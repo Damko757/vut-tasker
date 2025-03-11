@@ -7,12 +7,17 @@ import CheckBox from "../Subject/CheckBox.vue";
 import CompletedByDots from "../Subject/CompletedByDots.vue";
 import { getStore } from "../../store/store";
 import { API_URL } from "../../const";
+import moment from "moment";
 
 const store = getStore();
 const user = store.getters.getUser();
 
 const task = defineModel<Task>();
 const deleted = ref(false);
+
+const props = defineProps<{
+  showWeek: boolean;
+}>();
 
 const state = computed(() =>
   task.value!.completed_by.includes(user.value?.nick ?? "")
@@ -42,7 +47,16 @@ function todoCheck(ns: boolean) {
 }
 </script>
 <template>
-  <div :class="{ completed: state }" class="row" v-if="!deleted">
+  <div
+    :class="{ completed: state }"
+    class="row position-relative"
+    v-if="!deleted"
+  >
+    <div class="position-relative mb-2">
+      <div class="new-week" v-if="true">
+        <div class="week-num ps-1">{{ moment(task?.due_date).week() }}</div>
+      </div>
+    </div>
     <div class="col-auto position-relative pb-2">
       <div class="position-absolute" style="left: -0.75em">
         <CompletedByDots :completed-by="task?.completed_by ?? []" />
@@ -63,6 +77,24 @@ function todoCheck(ns: boolean) {
 </template>
 <style lang="scss" scoped>
 @import "/src/SCSS/main.scss";
+
+.new-week {
+  width: 2em;
+  height: 0.5rem;
+  background-color: $white;
+  left: 0;
+  top: 100%;
+  transform: translate(-1em, -50%);
+  border-radius: 1em;
+
+  .week-num {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(100%, -50%);
+    font-weight: bold;
+  }
+}
 
 .completed h5 {
   text-decoration: line-through;
