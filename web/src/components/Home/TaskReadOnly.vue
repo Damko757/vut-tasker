@@ -52,7 +52,7 @@ function todoCheck(ns: boolean) {
     class="row position-relative"
     v-if="!deleted"
   >
-    <div class="position-relative mb-2">
+    <div class="position-relative mb-2" v-if="showWeek">
       <div class="new-week" v-if="true">
         <div class="week-num ps-1">{{ moment(task?.due_date).week() }}</div>
       </div>
