@@ -45,6 +45,13 @@ function todoCheck(ns: boolean) {
       task.value!.completed_by = response.data.completed_by as string[];
   });
 }
+
+const weekNumber = computed(() =>
+  task.value ? moment(task.value!.due_date).week() : 0
+);
+
+const WINTER_START_WEEK = 6;
+const SUMMER_START_WEEK = -13;
 </script>
 <template>
   <div
@@ -52,14 +59,34 @@ function todoCheck(ns: boolean) {
     class="row position-relative"
     v-if="!deleted"
   >
-    <div class="position-relative mb-2" v-if="showWeek">
-      <div class="new-week" v-if="true">
-        <div class="week-num ps-1">{{ moment(task?.due_date).week() }}</div>
+    <div class="position-relative mb-2" v-if="showWeek && weekNumber">
+      <div class="new-week">
+        <div class="week-num ps-1">
+          {{
+            (() => {
+              if (
+                WINTER_START_WEEK <= weekNumber &&
+                weekNumber <= WINTER_START_WEEK + 13
+              ) {
+                return `${weekNumber}/${weekNumber - WINTER_START_WEEK}`;
+              }
+              if (
+                SUMMER_START_WEEK <= weekNumber &&
+                weekNumber <= SUMMER_START_WEEK + 13
+              ) {
+                return `${weekNumber}/${weekNumber - SUMMER_START_WEEK}`;
+              }
+
+              return weekNumber;
+            })()
+          }}
+        </div>
       </div>
     </div>
     <div class="col-auto position-relative pb-2">
       <div class="position-absolute" style="left: -0.75em">
-        <CompletedByDots :completed-by="task?.completed_by ?? []" />
+        <div class="personal" v-if="task?.personal">#</div>
+        <CompletedByDots :completed-by="task?.completed_by ?? []" v-else />
       </div>
       <CheckBox :state="state" @state-change="todoCheck" />
     </div>
