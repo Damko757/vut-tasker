@@ -82,7 +82,7 @@ const bgColor = computed<RGB>(() =>
           backgroundColor: Color.rgbToHex(bgColor),
           width: `${ratio * 100}%`,
         }"
-        :class="{ 'epilepsy-mode': /*ratio >= 1*/ false }"
+        :class="{ 'epilepsy-mode': ratio >= 1 }"
       ></div>
     </div>
     <div class="ratio">{{ roundTo(ratio * 100, 2) }} %</div>
