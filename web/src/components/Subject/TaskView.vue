@@ -168,7 +168,7 @@ const isForegroundColorBlack = computed(
         task.due_date_end
           ? ` &hyphen; ${task.due_date_end.ISOToFormattedDateTime()}`
           : ``
-      }}&#41; <span v-if="room">at {{ room }} </span>
+      }}&#41; <span v-if="room">at {{ room }}&nbsp;</span>
       <span
         :class="{
           'text-danger': countdown != null && countdown <= 0,
