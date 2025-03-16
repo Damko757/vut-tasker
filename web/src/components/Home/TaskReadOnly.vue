@@ -60,7 +60,7 @@ const SUMMER_START_WEEK = -13;
     v-if="!deleted"
   >
     <div class="position-relative mb-2" v-if="showWeek && weekNumber">
-      <div class="new-week">
+      <div class="new-week" :class="{ active: weekNumber == moment().week() }">
         <div class="week-num ps-1">
           {{
             (() => {
@@ -120,6 +120,13 @@ const SUMMER_START_WEEK = -13;
     top: 50%;
     transform: translate(100%, -50%);
     font-weight: bold;
+  }
+
+  &.active {
+    background-color: $fit-light-blue !important;
+    .week-num {
+      color: $fit-light-blue !important;
+    }
   }
 }
 
