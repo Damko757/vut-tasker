@@ -94,13 +94,9 @@ const bgColor = computed<RGB>(() =>
 .bar-wrapper {
   border: 0.5em solid lighten($black, 10%);
   background-color: lighten($black, 5%);
-  width: 30em;
-  max-width: 80%;
-  height: 3em;
-  position: absolute;
-  top: 1em;
-  right: 1em;
   border-radius: 1.5em;
+  height: 100%;
+  width: 100%;
 
   .bar-safe-zone {
     width: 100%;
@@ -121,9 +117,9 @@ const bgColor = computed<RGB>(() =>
     width: fit-content;
     font-weight: bold;
     position: absolute;
-    bottom: -100%;
+    bottom: 0%;
     left: 50%;
-    transform: translate(-50%, 50%);
+    transform: translate(-50%, 150%);
   }
 
   .epilepsy-mode {
