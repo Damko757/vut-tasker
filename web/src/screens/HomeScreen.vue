@@ -3,6 +3,7 @@ import { computed, inject, ref, watch, watchEffect } from "vue";
 import axios, { HttpStatusCode } from "axios";
 import {
   compareTasksByDueDate,
+  TaskType,
   type Task,
 } from "../../../shared/Entities/Task";
 import TasksView from "../components/Home/TasksView.vue";
@@ -10,8 +11,13 @@ import RainbowText from "../components/Home/RainbowText.vue";
 import type { StoreType } from "../store/store";
 import { API_URL } from "../const";
 import SanityBar from "../components/Etc/SanityBar/SanityBar.vue";
+import { useCookies } from "@vueuse/integrations/useCookies";
+import HomeFilter from "../components/Etc/HomeFilter/HomeFilter.vue";
+
+const SHOW_FILTER = "SHOW_FILTER";
 
 const store: StoreType = inject("store") as unknown as StoreType;
+const cookies = useCookies([SHOW_FILTER]);
 
 const user = store.getters.getUser();
 defineExpose({
@@ -54,7 +60,8 @@ const sortedTasks = computed(
             .getUser()
             .value?.subscribed_subjects.includes(x.subject) &&
           x.due_date && // has some end date
-          needsToBeShown(x) // if completed and after deadline, it should not be shown
+          needsToBeShown(x) && // if completed and after deadline, it should not be shown
+          filterMap.value[x.type] // Is not filtered out
       )
       .sort(compareTasksByDueDate) ?? []
 );
@@ -75,6 +82,13 @@ function loadTasks() {
     });
 }
 
+const filterMap = ref<{ [key in TaskType]: boolean }>({
+  [TaskType.PROJECT]: true,
+  [TaskType.HOMEWORK]: true,
+  [TaskType.EXAM]: true,
+  [TaskType.REGISTRATION]: true,
+});
+
 watch(store.state.user, loadTasks);
 function load() {
   emit("loadStateChange", 0);
@@ -82,7 +96,23 @@ function load() {
 }
 </script>
 <template>
-  <SanityBar :tasks="sortedTasks" />
+  <div
+    class="sanity-wrapper"
+    @click="
+      () => {
+        cookies.set(SHOW_FILTER, !cookies.get(SHOW_FILTER), {
+          sameSite: `strict`,
+          expires: (function (d = new Date()) {
+            d.setDate(d.getDate() + 365 * 10); // 10 years
+            return d;
+          })(),
+        });
+      }
+    "
+  >
+    <SanityBar v-if="!cookies.get(SHOW_FILTER)" :tasks="sortedTasks" />
+    <HomeFilter v-else :filter-map="filterMap" />
+  </div>
   <h1 class="fw-bold px-2 mb-md-5 mb-4">Upcoming tasks:</h1>
   <div class="types px-4">
     <section class="type mb-2">
@@ -97,4 +127,13 @@ function load() {
     </section>
   </div>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.sanity-wrapper {
+  width: 30em;
+  max-width: 80%;
+  height: 3em;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+}
+</style>
