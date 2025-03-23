@@ -8,6 +8,7 @@ import { API_URL } from "../../const";
 import DateTimeInput from "../Form/DateTimeInput/DateTimeInput.vue";
 import SimpleTextArea from "./SimpleTextArea.vue";
 import { getStore } from "../../store/store";
+import { getDayByDate } from "../../Utils";
 
 const store = getStore();
 const user = store.getters.getUser();
@@ -108,10 +109,13 @@ watch(
     {{ addOrEdit == "edit" ? "Edit" : "Add" }} task
   </h5>
   <div v-if="edittedTask.due_date" class="due-date fst-italic">
-    &#40;{{ edittedTask.due_date?.ISOToFormattedDateTime()
-    }}{{
+    &#40;{{ getDayByDate(edittedTask.due_date) }}
+    {{ edittedTask.due_date?.ISOToFormattedDateTime() }}
+    {{
       edittedTask.due_date_end
-        ? ` &hyphen; ${edittedTask.due_date_end.ISOToFormattedDateTime()}`
+        ? ` &hyphen; ${getDayByDate(
+            edittedTask.due_date_end
+          )} ${edittedTask.due_date_end.ISOToFormattedDateTime()}`
         : ``
     }}&#41;
   </div>

@@ -4,6 +4,7 @@ import { taskTypeToColor, type Task } from "../../../../shared/Entities/Task";
 import { getStore } from "../../store/store";
 import stc from "string-to-color";
 import fontColorContrast from "font-color-contrast";
+import { getDayByDate } from "../../Utils";
 const store = getStore();
 const user = store.getters.getUser();
 
@@ -163,10 +164,13 @@ const isForegroundColorBlack = computed(
       </div>
     </h5>
     <div v-if="task.due_date" class="due-date fst-italic">
-      &#40;{{ task.due_date?.ISOToFormattedDateTime()
+      &#40;{{ getDayByDate(task.due_date) }}
+      {{ task.due_date?.ISOToFormattedDateTime()
       }}{{
         task.due_date_end
-          ? ` &hyphen; ${task.due_date_end.ISOToFormattedDateTime()}`
+          ? ` &hyphen; ${getDayByDate(
+              task.due_date_end
+            )} ${task.due_date_end.ISOToFormattedDateTime()}`
           : ``
       }}&#41; <span v-if="room">at {{ room }}&nbsp;</span>
       <span
