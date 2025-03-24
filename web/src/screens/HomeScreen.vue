@@ -21,8 +21,7 @@ const invertFilter = () => {
 };
 
 onMounted(() => {
-  const v = Number(localStorage.getItem(SHOW_FILTER));
-  showFilter.value = Number.isNaN(v) ? false : !!v;
+  showFilter.value = localStorage.getItem(SHOW_FILTER) == "true";
 });
 
 const store: StoreType = inject("store") as unknown as StoreType;
@@ -69,7 +68,11 @@ const sortedTasks = computed(
             .value?.subscribed_subjects.includes(x.subject) &&
           x.due_date && // has some end date
           needsToBeShown(x) && // if completed and after deadline, it should not be shown
-          filterMap.value[x.type] // Is not filtered out
+          filterMap.value[x.type] && // Is not filtered out
+          !(
+            filterMap.value.Hide &&
+            x.completed_by.includes(user.value?.nick ?? "")
+          ) // Hide completed
       )
       .sort(compareTasksByDueDate) ?? []
 );
@@ -90,7 +93,8 @@ function loadTasks() {
     });
 }
 
-const filterMap = ref<{ [key in TaskType]: boolean }>({
+const filterMap = ref<{ [key in TaskType | "Hide"]: boolean }>({
+  Hide: false, // Hide completed
   [TaskType.PROJECT]: true,
   [TaskType.HOMEWORK]: true,
   [TaskType.EXAM]: true,

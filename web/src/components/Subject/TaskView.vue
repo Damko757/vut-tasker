@@ -106,7 +106,6 @@ const setCountdown = () => {
   }
 
   const today = new Date();
-  console.log(new Date(date), today);
   countdown.value = (new Date(date).getTime() - today.getTime()) / 1000; // s
 };
 onMounted(() => {
