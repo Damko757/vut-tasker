@@ -97,6 +97,7 @@ const bgColor = computed<RGB>(() =>
   border-radius: 1.5em;
   height: 100%;
   width: 100%;
+  position: relative;
 
   .bar-safe-zone {
     width: 100%;
@@ -148,7 +149,6 @@ const bgColor = computed<RGB>(() =>
 @include media-breakpoint-down(lg) {
   .bar-wrapper {
     position: relative !important;
-    position: absolute;
     top: 0;
     right: 0;
     border-width: 0.25em;
@@ -158,8 +158,9 @@ const bgColor = computed<RGB>(() =>
     .ratio {
       position: absolute;
       bottom: 0;
-      left: 100%;
-      transform: translate(50%, 0%);
+      right: unset;
+      left: 0%;
+      transform: translate(-150%, 0%);
       white-space: nowrap;
     }
   }

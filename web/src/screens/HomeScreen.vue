@@ -108,11 +108,17 @@ function load() {
 }
 </script>
 <template>
-  <div class="sanity-wrapper" @click="invertFilter">
-    <SanityBar v-if="!showFilter" :tasks="sortedTasks" />
-    <HomeFilter v-else :filter-map="filterMap" />
+  <div class="row">
+    <div class="col-lg-auto col-12">
+      <h1 class="fw-bold px-2 mb-md-5 mb-2 mb-md-4">Upcoming tasks:</h1>
+    </div>
+    <div class="col-lg col-12">
+      <div class="sanity-wrapper" @click="invertFilter">
+        <SanityBar v-if="!showFilter" :tasks="sortedTasks" />
+        <HomeFilter v-else :filter-map="filterMap" />
+      </div>
+    </div>
   </div>
-  <h1 class="fw-bold px-2 mb-md-5 mb-4">Upcoming tasks:</h1>
   <div class="types px-4">
     <section class="type mb-2">
       <div v-if="!sortedTasks.length" class="fw-bold fs-1">
@@ -131,8 +137,8 @@ function load() {
   width: 30em;
   max-width: 80%;
   height: 3em;
-  position: absolute;
-  top: 1em;
-  right: 1em;
+  margin-left: auto;
+  margin-right: 1em;
+  margin-bottom: 1em;
 }
 </style>
