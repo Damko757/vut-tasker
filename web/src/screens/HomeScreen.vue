@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject, ref, watch, watchEffect } from "vue";
+import { computed, inject, onMounted, ref, watch, watchEffect } from "vue";
 import axios, { HttpStatusCode } from "axios";
 import {
   compareTasksByDueDate,
@@ -11,13 +11,20 @@ import RainbowText from "../components/Home/RainbowText.vue";
 import type { StoreType } from "../store/store";
 import { API_URL } from "../const";
 import SanityBar from "../components/Etc/SanityBar/SanityBar.vue";
-import { useCookies } from "@vueuse/integrations/useCookies";
 import HomeFilter from "../components/Etc/HomeFilter/HomeFilter.vue";
 
 const SHOW_FILTER = "SHOW_FILTER";
+const showFilter = ref(false);
+const invertFilter = () => {
+  showFilter.value = !showFilter.value;
+  localStorage.setItem(SHOW_FILTER, showFilter.value.toString());
+};
+
+onMounted(() => {
+  showFilter.value = localStorage.getItem(SHOW_FILTER) == "true";
+});
 
 const store: StoreType = inject("store") as unknown as StoreType;
-const cookies = useCookies([SHOW_FILTER]);
 
 const user = store.getters.getUser();
 defineExpose({
@@ -61,7 +68,11 @@ const sortedTasks = computed(
             .value?.subscribed_subjects.includes(x.subject) &&
           x.due_date && // has some end date
           needsToBeShown(x) && // if completed and after deadline, it should not be shown
-          filterMap.value[x.type] // Is not filtered out
+          filterMap.value[x.type] && // Is not filtered out
+          !(
+            filterMap.value.Hide &&
+            x.completed_by.includes(user.value?.nick ?? "")
+          ) // Hide completed
       )
       .sort(compareTasksByDueDate) ?? []
 );
@@ -82,7 +93,8 @@ function loadTasks() {
     });
 }
 
-const filterMap = ref<{ [key in TaskType]: boolean }>({
+const filterMap = ref<{ [key in TaskType | "Hide"]: boolean }>({
+  Hide: false, // Hide completed
   [TaskType.PROJECT]: true,
   [TaskType.HOMEWORK]: true,
   [TaskType.EXAM]: true,
@@ -96,24 +108,17 @@ function load() {
 }
 </script>
 <template>
-  <div
-    class="sanity-wrapper"
-    @click="
-      () => {
-        cookies.set(SHOW_FILTER, !cookies.get(SHOW_FILTER), {
-          sameSite: `strict`,
-          expires: (function (d = new Date()) {
-            d.setDate(d.getDate() + 365 * 10); // 10 years
-            return d;
-          })(),
-        });
-      }
-    "
-  >
-    <SanityBar v-if="!cookies.get(SHOW_FILTER)" :tasks="sortedTasks" />
-    <HomeFilter v-else :filter-map="filterMap" />
+  <div class="row">
+    <div class="col-lg-auto col-12">
+      <h1 class="fw-bold px-2 mb-md-5 mb-2 mb-md-4">Upcoming tasks:</h1>
+    </div>
+    <div class="col-lg col-12">
+      <div class="sanity-wrapper" @click="invertFilter">
+        <SanityBar v-if="!showFilter" :tasks="sortedTasks" />
+        <HomeFilter v-else :filter-map="filterMap" />
+      </div>
+    </div>
   </div>
-  <h1 class="fw-bold px-2 mb-md-5 mb-4">Upcoming tasks:</h1>
   <div class="types px-4">
     <section class="type mb-2">
       <div v-if="!sortedTasks.length" class="fw-bold fs-1">
@@ -132,8 +137,8 @@ function load() {
   width: 30em;
   max-width: 80%;
   height: 3em;
-  position: absolute;
-  top: 1em;
-  right: 1em;
+  margin-left: auto;
+  margin-right: 1em;
+  margin-bottom: 1em;
 }
 </style>

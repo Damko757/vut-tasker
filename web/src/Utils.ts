@@ -9,7 +9,7 @@ export const roundTo = (n: number, precision: number = 2) =>
  * @param date
  */
 export function getDayByDate(date: string) {
-  return ["Su", "Mo", "Tu", "Th", "Fr", "Sa", "Su"][
+  return ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"][
     moment(date.split(" ")[0]).day()
   ];
 }

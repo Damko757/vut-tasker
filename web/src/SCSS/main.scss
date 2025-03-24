@@ -4,6 +4,8 @@
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
 @import "./build/mixins.scss";
+@import "./build/font.scss";
+
 /* Hide the spin buttons in WebKit browsers */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
