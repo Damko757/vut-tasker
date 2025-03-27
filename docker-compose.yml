@@ -24,6 +24,7 @@ services:
     ports:
       - 3000:3000
     volumes:
+      - ./server/traffic.log:/usr/src/app/traffic.log
       - ./server/src:/usr/src/app/src
       - ./shared:/usr/src/shared
       - ./.env:/usr/src/.env

@@ -2,3 +2,4 @@ mongodb/*
 web/bun.lockb
 server/bun.lockb
 .Cloudflare
+server/traffic.log
