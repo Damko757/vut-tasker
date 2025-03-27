@@ -108,14 +108,16 @@ function load() {
 }
 </script>
 <template>
-  <div class="row">
-    <div class="col-lg-auto col-12">
-      <h1 class="fw-bold px-2 mb-md-5 mb-2 mb-md-4">Upcoming tasks:</h1>
-    </div>
-    <div class="col-lg col-12">
-      <div class="sanity-wrapper" @click="invertFilter">
-        <SanityBar v-if="!showFilter" :tasks="sortedTasks" />
-        <HomeFilter v-else :filter-map="filterMap" />
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-auto col-12">
+        <h1 class="fw-bold px-2 mb-md-5 mb-2 mb-md-4">Upcoming tasks:</h1>
+      </div>
+      <div class="col-lg col-12">
+        <div class="sanity-wrapper" @click="invertFilter">
+          <SanityBar v-if="!showFilter" :tasks="sortedTasks" />
+          <HomeFilter v-else :filter-map="filterMap" />
+        </div>
       </div>
     </div>
   </div>
