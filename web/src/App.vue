@@ -4,6 +4,7 @@ import MainScreen from "./screens/MainScreen.vue";
 import { getStore } from "./store/store";
 
 getStore().mutations.loadUser();
+getStore().mutations.loadAllUsers();
 const user = getStore().getters.getUser();
 </script>
 <template>

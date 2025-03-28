@@ -13,7 +13,6 @@ export const Store = {
 
   getters: {
     getAllUsers: () => {
-      Store.mutations.loadAllUsers();
       return Store.state.allUsers;
     },
     getUser: () => {
