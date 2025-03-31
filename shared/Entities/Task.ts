@@ -16,17 +16,19 @@ export interface Task {
   rooms?: Record<string, string>; // nick: <roomNumber>
 }
 export enum TaskType {
+  EXAM = "exam",
   PROJECT = "project",
   HOMEWORK = "homework",
-  EXAM = "exam",
   REGISTRATION = "registration",
+  OTHER = "other",
 }
 
 export const taskTypeToColor: Record<TaskType, string> = {
+  [TaskType.EXAM]: "orangered",
   [TaskType.PROJECT]: "dodgerblue",
   [TaskType.HOMEWORK]: "fuchsia",
-  [TaskType.EXAM]: "orangered",
-  [TaskType.REGISTRATION]: "yellowgreen",
+  [TaskType.REGISTRATION]: "limegreen",
+  [TaskType.OTHER]: "gold",
 };
 
 export function compareTasksByDueDate(a: Task, b: Task): -1 | 0 | 1 {
