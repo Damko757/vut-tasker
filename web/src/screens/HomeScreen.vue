@@ -12,17 +12,10 @@ import type { StoreType } from "../store/store";
 import { API_URL } from "../const";
 import SanityBar from "../components/Etc/SanityBar/SanityBar.vue";
 import HomeFilter from "../components/Etc/HomeFilter/HomeFilter.vue";
-
-const SHOW_FILTER = "SHOW_FILTER";
-const showFilter = ref(false);
-const invertFilter = () => {
-  showFilter.value = !showFilter.value;
-  localStorage.setItem(SHOW_FILTER, showFilter.value.toString());
-};
-
-onMounted(() => {
-  showFilter.value = localStorage.getItem(SHOW_FILTER) == "true";
-});
+import {
+  filterState,
+  loadFilterValue,
+} from "../components/Etc/HomeFilter/HomeFilter";
 
 const store: StoreType = inject("store") as unknown as StoreType;
 
@@ -70,7 +63,7 @@ const sortedTasks = computed(
           needsToBeShown(x) && // if completed and after deadline, it should not be shown
           filterMap.value[x.type] && // Is not filtered out
           !(
-            filterMap.value.Hide &&
+            filterMap.value.See &&
             x.completed_by.includes(user.value?.nick ?? "")
           ) // Hide completed
       )
@@ -92,13 +85,23 @@ function loadTasks() {
       emit("loadStateChange", -1);
     });
 }
+const showFilter = ref(false);
+const invertFilter = () => {
+  showFilter.value = !showFilter.value;
+  filterState(showFilter.value.toString());
+};
 
-const filterMap = ref<{ [key in TaskType | "Hide"]: boolean }>({
-  Hide: false, // Hide completed
-  [TaskType.PROJECT]: true,
-  [TaskType.HOMEWORK]: true,
-  [TaskType.EXAM]: true,
-  [TaskType.REGISTRATION]: true,
+onMounted(() => {
+  showFilter.value = filterState() == "true";
+});
+
+const filterMap = ref<{ [key in TaskType | "See"]: boolean }>({
+  See: loadFilterValue("S", false), // Hide completed
+  [TaskType.EXAM]: loadFilterValue("E", true),
+  [TaskType.PROJECT]: loadFilterValue("P", true),
+  [TaskType.HOMEWORK]: loadFilterValue("H", true),
+  [TaskType.REGISTRATION]: loadFilterValue("R", true),
+  [TaskType.OTHER]: loadFilterValue("O", true),
 });
 
 watch(store.state.user, loadTasks);

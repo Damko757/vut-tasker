@@ -27,8 +27,8 @@ const props = defineProps({
 const subjectTasks = ref<Task[]>([]);
 const allTaskTypes = Object.keys(TaskType)
   .filter((v) => isNaN(Number(v)))
-  .map((v) => v.toLocaleLowerCase())
-  .sort();
+  .map((v) => v.toLocaleLowerCase());
+// .sort();
 
 function load() {
   emit("loadStateChange", 0);

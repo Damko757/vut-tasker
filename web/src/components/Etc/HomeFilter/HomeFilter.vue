@@ -4,6 +4,7 @@ import {
   taskTypeToColor,
   type Task,
 } from "../../../../../shared/Entities/Task";
+import { saveFilterValue } from "./HomeFilter";
 
 const filterMap = defineModel<{ [key in TaskType]: boolean }>("filterMap", {
   required: true,
@@ -14,8 +15,11 @@ const filterMap = defineModel<{ [key in TaskType]: boolean }>("filterMap", {
     <div
       v-for="key in Object.keys(filterMap)"
       :key="key"
-      @click.stop="() => filterMap[key as TaskType] = !filterMap[key as TaskType]"
-      :class="{inactive: !filterMap[key as TaskType], hideButton: key == `Hide`}"
+      @click.stop="() => {
+        filterMap[key as TaskType] = !filterMap[key as TaskType];
+        saveFilterValue(key[0].toUpperCase(), filterMap[key as TaskType])
+      }"
+      :class="{inactive: !filterMap[key as TaskType], hideButton: key == `See`, invertColors: key == `See` || key == TaskType.OTHER}"
       :style="{'background-color': taskTypeToColor[key as TaskType]}"
       class="filter-button py-3 px-3 rounded-1 w-fit-content fw-bold mx-2 cursor-pointer"
     >
@@ -41,12 +45,18 @@ const filterMap = defineModel<{ [key in TaskType]: boolean }>("filterMap", {
       color: $white;
     }
 
-    &.hideButton {
-      background-color: $white !important;
+    &.invertColors {
       color: $black;
       &.inactive {
         background-color: lighten($black, $amount: 15%) !important;
         color: $white;
+      }
+    }
+
+    &.hideButton {
+      background-color: $white !important;
+      &.inactive {
+        background-color: lighten($black, $amount: 15%) !important;
       }
     }
   }
