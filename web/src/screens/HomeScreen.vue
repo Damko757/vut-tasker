@@ -143,7 +143,8 @@ function load() {
   max-width: 80%;
   height: 3em;
   margin-left: auto;
-  margin-right: 1em;
+  margin-right: 0em;
   margin-bottom: 1em;
+  position: relative;
 }
 </style>
