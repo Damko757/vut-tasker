@@ -1,7 +1,7 @@
 {
   "name": "vut-tasker-web",
   "private": true,
-  "version": "1.0.3",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "bunx --bun vite",
