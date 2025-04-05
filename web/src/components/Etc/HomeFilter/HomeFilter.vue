@@ -21,7 +21,7 @@ const filterMap = defineModel<{ [key in TaskType]: boolean }>("filterMap", {
       }"
       :class="{inactive: !filterMap[key as TaskType], hideButton: key == `See`, invertColors: key == `See` || key == TaskType.OTHER}"
       :style="{'background-color': taskTypeToColor[key as TaskType]}"
-      class="filter-button py-3 px-3 rounded-1 w-fit-content fw-bold mx-2 cursor-pointer"
+      class="filter-button p-md-3 px-3 py-1 rounded-1 w-fit-content fw-bold mx-md-2 mx-1 cursor-pointer"
     >
       {{ key[0].toUpperCase() }}
     </div>
@@ -38,6 +38,9 @@ const filterMap = defineModel<{ [key in TaskType]: boolean }>("filterMap", {
   justify-content: center;
   align-items: center;
   margin-left: auto;
+
+  position: absolute;
+  right: 0;
 
   .filter-button {
     &.inactive {
@@ -59,6 +62,10 @@ const filterMap = defineModel<{ [key in TaskType]: boolean }>("filterMap", {
         background-color: lighten($black, $amount: 15%) !important;
       }
     }
+  }
+
+  @include media-breakpoint-down(md) {
+    font-size: 1rem;
   }
 }
 </style>

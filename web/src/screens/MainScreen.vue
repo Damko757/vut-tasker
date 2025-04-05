@@ -83,6 +83,8 @@ onMounted(async () => {
 main {
   margin-top: 1em;
   margin-bottom: 4em;
+  max-width: 100vw;
+  overflow: hidden;
   @include media-breakpoint-up(md) {
     padding-left: 5rem;
   }
