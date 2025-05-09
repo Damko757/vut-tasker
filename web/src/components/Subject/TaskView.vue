@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, type PropType, watch } from "vue";
+import {
+  computed,
+  onMounted,
+  ref,
+  type PropType,
+  watch,
+  onActivated,
+  onBeforeMount,
+} from "vue";
 import { taskTypeToColor, type Task } from "../../../../shared/Entities/Task";
 import { getStore } from "../../store/store";
 import stc from "string-to-color";
@@ -108,7 +116,8 @@ const setCountdown = () => {
   const today = new Date();
   countdown.value = (new Date(date).getTime() - today.getTime()) / 1000; // s
 };
-onMounted(() => {
+
+onBeforeMount(() => {
   setCountdown();
 
   setInterval(function () {
@@ -183,9 +192,13 @@ const isForegroundColorBlack = computed(
     <div class="h-0 overflow-hidden" :class="{ collapsed: props.isCollapsed }">
       <div v-if="task.link">
         <span class="fw-bold">Link: </span
-        ><a :href="task.link ?? '#'" @click.stop target="_blank">{{
-          task.link ?? "&hyphen;"
-        }}</a>
+        ><a
+          class="text-break"
+          :href="task.link ?? '#'"
+          @click.stop
+          target="_blank"
+          >{{ task.link ?? "&hyphen;" }}</a
+        >
       </div>
       <div v-if="task.description">
         <span class="fw-bold">Description: </span>
