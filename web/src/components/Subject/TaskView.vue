@@ -107,21 +107,34 @@ const countdownText = computed(() => {
 });
 
 const setCountdown = () => {
-  const date = props.task.due_date_end ?? props.task.due_date;
-  if (!date) {
+  /**
+   * due_date is used first. If it under zero, date_end is used (if defined)
+   */
+  const dates = [props.task.due_date, props.task.due_date_end];
+
+  if (!dates.some((x) => x)) {
+    // If every null, but faster?
     countdown.value = null;
     return;
   }
 
   const today = new Date();
-  countdown.value = (new Date(date).getTime() - today.getTime()) / 1000; // s
+  const untilDueDate = (new Date(dates[0]!).getTime() - today.getTime()) / 1000; // s
+  if (!dates[1] || untilDueDate >= 0) {
+    countdown.value = untilDueDate;
+    return;
+  }
+
+  const untilDueDateEnd =
+    (new Date(dates[1]!).getTime() - today.getTime()) / 1000; // s
+  countdown.value = untilDueDateEnd;
 };
 
 onBeforeMount(() => {
   setCountdown();
 
   setInterval(function () {
-    if (countdown.value != null) countdown.value--;
+    setCountdown(); // Refreshing counter (with precision +-500 ms)
   }, 1000);
 });
 watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
