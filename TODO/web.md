@@ -8,3 +8,4 @@
 8. [ ] Add /logout or /logoff to delete cookie (and show users)
 
 9. [ ] Implement switches to enable/disable user prefs for showing stats next to checkbox
+10. [x] Set countdown to first date, then last date (it is confusing for exams)
