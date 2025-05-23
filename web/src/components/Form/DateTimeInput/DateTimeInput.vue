@@ -93,7 +93,13 @@ function buildDateTimeString(): string | null {
 
 function onInput(inputData: InputData): void {
   const moreSignificantValue = (inputData.value ?? 0) * 10;
-  if (moreSignificantValue > inputData.max || inputData.value === 0) {
+  const zeroFirstCondition =
+    inputData.realValue.length >= 2 && inputData.realValue[0] == "0";
+  if (
+    moreSignificantValue > inputData.max ||
+    inputData.value === null ||
+    zeroFirstCondition
+  ) {
     inputs.value.at(inputData.index + 1)?.element?.focus() ??
       inputs.value[inputData.index]!.element?.blur();
     if (inputData.index + 1 >= inputs.value.length) emit("done");

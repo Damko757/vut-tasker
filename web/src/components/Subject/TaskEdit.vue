@@ -110,8 +110,8 @@ watch(
   </h5>
   <div v-if="edittedTask.due_date" class="due-date fst-italic">
     &#40;{{ getDayByDate(edittedTask.due_date) }}
-    {{ edittedTask.due_date?.ISOToFormattedDateTime() }}
-    {{
+    {{ edittedTask.due_date?.ISOToFormattedDateTime()
+    }}{{
       edittedTask.due_date_end
         ? ` &hyphen; ${getDayByDate(
             edittedTask.due_date_end

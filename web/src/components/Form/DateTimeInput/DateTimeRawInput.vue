@@ -29,19 +29,23 @@ const emit = defineEmits<{
         inputData.value = Number(inputData.realValue);
         inputData.value =
           inputData.realValue != `` && !Number.isNaN(inputData.value)
-            ? Math.max(
-                inputData.min,
-                Math.min(inputData.max, inputData.value ?? 0)
-              )
-            : null;
-        inputData.realValue = inputData.value?.toString() ?? ``;
-        
+            ? Math.min(inputData.max, inputData.value ?? 0)
+            : null;        
         emit(`input`, inputData);
       }
     "
     @blur="
+      inputData.value =
+        inputData.realValue != `` && !Number.isNaN(inputData.value)
+          ? Math.max(
+              inputData.min,
+              Math.min(inputData.max, inputData.value ?? 0)
+            )
+          : null;
+      inputData.realValue = inputData.value?.toString() ?? ``;
+
       inputData.realValue =
-        inputData.value?.toString().padStart(2, '0') ?? inputData.default
+        inputData.value?.toString().padStart(2, '0') ?? inputData.default;
     "
   />
 </template>

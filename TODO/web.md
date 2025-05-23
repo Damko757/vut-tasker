@@ -9,3 +9,5 @@
 
 9. [ ] Implement switches to enable/disable user prefs for showing stats next to checkbox
 10. [x] Set countdown to first date, then last date (it is confusing for exams)
+11. [x] EditTask space in (due_date )
+12. [x] Date input 0 inputs 1
