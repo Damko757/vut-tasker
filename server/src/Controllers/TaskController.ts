@@ -99,8 +99,19 @@ export class TaskController
         return res.status(HttpStatusCode.UnprocessableEntity).send(error);
       });
   }
+  /**
+   * Fetches all tasks
+   * @query subjects - Semicolon splitted subjects to include
+   */
   static async getAllTasks(req: Request, res: Response, next: NextFunction) {
-    TaskModel.find().then((tasks) => {
+    const filter: mongoose.FilterQuery<Task> = {}; // Generic filter
+
+    // If subjects defined, filter by semicolon divided values
+    if (req.query.subjects) {
+      filter.subject = { $in: (req.query.subjects as string).split(";") };
+    }
+
+    TaskModel.find(filter).then((tasks) => {
       res
         .status(HttpStatusCode.Ok)
         .send(
