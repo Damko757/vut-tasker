@@ -50,7 +50,7 @@ const weekNumber = computed(() =>
   task.value ? moment(task.value!.due_date).week() : 0
 );
 
-const WINTER_START_WEEK = 6;
+const WINTER_START_WEEK = 38;
 const SUMMER_START_WEEK = -13;
 </script>
 <template>
