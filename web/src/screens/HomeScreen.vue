@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { computed, inject, onMounted, ref, watch, watchEffect } from "vue";
 import axios, { HttpStatusCode } from "axios";
+import { computed, inject, onMounted, ref, watch } from "vue";
 import {
   compareTasksByDueDate,
   TaskType,
   type Task,
 } from "../../../shared/Entities/Task";
-import TasksView from "../components/Home/TasksView.vue";
-import RainbowText from "../components/Home/RainbowText.vue";
-import type { StoreType } from "../store/store";
-import { API_URL } from "../const";
-import SanityBar from "../components/Etc/SanityBar/SanityBar.vue";
-import HomeFilter from "../components/Etc/HomeFilter/HomeFilter.vue";
 import {
   filterState,
   loadFilterValue,
 } from "../components/Etc/HomeFilter/HomeFilter";
+import HomeFilter from "../components/Etc/HomeFilter/HomeFilter.vue";
+import SanityBar from "../components/Etc/SanityBar/SanityBar.vue";
+import RainbowText from "../components/Home/RainbowText.vue";
+import TasksView from "../components/Home/TasksView.vue";
+import { API_URL } from "../const";
+import type { StoreType } from "../store/store";
 
 const store: StoreType = inject("store") as unknown as StoreType;
 
@@ -113,8 +113,30 @@ function load() {
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-lg-auto col-12">
-        <h1 class="fw-bold px-2 mb-md-5 mb-2 mb-md-4">Upcoming tasks:</h1>
+      <div
+        class="col-lg-auto col-12 d-flex align-items-center mb-md-5 mb-2 mb-md-4"
+      >
+        <!-- FitCheats link -->
+        <a
+          class="fitcheats-link"
+          href="https://vutbr-my.sharepoint.com/shared"
+          target="_blank"
+          title="FitCheats"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+          >
+            <!-- Icon from Material Symbols by Google - https://github.com/google/material-design-icons/blob/master/LICENSE -->
+            <path
+              fill="currentColor"
+              d="M5 20q-.825 0-1.412-.587T3 18V4q0-.825.588-1.412T5 2h14q.825 0 1.413.588T21 4v7.1q-.25-.05-.488-.075T20 11h-1V4H5v14h3.1q.1.55.263 1.05T8.8 20zm0-3v1V4zm2-1h1.1q.2-1.225.875-2.262T10.7 12H7zm0-6h4V6H7zm7 11q-1.65 0-2.825-1.175T10 17t1.175-2.825T14 13h2v2h-2q-.825 0-1.412.588T12 17t.588 1.413T14 19h2v2zm-1-11h4V6h-4zm1 8v-2h6v2zm4 3v-2h2q.825 0 1.413-.587T22 17t-.587-1.412T20 15h-2v-2h2q1.65 0 2.825 1.163T24 17q0 1.65-1.175 2.825T20 21z"
+            />
+          </svg>
+        </a>
+        <h1 class="fw-bold px-2">Upcoming tasks:</h1>
       </div>
       <div class="col-lg col-12">
         <div class="sanity-wrapper" @click="invertFilter">
@@ -138,6 +160,8 @@ function load() {
   </div>
 </template>
 <style lang="scss" scoped>
+@import "/src/SCSS/build/colors.scss";
+
 .sanity-wrapper {
   width: 30em;
   max-width: 80%;
@@ -146,5 +170,15 @@ function load() {
   margin-right: 0em;
   margin-bottom: 1em;
   position: relative;
+}
+
+.fitcheats-link {
+  color: $fit-blue;
+  transition: 250ms;
+  display: inline-block;
+
+  &:hover {
+    color: $fit-dark-blue;
+  }
 }
 </style>
