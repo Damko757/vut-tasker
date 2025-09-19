@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, ref, type PropType } from "vue";
-import type { Task } from "../../../../shared/Entities/Task";
 import axios from "axios";
-import TaskView from "../Subject/TaskView.vue";
+import moment from "moment";
+import { computed, ref } from "vue";
+import type { Task } from "../../../../shared/Entities/Task";
+import { API_URL } from "../../const";
+import { getStore } from "../../store/store";
 import CheckBox from "../Subject/CheckBox.vue";
 import CompletedByDots from "../Subject/CompletedByDots.vue";
-import { getStore } from "../../store/store";
-import { API_URL } from "../../const";
-import moment from "moment";
+import TaskView from "../Subject/TaskView.vue";
 
 const store = getStore();
 const user = store.getters.getUser();
@@ -66,15 +66,15 @@ const SUMMER_START_WEEK = -13;
             (() => {
               if (
                 WINTER_START_WEEK <= weekNumber &&
-                weekNumber <= WINTER_START_WEEK + 13
+                weekNumber < WINTER_START_WEEK + 13
               ) {
-                return `${weekNumber}/${weekNumber - WINTER_START_WEEK}`;
+                return `${weekNumber}/${weekNumber - WINTER_START_WEEK + 1}`;
               }
               if (
                 SUMMER_START_WEEK <= weekNumber &&
-                weekNumber <= SUMMER_START_WEEK + 13
+                weekNumber < SUMMER_START_WEEK + 13
               ) {
-                return `${weekNumber}/${weekNumber - SUMMER_START_WEEK}`;
+                return `${weekNumber}/${weekNumber - SUMMER_START_WEEK + 1}`;
               }
 
               return weekNumber;
