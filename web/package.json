@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@iconify/vue": "^5.0.0",
     "@tailwindcss/vite": "^4.1.13",
     "@vueuse/integrations": "^11.1.0",
     "axios": "^1.7.7",

@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { computed, ref, type PropType } from "vue";
-import type { Task } from "../../../../shared/Entities/Task";
-import CheckBox from "./CheckBox.vue";
-import { API_URL } from "../../const";
-import TaskView from "./TaskView.vue";
-import TaskEdit from "./TaskEdit.vue";
 import axios from "axios";
-import CompletedByDots from "./CompletedByDots.vue";
+import moment from "moment";
+import { computed, ref } from "vue";
+import type { Task } from "../../../../shared/Entities/Task";
+import { API_URL } from "../../const";
 import { getStore } from "../../store/store";
+import CheckBox from "./CheckBox.vue";
+import CompletedByDots from "./CompletedByDots.vue";
+import TaskEdit from "./TaskEdit.vue";
+import TaskView from "./TaskView.vue";
 
 const store = getStore();
 const user = store.getters.getUser();
@@ -44,9 +45,45 @@ function todoCheck(ns: boolean) {
       task.value!.completed_by = response.data.completed_by as string[];
   });
 }
+
+const props = defineProps<{
+  showWeek: boolean;
+  showSubjectName: boolean; // If subject name should be shown
+}>();
+
+const weekNumber = computed(() =>
+  task.value ? moment(task.value!.due_date).week() : 0
+);
+
+const WINTER_START_WEEK = 38;
+const SUMMER_START_WEEK = -13;
 </script>
 <template>
-  <div :class="{ completed: state }" class="row" v-if="!deleted">
+  <div :class="{ completed: state }" class="row py-2 mb-3" v-if="!deleted">
+    <div class="position-relative mb-3" v-if="showWeek && weekNumber">
+      <div class="new-week" :class="{ active: weekNumber == moment().week() }">
+        <div class="week-num ps-1">
+          {{
+            (() => {
+              if (
+                WINTER_START_WEEK <= weekNumber &&
+                weekNumber < WINTER_START_WEEK + 13
+              ) {
+                return `${weekNumber}/${weekNumber - WINTER_START_WEEK + 1}`;
+              }
+              if (
+                SUMMER_START_WEEK <= weekNumber &&
+                weekNumber < SUMMER_START_WEEK + 13
+              ) {
+                return `${weekNumber}/${weekNumber - SUMMER_START_WEEK + 1}`;
+              }
+
+              return weekNumber;
+            })()
+          }}
+        </div>
+      </div>
+    </div>
     <div class="col-auto position-relative pb-2">
       <div class="position-absolute" style="left: -0.75em">
         <div class="personal" v-if="task?.personal">#</div>
@@ -59,6 +96,7 @@ function todoCheck(ns: boolean) {
         v-if="action == 'view'"
         :task="task!"
         :is-collapsed="isCollapsed"
+        :showSubjectName="showSubjectName"
         @update="action = 'update'"
         @delete="deleteTask"
       />
@@ -73,12 +111,35 @@ function todoCheck(ns: boolean) {
         "
       />
     </div>
-
-    <hr class="mt-2" />
   </div>
 </template>
 <style lang="scss">
 @import "/src/SCSS/main.scss";
+
+.new-week {
+  width: 2em;
+  height: 0.5rem;
+  background-color: $white;
+  left: 0;
+  top: 100%;
+  transform: translate(-1em, -50%);
+  border-radius: 1em;
+
+  .week-num {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(100%, -50%);
+    font-weight: bold;
+  }
+
+  &.active {
+    background-color: $fit-light-blue !important;
+    .week-num {
+      color: $fit-light-blue !important;
+    }
+  }
+}
 
 .completed h5 {
   text-decoration: line-through;
