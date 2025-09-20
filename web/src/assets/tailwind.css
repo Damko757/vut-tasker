@@ -2,10 +2,21 @@
 
 @theme {
   --color-black: #191919;
+  --color-black-400: #1e1e1e;
   --color-white: #dedede;
   --color-dark-blue: #00205c;
   --color-fit-blue: #00a9e0;
   --color-fit-light-blue: #00bcfa;
   --color-fit-dark-blue: #1676d0;
   --color-vut-red: #e4002b;
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
