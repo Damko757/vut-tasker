@@ -1,17 +1,10 @@
 <script setup lang="ts">
-import {
-  computed,
-  onMounted,
-  ref,
-  type PropType,
-  watch,
-  onActivated,
-  onBeforeMount,
-} from "vue";
+import { Icon } from "@iconify/vue";
+import fontColorContrast from "font-color-contrast";
+import stc from "string-to-color";
+import { computed, onBeforeMount, ref, watch, type PropType } from "vue";
 import { taskTypeToColor, type Task } from "../../../../shared/Entities/Task";
 import { getStore } from "../../store/store";
-import stc from "string-to-color";
-import fontColorContrast from "font-color-contrast";
 import { getDayByDate } from "../../Utils";
 const store = getStore();
 const user = store.getters.getUser();
@@ -22,7 +15,7 @@ const props = defineProps({
     required: true,
   },
   isCollapsed: { type: Boolean, required: true },
-  showAll: { type: Boolean, default: false },
+  showSubjectName: { type: Boolean, default: false },
 });
 
 const room = computed(() => props.task.rooms?.[user?.value?.nick ?? ""]);
@@ -147,12 +140,12 @@ const isForegroundColorBlack = computed(
 );
 </script>
 <template>
-  <div class="cursor-pointer">
-    <h5 class="position-relative pe-3">
+  <div class="">
+    <h5 class="position-relative pe-3 flex items-center">
       <!-- Show subject name -->
       <span
-        v-if="showAll"
-        class="fw-bold me-2 px-1 rounded-2"
+        v-if="showSubjectName"
+        class="fw-bold me-2 py-0.5 px-2 rounded-xl"
         :style="{
           background: backgroundColor,
         }"
@@ -161,29 +154,41 @@ const isForegroundColorBlack = computed(
           'text-white': !isForegroundColorBlack,
         }"
       >
-        {{ task.required ? "*" : "" }}{{ task.subject }}:</span
+        {{ task.subject }}</span
       >
       <!-- Show only basic task -->
       <span class="fw-bold" v-else>{{ task.required ? "*" : "" }}</span
       >{{ task.name }}
-      <template v-if="showAll">
-        <span class="fw-bold" :style="{ color: taskTypeToColor[task.type] }"
+      <template v-if="showSubjectName">
+        <span
+          class="ms-2 fw-bold"
+          :style="{ color: taskTypeToColor[task.type] }"
           >({{ (task.type as unknown as string).capitalize() }})</span
         >
       </template>
+      <!-- !!! -->
       <span
-        class="incoming text-danger ms-2 fw-bold fs-3"
+        class="incoming text-vut-red ms-2 fw-bold fs-3"
         v-if="!task.completed_by.includes(user?.nick ?? ``)"
         >{{ incomingExclamations }}</span
       >
+      <!-- Dropdown -->
       <div
         class="collapse-arrow"
         :class="{ collapsed: props.isCollapsed }"
-        v-if="!showAll || extraInfo.some((x) => task[x])"
+        v-if="!showSubjectName || extraInfo.some((x) => task[x])"
       >
-        >
+        <Icon icon="material-symbols:arrow-forward-ios-rounded" />
+      </div>
+      <div
+        v-else
+        class="ms-auto me-0 cursor-pointer hover:text-slate-400"
+        @click.stop="emit('update', task)"
+      >
+        <Icon icon="material-symbols:edit-rounded" />
       </div>
     </h5>
+
     <div v-if="task.due_date" class="due-date fst-italic">
       &#40;{{ getDayByDate(task.due_date) }}
       {{ task.due_date?.ISOToFormattedDateTime()
@@ -196,7 +201,7 @@ const isForegroundColorBlack = computed(
       }}&#41; <span v-if="room">at {{ room }}&nbsp;</span>
       <span
         :class="{
-          'text-danger': countdown != null && countdown <= 0,
+          'text-vut-red': countdown != null && countdown <= 0,
         }"
         class="countdown fw-bold text-nowrap"
         >{{ countdownText }}</span
@@ -220,13 +225,16 @@ const isForegroundColorBlack = computed(
         </div>
       </div>
 
-      <div class="pt-2 fw-bold" v-if="!showAll">
-        <button class="btn btn-success" @click.stop="emit('update', task)">
-          Update
+      <div class="pt-2 fw-bold" v-if="!showSubjectName">
+        <!-- Update -->
+        <button
+          class="bg-emerald-600 rounded-full p-2"
+          @click.stop="emit('update', task)"
+        >
+          <Icon icon="material-symbols:edit-rounded" />
         </button>
-        <button class="btn btn-danger mx-3" @click.stop="emit('delete', task)">
-          Delete
-        </button>
+        <!-- Delete -->
+        <button class="mx-3" @click.stop="emit('delete', task)">Delete</button>
       </div>
     </div>
   </div>
@@ -239,13 +247,13 @@ const isForegroundColorBlack = computed(
 }
 
 .incoming {
-  vertical-align: top;
-  display: inline-block;
-  height: 0 !important;
+  // vertical-align: top;
+  // display: inline-block;
+  // height: 0 !important;
 }
 
 .due-date {
-  color: darken($white, 10%);
+  color: var(--color-slate-400);
 }
 
 .collapsed {
