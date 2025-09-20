@@ -240,10 +240,8 @@ const isForegroundColorBlack = computed(
   </div>
 </template>
 <style lang="scss" scoped>
-@import "/src/SCSS/main.scss";
-
 .countdown {
-  color: $white;
+  color: white;
 }
 
 .incoming {

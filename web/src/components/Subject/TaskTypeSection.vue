@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, type PropType } from "vue";
+import { ref, type PropType } from "vue";
 import {
   taskTypeToColor,
   type Task,
   type TaskType,
 } from "../../../../shared/Entities/Task";
-import Tasks from "./Tasks.vue";
 import TaskEdit from "./TaskEdit.vue";
+import Tasks from "./Tasks.vue";
 
 const emit = defineEmits<{
   (e: "taskAdd", task: Task): void;
@@ -69,11 +69,9 @@ function addTask(newTask: Task | null) {
   </div>
 </template>
 <style lang="scss" scoped>
-@import "/src/SCSS/main.scss";
-
 .hr {
   margin-top: 0.5em;
-  background-color: $white;
+  background-color: white;
   min-height: 0.15em;
   border-radius: 0.15em;
   width: 100%;
