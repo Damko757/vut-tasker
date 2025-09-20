@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, ref, onMounted } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const value = defineModel();
 const props = defineProps({
@@ -28,13 +28,12 @@ const inputRef = ref<HTMLInputElement | null>(null);
   <input v-model="value" :type="type" ref="inputRef" />
 </template>
 <style lang="scss" scoped>
-@import "/src/SCSS/main.scss";
 input {
   background: none;
   outline: none;
   border: none;
-  border-bottom: 0.2em solid $white;
-  color: $white;
+  border-bottom: 0.2em solid white;
+  color: white;
   max-width: 100%;
 }
 </style>

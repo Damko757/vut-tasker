@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch, type PropType } from "vue";
+import { onMounted, ref, watch } from "vue";
 import DateTimeRawInput from "./DateTimeRawInput.vue";
 
 const emit = defineEmits<{
@@ -38,7 +38,7 @@ const inputs = ref<InputData[]>(
       realValue: defaultPlaceholders[i],
       preWrittenValue: defaultPlaceholders[i] == "yyyy" ? "20" : "",
     };
-  })
+  }),
 );
 const datetime = defineModel<string | null | undefined>("datetime");
 function updateInputsByDateTime(datetime: string | null | undefined) {
@@ -80,13 +80,13 @@ function buildDateTimeString(): string | null {
   if (
     (inputs.value[2].value ?? 0) < 100 || // Year needs to be at least 3 digit for Date object to work
     inputs.value.some(
-      (inputData) => inputData.value == null || Number.isNaN(inputData.value)
+      (inputData) => inputData.value == null || Number.isNaN(inputData.value),
     )
   )
     return null;
 
   const v = inputs.value.map((inputData) =>
-    inputData.value?.toString().padStart(2, "0")
+    inputData.value?.toString().padStart(2, "0"),
   );
   return `${v[2]}-${v[1]}-${v[0]} ${v[3]}:${v[4]}:${v[5] ?? "00"}`;
 }
@@ -126,11 +126,9 @@ function onInput(inputData: InputData): void {
   </div>
 </template>
 <style lang="scss" scoped>
-@import "/src/SCSS/main.scss";
-
 .date,
 .time {
-  border-bottom: 3px solid $white;
+  border-bottom: 3px solid white;
   width: fit-content;
   font-weight: bold;
   display: inline-block;

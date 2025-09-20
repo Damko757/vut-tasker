@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { computed, ref, watch, watchEffect, type PropType } from "vue";
+import axios from "axios";
+import { ref, watch, watchEffect, type PropType } from "vue";
 import type { Task } from "../../../../shared/Entities/Task";
-import SimpleInput from "./SimpleInput.vue";
-import CheckBox from "./CheckBox.vue";
-import axios, { type AxiosResponse } from "axios";
 import { API_URL } from "../../const";
-import DateTimeInput from "../Form/DateTimeInput/DateTimeInput.vue";
-import SimpleTextArea from "./SimpleTextArea.vue";
 import { getStore } from "../../store/store";
 import { getDayByDate } from "../../Utils";
+import DateTimeInput from "../Form/DateTimeInput/DateTimeInput.vue";
+import CheckBox from "./CheckBox.vue";
+import SimpleInput from "./SimpleInput.vue";
+import SimpleTextArea from "./SimpleTextArea.vue";
 
 const store = getStore();
 const user = store.getters.getUser();
@@ -30,7 +30,7 @@ watchEffect(() => {
   edittedTask.value = props.task ?? {};
 });
 const originalRoom = ref(
-  edittedTask.value.rooms?.[user.value?.nick ?? ""] ?? ""
+  edittedTask.value.rooms?.[user.value?.nick ?? ""] ?? "",
 );
 const modifiableRoom = ref(`${originalRoom.value}`);
 const submit = () => {
@@ -65,10 +65,10 @@ const submit = () => {
           const roomResponse = modifiableRoom.value
             ? await axios.post(
                 `${API_URL}/task/${response.data._id}/room/${user.value?.nick}`,
-                { room: modifiableRoom.value }
+                { room: modifiableRoom.value },
               )
             : await axios.delete(
-                `${API_URL}/task/${response.data._id}/room/${user.value?.nick}`
+                `${API_URL}/task/${response.data._id}/room/${user.value?.nick}`,
               );
 
           return emit("done", roomResponse.data as Task);
@@ -101,7 +101,7 @@ watch(
       const parts = edittedTask.value.due_date?.split(" ")!;
       return `${parts[0]} `;
     })();
-  }
+  },
 );
 </script>
 <template>
@@ -114,7 +114,7 @@ watch(
     }}{{
       edittedTask.due_date_end
         ? ` &hyphen; ${getDayByDate(
-            edittedTask.due_date_end
+            edittedTask.due_date_end,
           )} ${edittedTask.due_date_end.ISOToFormattedDateTime()}`
         : ``
     }}&#41;
@@ -128,7 +128,7 @@ watch(
       ><span
         ><DateTimeInput
           v-model:datetime="edittedTask.due_date"
-          :ref="(el) => (dueDates[0] = el as typeof dueDates[0])"
+          :ref="(el) => (dueDates[0] = el as (typeof dueDates)[0])"
           @done="
             () => {
               dueDates[1]?.focusTime();
@@ -139,11 +139,11 @@ watch(
       <span
         ><DateTimeInput
           v-model:datetime="edittedTask.due_date_end"
-          :ref="(el) => (dueDates[1] = el as typeof dueDates[1])"
+          :ref="(el) => (dueDates[1] = el as (typeof dueDates)[1])"
       /></span>
       <br />
       <span class="fw-bold">Required: </span
-      ><span class="d-inline-block ps-2 my-2"
+      ><span class="d-inline-block my-2 ps-2"
         ><CheckBox
           :state="edittedTask.required"
           :grey-out="false"
@@ -152,7 +152,7 @@ watch(
       <span class="d-inline-block" style="width: 2em"></span>
       <template v-if="task?.created_by == user?.nick || !task?.created_by">
         <span class="fw-bold">Personal only: </span
-        ><span class="d-inline-block ps-2 my-2"
+        ><span class="d-inline-block my-2 ps-2"
           ><CheckBox
             :state="edittedTask.personal"
             :grey-out="false"
@@ -182,20 +182,19 @@ watch(
       </span>
     </div>
 
-    <div class="pt-2 fw-bold">
-      <button class="btn btn-success mx-3 fw-bold" @click="submit()">
+    <div class="fw-bold pt-2">
+      <button class="btn btn-success fw-bold mx-3" @click="submit()">
         Submit!
       </button>
-      <button class="btn btn-danger mx-3 fw-bold" @click="emit('done', null)">
+      <button class="btn btn-danger fw-bold mx-3" @click="emit('done', null)">
         Cancel!
       </button>
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
-@import "/src/SCSS/main.scss";
 .due-date {
-  color: darken($white, 10%);
+  color: var(--color-slate-400);
 }
 .editables {
   text-decoration: none !important;

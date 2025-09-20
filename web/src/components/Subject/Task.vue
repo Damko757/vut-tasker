@@ -17,7 +17,7 @@ const task = defineModel<Task>();
 const deleted = ref(false);
 
 const state = computed(() =>
-  task.value!.completed_by.includes(user.value?.nick ?? "")
+  task.value!.completed_by.includes(user.value?.nick ?? ""),
 );
 const isCollapsed = ref<boolean>(false);
 
@@ -39,7 +39,7 @@ function deleteTask() {
 
 function todoCheck(ns: boolean) {
   axios[ns ? "post" : "delete"](
-    API_URL + `/task/${task.value!._id}/${user.value!.nick}`
+    API_URL + `/task/${task.value!._id}/${user.value!.nick}`,
   ).then((response) => {
     if (response.data.completed_by)
       task.value!.completed_by = response.data.completed_by as string[];
@@ -52,14 +52,14 @@ const props = defineProps<{
 }>();
 
 const weekNumber = computed(() =>
-  task.value ? moment(task.value!.due_date).week() : 0
+  task.value ? moment(task.value!.due_date).week() : 0,
 );
 
 const WINTER_START_WEEK = 38;
 const SUMMER_START_WEEK = -13;
 </script>
 <template>
-  <div :class="{ completed: state }" class="row py-2 mb-3" v-if="!deleted">
+  <div :class="{ completed: state }" class="row mb-3 py-2" v-if="!deleted">
     <div class="position-relative mb-3" v-if="showWeek && weekNumber">
       <div class="new-week" :class="{ active: weekNumber == moment().week() }">
         <div class="week-num ps-1">
@@ -84,7 +84,7 @@ const SUMMER_START_WEEK = -13;
         </div>
       </div>
     </div>
-    <div class="col-auto position-relative pb-2">
+    <div class="position-relative col-auto pb-2">
       <div class="position-absolute" style="left: -0.75em">
         <div class="personal" v-if="task?.personal">#</div>
         <CompletedByDots :completed-by="task?.completed_by ?? []" v-else />
@@ -114,12 +114,10 @@ const SUMMER_START_WEEK = -13;
   </div>
 </template>
 <style lang="scss">
-@import "/src/SCSS/main.scss";
-
 .new-week {
   width: 2em;
   height: 0.5rem;
-  background-color: $white;
+  background-color: white;
   left: 0;
   top: 100%;
   transform: translate(-1em, -50%);
@@ -134,20 +132,20 @@ const SUMMER_START_WEEK = -13;
   }
 
   &.active {
-    background-color: $fit-light-blue !important;
+    background-color: var(--color-fit-light-blue) !important;
     .week-num {
-      color: $fit-light-blue !important;
+      color: var(--color-fit-light-blue) !important;
     }
   }
 }
 
 .completed h5 {
   text-decoration: line-through;
-  color: darken($white, 30%);
+  color: var(--color-slate-400);
 }
 
 .personal {
-  color: darken($white, 15%);
+  color: var(--color-slate-400);
   display: block;
   position: absolute;
   font-size: 1.75rem;
