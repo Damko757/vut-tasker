@@ -53,7 +53,7 @@ function redirect(subject: string) {
       :class="
         clsx(
           '[&>li]:ms-2 [&>li]:flex [&>li]:cursor-pointer [&>li]:items-center [&>li]:justify-center [&>li]:font-bold [&>li]:hover:underline',
-          'md:mb-5 md:flex-col',
+          'md:mb-2 md:flex-col',
           'text-center md:[&>li]:ms-0 md:[&>li]:mt-2',
         )
       "

@@ -30,7 +30,7 @@ const emit = defineEmits<{
         inputData.value =
           inputData.realValue != `` && !Number.isNaN(inputData.value)
             ? Math.min(inputData.max, inputData.value ?? 0)
-            : null;        
+            : null;
         emit(`input`, inputData);
       }
     "
@@ -39,7 +39,7 @@ const emit = defineEmits<{
         inputData.realValue != `` && !Number.isNaN(inputData.value)
           ? Math.max(
               inputData.min,
-              Math.min(inputData.max, inputData.value ?? 0)
+              Math.min(inputData.max, inputData.value ?? 0),
             )
           : null;
       inputData.realValue = inputData.value?.toString() ?? ``;
@@ -50,15 +50,12 @@ const emit = defineEmits<{
   />
 </template>
 <style lang="scss" scoped>
-@import "/src/SCSS/main.scss";
-
 input {
   min-width: 2.2em;
   width: fit-content;
   border: none;
-  // border-bottom: 3px solid $white;
   background: none;
   outline: none;
-  color: $white;
+  color: white;
 }
 </style>
