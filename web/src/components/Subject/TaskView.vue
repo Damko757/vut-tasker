@@ -2,27 +2,23 @@
 import { Icon } from "@iconify/vue";
 import fontColorContrast from "font-color-contrast";
 import stc from "string-to-color";
-import { computed, onBeforeMount, ref, watch, type PropType } from "vue";
+import { computed, onBeforeMount, ref, watch } from "vue";
 import { taskTypeToColor, type Task } from "../../../../shared/Entities/Task";
 import { getStore } from "../../store/store";
 import { getDayByDate } from "../../Utils";
 const store = getStore();
 const user = store.getters.getUser();
 
-const props = defineProps({
-  task: {
-    type: Object as PropType<Task>,
-    required: true,
-  },
-  isCollapsed: { type: Boolean, required: true },
-  showSubjectName: { type: Boolean, default: false },
-});
+const props = defineProps<{
+  task: Task;
+  isCollapsed: boolean;
+  showSubjectName?: boolean;
+}>();
 
 const room = computed(() => props.task.rooms?.[user?.value?.nick ?? ""]);
 
 const emit = defineEmits<{
   (e: "update", task: Task): void;
-  (e: "delete", task: Task): void;
 }>();
 
 const extraInfo: (keyof Task)[] = ["link", "description"];
@@ -194,7 +190,7 @@ const isCompleted = computed(() =>
           class="cursor-pointer hover:text-slate-400"
           :class="[
             isCollapsed ? 'rotate-90' : '-rotate-90',
-            extraInfo.some((x) => task[x]) ? 'opacity-0' : 'opacity-100',
+            extraInfo.some((x) => task[x]) ? 'opacity-100' : 'opacity-0',
           ]"
         >
           <Icon icon="material-symbols:arrow-forward-ios-rounded" />
@@ -214,7 +210,7 @@ const isCompleted = computed(() =>
               task.due_date_end,
             )} ${task.due_date_end.ISOToFormattedDateTime()}`
           : ``
-      }}&#41; <span v-if="room">at {{ room }}&nbsp;</span>
+      }}&#41; <span v-if="room">at {{ room }}</span>
       <span
         :class="[
           countdown != null && countdown <= 0 ? 'text-vut-red' : 'text-white',

@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import moment from "moment";
-import { type PropType } from "vue";
 import { type Task as TaskT } from "../../../../shared/Entities/Task";
 import Task from "../Subject/Task.vue";
 
-const props = defineProps({
-  tasks: {
-    type: Object as PropType<TaskT[]>,
-    default: [],
-  },
-});
+const props = defineProps<{
+  tasks: TaskT[];
+}>();
+const emit = defineEmits<{ (e: "update", task: TaskT | null): void }>();
 
 moment.updateLocale("en", {
   week: {
@@ -54,7 +51,8 @@ const weekText = (task: TaskT) => {
       </div>
     </div>
     <Task
-      v-model="tasks[i]"
+      :task="tasks[i]"
+      @update="(t) => emit('update', t)"
       :show-week="
         i <= 0 ||
         moment(props.tasks[i].due_date).week() !=

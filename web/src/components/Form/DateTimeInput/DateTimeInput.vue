@@ -109,7 +109,7 @@ function onInput(inputData: InputData): void {
 }
 </script>
 <template>
-  <div class="d-inline-block">
+  <div class="inline-block">
     <div class="date me-3">
       <DateTimeRawInput :input-data="inputs[0]" @input="onInput" />.
       <DateTimeRawInput :input-data="inputs[1]" @input="onInput" />.

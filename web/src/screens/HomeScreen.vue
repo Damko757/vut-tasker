@@ -141,7 +141,18 @@ function load() {
         /></span>
       </div>
       <div>
-        <TasksView :tasks="sortedTasks" />
+        <TasksView
+          :tasks="sortedTasks"
+          @update="
+            (newTask) => {
+              if (!newTask) return;
+              // Replacing in allTasks or inserting
+              const index = allTasks.findIndex((t) => t._id == newTask._id);
+              if (index == -1) allTasks.push(newTask);
+              else allTasks[index] = newTask;
+            }
+          "
+        />
       </div>
     </section>
   </div>

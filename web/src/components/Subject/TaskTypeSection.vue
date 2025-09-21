@@ -39,7 +39,7 @@ function addTask(newTask: Task | null) {
 <template>
   <h3 class="fw-bold w-fit-content position-relative">
     <div
-      class="ps-1 pe-3"
+      class="pe-3 ps-1"
       :style="{ color: taskTypeToColor[taskType as TaskType] }"
     >
       {{ taskType.capitalize() }}
@@ -62,7 +62,11 @@ function addTask(newTask: Task | null) {
         v-if="adding"
         :add-or-edit="'add'"
         @done="addTask"
-        :task="{ type: props.taskType as unknown as TaskType, subject: props.subjectName, required: true }"
+        :task="{
+          type: props.taskType as unknown as TaskType,
+          subject: props.subjectName,
+          required: true,
+        }"
       />
     </div>
     <Tasks :tasks="tasks" :subject="subjectName" :type="taskType" />
