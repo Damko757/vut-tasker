@@ -87,10 +87,10 @@ const props = defineProps<{
   </div>
 </template>
 <style lang="scss">
-.completed h5 {
-  text-decoration: line-through;
-  color: var(--color-slate-400);
-}
+// .completed h5 {
+//   text-decoration: line-through;
+//   color: var(--color-slate-400);
+// }
 
 .personal {
   color: var(--color-slate-400);

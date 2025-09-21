@@ -28,7 +28,7 @@ div {
   width: 1.5em;
   height: 1.5em;
   border: 0.2em solid var(--checkbox_color);
-  border-radius: 0.2em;
+  border-radius: var(--radius-md);
   cursor: pointer;
   display: flex;
   justify-content: flex-end;
@@ -51,7 +51,7 @@ div {
 
   &.active {
     &.grey {
-      --checkbox_color: var(--text-slate-400);
+      --checkbox_color: var(--color-slate-500);
     }
     &::after {
       opacity: 1;
