@@ -44,7 +44,7 @@ function redirect(subject: string) {
     class="no-scrollbar bg-fit-dark-blue fixed bottom-0 z-50 h-fit w-full overflow-scroll rounded-t-xl px-2 py-2"
     :class="
       clsx(
-        'md:left-0 md:top-0 md:h-fit md:w-fit md:rounded-b-xl md:rounded-t-none',
+        'md:left-1 md:top-0 md:h-fit md:w-fit md:rounded-b-xl md:rounded-t-none',
       )
     "
   >
