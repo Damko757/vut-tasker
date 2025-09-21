@@ -18,6 +18,30 @@ moment.updateLocale("en", {
 });
 </script>
 <template>
+  <!-- <div class="relative mb-3" v-if="showWeek && weekNumber">
+      <div class="new-week" :class="{ active: weekNumber == moment().week() }">
+        <div class="week-num ps-1">
+          {{
+            (() => {
+              if (
+                WINTER_START_WEEK <= weekNumber &&
+                weekNumber < WINTER_START_WEEK + 13
+              ) {
+                return `${weekNumber}/${weekNumber - WINTER_START_WEEK + 1}`;
+              }
+              if (
+                SUMMER_START_WEEK <= weekNumber &&
+                weekNumber < SUMMER_START_WEEK + 13
+              ) {
+                return `${weekNumber}/${weekNumber - SUMMER_START_WEEK + 1}`;
+              }
+
+              return weekNumber;
+            })()
+          }}
+        </div>
+      </div>
+    </div> -->
   <div v-for="(task, i) in tasks" :key="task._id">
     <Task
       v-model="tasks[i]"

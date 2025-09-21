@@ -59,38 +59,20 @@ const WINTER_START_WEEK = 38;
 const SUMMER_START_WEEK = -13;
 </script>
 <template>
-  <div :class="{ completed: state }" class="row mb-3 py-2" v-if="!deleted">
-    <div class="position-relative mb-3" v-if="showWeek && weekNumber">
-      <div class="new-week" :class="{ active: weekNumber == moment().week() }">
-        <div class="week-num ps-1">
-          {{
-            (() => {
-              if (
-                WINTER_START_WEEK <= weekNumber &&
-                weekNumber < WINTER_START_WEEK + 13
-              ) {
-                return `${weekNumber}/${weekNumber - WINTER_START_WEEK + 1}`;
-              }
-              if (
-                SUMMER_START_WEEK <= weekNumber &&
-                weekNumber < SUMMER_START_WEEK + 13
-              ) {
-                return `${weekNumber}/${weekNumber - SUMMER_START_WEEK + 1}`;
-              }
-
-              return weekNumber;
-            })()
-          }}
-        </div>
-      </div>
-    </div>
-    <div class="position-relative col-auto pb-2">
-      <div class="position-absolute" style="left: -0.75em">
+  <div
+    :class="{ completed: state }"
+    class="mb-3 grid grid-cols-[auto_1fr] gap-3 py-2"
+    v-if="!deleted"
+  >
+    <!-- CheckBox -->
+    <div class="relative grid grid-cols-2 gap-x-0.5">
+      <div>
         <div class="personal" v-if="task?.personal">#</div>
         <CompletedByDots :completed-by="task?.completed_by ?? []" v-else />
       </div>
       <CheckBox :state="state" @state-change="todoCheck" />
     </div>
+    <!-- Task -->
     <div class="col ps-0" @click="isCollapsed = !isCollapsed">
       <TaskView
         v-if="action == 'view'"
