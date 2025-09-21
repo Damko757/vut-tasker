@@ -12,11 +12,17 @@ import TaskView from "./TaskView.vue";
 const store = getStore();
 const user = store.getters.getUser();
 
-const task = defineModel<Task>();
+const props = defineProps<{
+  task: Task | null;
+  showSubjectName: boolean; // If subject name should be shown
+}>();
+const emit = defineEmits<{
+  (e: "update", task: Task): void;
+}>();
 const deleted = ref(false);
 
 const state = computed(() =>
-  task.value!.completed_by.includes(user.value?.nick ?? ""),
+  props.task!.completed_by.includes(user.value?.nick ?? ""),
 );
 const isCollapsed = ref<boolean>(false);
 
@@ -25,11 +31,12 @@ defineExpose({
   action,
 });
 
-function deleteTask() {
+function deleteTask(id: Task["_id"] | null) {
+  if (!id) return;
   if (!confirm("Really?")) return;
 
   axios
-    .delete(API_URL + `/task/${task.value?._id}`)
+    .delete(API_URL + `/task/${props.task?._id}`)
     .then((response) => {
       deleted.value = true;
     })
@@ -38,16 +45,12 @@ function deleteTask() {
 
 function todoCheck(ns: boolean) {
   axios[ns ? "post" : "delete"](
-    API_URL + `/task/${task.value!._id}/${user.value!.nick}`,
+    API_URL + `/task/${props.task!._id}/${user.value!.nick}`,
   ).then((response) => {
     if (response.data.completed_by)
-      task.value!.completed_by = response.data.completed_by as string[];
+      props.task!.completed_by = response.data.completed_by as string[];
   });
 }
-
-const props = defineProps<{
-  showSubjectName: boolean; // If subject name should be shown
-}>();
 </script>
 <template>
   <div
@@ -71,17 +74,20 @@ const props = defineProps<{
         :is-collapsed="isCollapsed"
         :showSubjectName="showSubjectName"
         @update="action = 'update'"
-        @delete="deleteTask"
       />
       <TaskEdit
         v-if="action == 'update'"
-        :task="task"
+        add-or-edit="edit"
+        :task="task ?? null"
         @done="
           (newTask) => {
             action = 'view';
-            if (newTask) task = newTask;
+            if (newTask) {
+              emit('update', newTask);
+            }
           }
         "
+        @delete="deleteTask"
       />
     </div>
   </div>

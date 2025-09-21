@@ -33,7 +33,6 @@ input {
   outline: none;
   border: none;
   border-bottom: 0.2em solid white;
-  color: white;
   max-width: 100%;
 }
 </style>

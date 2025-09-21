@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { Icon } from "@iconify/vue";
 import axios from "axios";
-import { ref, watch, watchEffect, type PropType } from "vue";
+import { ref, watch, watchEffect } from "vue";
 import type { Task } from "../../../../shared/Entities/Task";
 import { API_URL } from "../../const";
 import { getStore } from "../../store/store";
@@ -13,17 +14,10 @@ import SimpleTextArea from "./SimpleTextArea.vue";
 const store = getStore();
 const user = store.getters.getUser();
 
-const props = defineProps({
-  task: {
-    type: Object as PropType<Partial<Task> | null>,
-    required: false,
-    default: null,
-  },
-  addOrEdit: {
-    type: String,
-    default: "edit",
-  },
-});
+const props = defineProps<{
+  task: Partial<Task> | null;
+  addOrEdit: "edit" | "add";
+}>();
 
 const edittedTask = ref<Partial<Task>>({});
 watchEffect(() => {
@@ -85,6 +79,7 @@ const submit = () => {
 
 const emit = defineEmits<{
   (e: "done", task: Task | null): void;
+  (e: "delete", task: Task["_id"] | null): void;
 }>();
 
 const dueDates = ref<(InstanceType<typeof DateTimeInput> | null)[]>([
@@ -105,92 +100,116 @@ watch(
 );
 </script>
 <template>
-  <h5 class="fw-bold position-relative">
-    {{ addOrEdit == "edit" ? "Edit" : "Add" }} task
-  </h5>
-  <div v-if="edittedTask.due_date" class="due-date fst-italic">
-    &#40;{{ getDayByDate(edittedTask.due_date) }}
-    {{ edittedTask.due_date?.ISOToFormattedDateTime()
-    }}{{
-      edittedTask.due_date_end
-        ? ` &hyphen; ${getDayByDate(
-            edittedTask.due_date_end,
-          )} ${edittedTask.due_date_end.ISOToFormattedDateTime()}`
-        : ``
-    }}&#41;
-  </div>
-  <div class="editables">
-    <div>
-      <span class="fw-bold">Name: </span
-      ><span><SimpleInput v-model="edittedTask.name" /></span>
-      <br />
-      <span class="fw-bold">Due date: </span
-      ><span
-        ><DateTimeInput
-          v-model:datetime="edittedTask.due_date"
-          :ref="(el) => (dueDates[0] = el as (typeof dueDates)[0])"
-          @done="
-            () => {
-              dueDates[1]?.focusTime();
-            }
-          "
-        /><span class="fw-bold"> - </span></span
-      >
-      <span
-        ><DateTimeInput
-          v-model:datetime="edittedTask.due_date_end"
-          :ref="(el) => (dueDates[1] = el as (typeof dueDates)[1])"
-      /></span>
-      <br />
-      <span class="fw-bold">Required: </span
-      ><span class="d-inline-block my-2 ps-2"
-        ><CheckBox
-          :state="edittedTask.required"
-          :grey-out="false"
-          @state-change="(ns) => (edittedTask.required = ns)"
-      /></span>
-      <span class="d-inline-block" style="width: 2em"></span>
-      <template v-if="task?.created_by == user?.nick || !task?.created_by">
-        <span class="fw-bold">Personal only: </span
-        ><span class="d-inline-block my-2 ps-2"
-          ><CheckBox
-            :state="edittedTask.personal"
-            :grey-out="false"
-            @state-change="(ns) => (edittedTask.personal = ns)"
-        /></span>
-      </template>
-      <br />
-      <span class="fw-bold">Link: </span
-      ><a
-        ><SimpleInput
-          v-model="edittedTask.link"
-          type="text"
-          style="color: cyan"
-      /></a>
-      <br />
-      <span class="fw-bold">Description: </span>
-      <div>
-        <SimpleTextArea
-          v-model="edittedTask.description"
-          type="text"
-          style="width: 100%"
-        />
+  <section class="relative">
+    <div
+      v-if="addOrEdit == 'edit'"
+      class="rounded-bl-4xl absolute right-0 top-0 cursor-pointer rounded-tr-xl bg-red-500 pb-3 pe-2 ps-3 pt-2 text-xl hover:bg-red-400"
+      @click="() => emit('delete', task?._id ?? null)"
+    >
+      <Icon icon="material-symbols:delete-rounded" />
+    </div>
+    <h5 class="relative font-bold">
+      {{ addOrEdit == "edit" ? "Editing" : "Adding" }} task
+    </h5>
+    <div v-if="edittedTask.due_date" class="due-date italic">
+      &#40;{{ getDayByDate(edittedTask.due_date) }}
+      {{ edittedTask.due_date?.ISOToFormattedDateTime()
+      }}{{
+        edittedTask.due_date_end
+          ? ` &hyphen; ${getDayByDate(
+              edittedTask.due_date_end,
+            )} ${edittedTask.due_date_end.ISOToFormattedDateTime()}`
+          : ``
+      }}&#41;
+    </div>
+    <div class="editables">
+      <div class="[&>div]:mt-2">
+        <!-- Name -->
+        <div>
+          <span class="">Name: </span><SimpleInput v-model="edittedTask.name" />
+        </div>
+        <!-- Due date -->
+        <div>
+          <span class="">Due date: </span
+          ><span
+            ><DateTimeInput
+              v-model:datetime="edittedTask.due_date"
+              :ref="(el) => (dueDates[0] = el as (typeof dueDates)[0])"
+              @done="
+                () => {
+                  dueDates[1]?.focusTime();
+                }
+              "
+            /><span class=""> - </span></span
+          >
+          <span
+            ><DateTimeInput
+              v-model:datetime="edittedTask.due_date_end"
+              :ref="(el) => (dueDates[1] = el as (typeof dueDates)[1])"
+          /></span>
+        </div>
+        <!-- Checkboxes -->
+        <div>
+          <span class="">Required: </span
+          ><span class="my-2 inline-block ps-2"
+            ><CheckBox
+              :state="edittedTask.required"
+              :grey-out="false"
+              @state-change="(ns) => (edittedTask.required = ns)"
+          /></span>
+          <span class="inline-block" style="width: 2em"></span>
+          <template v-if="task?.created_by == user?.nick || !task?.created_by">
+            <span class="">Personal only: </span
+            ><span class="my-2 inline-block ps-2"
+              ><CheckBox
+                :state="edittedTask.personal"
+                :grey-out="false"
+                @state-change="(ns) => (edittedTask.personal = ns)"
+            /></span>
+          </template>
+        </div>
+        <!-- Link -->
+        <div>
+          <span class="">Link: </span
+          ><a class="text-fit-light-blue"
+            ><SimpleInput v-model="edittedTask.link" type="text"
+          /></a>
+        </div>
+        <!-- Description -->
+        <div>
+          <span class="inline-block pb-1">Description: </span>
+          <div class="">
+            <SimpleTextArea
+              v-model="edittedTask.description"
+              type="text"
+              style="width: 100%"
+            />
+          </div>
+        </div>
+        <div>
+          <span class="">Room: </span>
+          <span>
+            <SimpleInput v-model="modifiableRoom" type="text" />
+          </span>
+        </div>
       </div>
-      <span class="fw-bold">Room: </span>
-      <span>
-        <SimpleInput v-model="modifiableRoom" type="text" />
-      </span>
-    </div>
 
-    <div class="fw-bold pt-2">
-      <button class="btn btn-success fw-bold mx-3" @click="submit()">
-        Submit!
-      </button>
-      <button class="btn btn-danger fw-bold mx-3" @click="emit('done', null)">
-        Cancel!
-      </button>
+      <div class="mt-5 text-2xl font-bold">
+        <button
+          class="me-3 cursor-pointer rounded-xl bg-emerald-700 px-5 py-1 hover:bg-emerald-600"
+          @click="submit()"
+        >
+          <Icon icon="material-symbols:check-rounded" />
+        </button>
+        <button
+          class="cursor-pointer rounded-xl bg-red-700 px-5 py-1 hover:bg-red-600"
+          @click="emit('done', null)"
+        >
+          <Icon icon="material-symbols:close-rounded" />
+        </button>
+      </div>
     </div>
-  </div>
+  </section>
 </template>
 <style lang="scss" scoped>
 .due-date {
