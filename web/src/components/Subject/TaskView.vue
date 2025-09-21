@@ -183,19 +183,22 @@ const isCompleted = computed(() =>
         >{{ incomingExclamations }}</span
       >
       <!-- Dropdown -->
-      <div
-        class="collapse-arrow"
-        :class="{ collapsed: props.isCollapsed }"
-        v-if="!showSubjectName || extraInfo.some((x) => task[x])"
-      >
-        <Icon icon="material-symbols:arrow-forward-ios-rounded" />
-      </div>
-      <div
-        v-else
-        class="me-0 ms-auto cursor-pointer hover:text-slate-400"
-        @click.stop="emit('update', task)"
-      >
-        <Icon icon="material-symbols:edit-rounded" />
+      <div class="me-0 ms-auto flex items-center justify-end gap-2">
+        <div
+          class="cursor-pointer hover:text-slate-400"
+          @click.stop="emit('update', task)"
+        >
+          <Icon icon="material-symbols:edit-rounded" />
+        </div>
+        <div
+          class="cursor-pointer hover:text-slate-400"
+          :class="[
+            isCollapsed ? 'rotate-90' : '-rotate-90',
+            extraInfo.some((x) => task[x]) ? 'opacity-0' : 'opacity-100',
+          ]"
+        >
+          <Icon icon="material-symbols:arrow-forward-ios-rounded" />
+        </div>
       </div>
     </h5>
     <!-- Small text under subject -->
@@ -222,9 +225,8 @@ const isCompleted = computed(() =>
     </div>
     <div class="h-0 overflow-hidden" :class="{ collapsed: props.isCollapsed }">
       <div v-if="task.link">
-        <span class="font-bold">Link: </span
-        ><a
-          class="text-break"
+        <a
+          class="text-break text-fit-blue hover:text-fit-dark-blue underline"
           :href="task.link ?? '#'"
           @click.stop
           target="_blank"
@@ -232,22 +234,9 @@ const isCompleted = computed(() =>
         >
       </div>
       <div v-if="task.description">
-        <span class="font-bold">Description: </span>
-        <div>
+        <div class="bg-black-400 mt-2 rounded-xl p-2">
           {{ task.description }}
         </div>
-      </div>
-
-      <div class="pt-2 font-bold" v-if="!showSubjectName">
-        <!-- Update -->
-        <button
-          class="rounded-full bg-emerald-600 p-2"
-          @click.stop="emit('update', task)"
-        >
-          <Icon icon="material-symbols:edit-rounded" />
-        </button>
-        <!-- Delete -->
-        <button class="mx-3" @click.stop="emit('delete', task)">Delete</button>
       </div>
     </div>
   </div>
@@ -268,17 +257,17 @@ const isCompleted = computed(() =>
 }
 
 .collapse-arrow {
-  position: absolute;
-  font-size: 1.75em;
-  right: 0;
-  top: 50%;
-  translate: 0% -50%;
-  rotate: 90deg;
-  transition: 250ms;
-  transform-origin: center;
+  // position: absolute;
+  // font-size: 1.75em;
+  // right: 0;
+  // top: 50%;
+  // translate: 0% -50%;
+  // rotate: 90deg;
+  // transition: 250ms;
+  // transform-origin: center;
 
-  &.collapsed {
-    rotate: -90deg !important;
-  }
+  // &.collapsed {
+  //   rotate: -90deg !important;
+  // }
 }
 </style>
