@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import axios from "axios";
-import moment from "moment";
 import { computed, ref } from "vue";
 import type { Task } from "../../../../shared/Entities/Task";
 import { API_URL } from "../../const";
@@ -47,16 +46,8 @@ function todoCheck(ns: boolean) {
 }
 
 const props = defineProps<{
-  showWeek: boolean;
   showSubjectName: boolean; // If subject name should be shown
 }>();
-
-const weekNumber = computed(() =>
-  task.value ? moment(task.value!.due_date).week() : 0,
-);
-
-const WINTER_START_WEEK = 38;
-const SUMMER_START_WEEK = -13;
 </script>
 <template>
   <div
@@ -96,31 +87,6 @@ const SUMMER_START_WEEK = -13;
   </div>
 </template>
 <style lang="scss">
-.new-week {
-  width: 2em;
-  height: 0.5rem;
-  background-color: white;
-  left: 0;
-  top: 100%;
-  transform: translate(-1em, -50%);
-  border-radius: 1em;
-
-  .week-num {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translate(100%, -50%);
-    font-weight: bold;
-  }
-
-  &.active {
-    background-color: var(--color-fit-light-blue) !important;
-    .week-num {
-      color: var(--color-fit-light-blue) !important;
-    }
-  }
-}
-
 .completed h5 {
   text-decoration: line-through;
   color: var(--color-slate-400);
