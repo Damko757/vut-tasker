@@ -76,8 +76,12 @@ function redirect(subject: string) {
       >
         {{ subject }}
       </li>
-      <!-- Divider -->
+      <!-- Divider only if some in subscribed and in unsubscribed -->
       <div
+        v-if="
+          specifiedSubjects.subscribed.length &&
+          specifiedSubjects.unsubscribed.length
+        "
         class="mb-2 ms-2 mt-2 w-[2px] rounded-full bg-white md:mb-0 md:ms-0 md:mt-2 md:h-[2px] md:w-auto"
       ></div>
       <!-- Unsubscribed -->
