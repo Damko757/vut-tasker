@@ -1,36 +1,41 @@
 <script setup lang="ts">
-import {
-  TaskType,
-  taskTypeToColor,
-  type Task,
-} from "../../../../../shared/Entities/Task";
+import { TaskType, taskTypeToColor } from "../../../../../shared/Entities/Task";
 import { saveFilterValue } from "./HomeFilter";
+
+const typeToColor = { ...taskTypeToColor, See: "white" };
 
 const filterMap = defineModel<{ [key in TaskType]: boolean }>("filterMap", {
   required: true,
 }); // true -> show, false -> hide
 </script>
 <template>
-  <div class="wrapper py-1 rounded-2 px-2">
+  <div class="wrapper bg-black-100 rounded-xl px-3 py-2 text-base">
     <div
       v-for="key in Object.keys(filterMap)"
       :key="key"
-      @click.stop="() => {
-        filterMap[key as TaskType] = !filterMap[key as TaskType];
-        saveFilterValue(key[0].toUpperCase(), filterMap[key as TaskType])
+      @click.stop="
+        () => {
+          filterMap[key as TaskType] = !filterMap[key as TaskType];
+          saveFilterValue(key[0].toUpperCase(), filterMap[key as TaskType]);
+        }
+      "
+      :class="{
+        inactive: !filterMap[key as TaskType],
+        // hideButton: key == `See`,
+        invertColors: key == `See` || key == TaskType.OTHER,
       }"
-      :class="{inactive: !filterMap[key as TaskType], hideButton: key == `See`, invertColors: key == `See` || key == TaskType.OTHER}"
-      :style="{'background-color': taskTypeToColor[key as TaskType]}"
-      class="filter-button p-md-3 px-3 py-1 rounded-1 w-fit-content fw-bold mx-md-2 mx-1 cursor-pointer"
+      :style="{
+        'background-color': typeToColor[key as TaskType],
+        'border-color': typeToColor[key as TaskType],
+      }"
+      class="filter-button mx-1 w-fit cursor-pointer rounded-xl border-4 p-3 px-3 py-2 font-bold md:mx-2"
     >
       {{ key[0].toUpperCase() }}
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
-@import "/src/SCSS/main.scss";
 .wrapper {
-  background-color: lighten($black, 10%);
   width: fit-content;
   margin-right: 0;
   // height: 100%;
@@ -39,33 +44,22 @@ const filterMap = defineModel<{ [key in TaskType]: boolean }>("filterMap", {
   align-items: center;
   margin-left: auto;
 
-  position: absolute;
+  position: relative;
   right: 0;
 
   .filter-button {
     &.inactive {
-      background-color: lighten($black, $amount: 15%) !important;
-      color: $white;
+      background-color: transparent !important;
+      color: white;
     }
 
     &.invertColors {
-      color: $black;
+      color: var(--color-black);
       &.inactive {
-        background-color: lighten($black, $amount: 15%) !important;
-        color: $white;
+        // background-color: var(--color-black);
+        color: white;
       }
     }
-
-    &.hideButton {
-      background-color: $white !important;
-      &.inactive {
-        background-color: lighten($black, $amount: 15%) !important;
-      }
-    }
-  }
-
-  @include media-breakpoint-down(md) {
-    font-size: 1rem;
   }
 }
 </style>
