@@ -138,21 +138,31 @@ const backgroundColor = computed(() =>
 const isForegroundColorBlack = computed(
   () => fontColorContrast(backgroundColor.value) == "#000000",
 );
+
+const isCompleted = computed(() =>
+  props.task.completed_by.includes(user.value?.nick ?? ""),
+);
 </script>
 <template>
   <div class="">
-    <h5 class="relative flex items-center pe-3 md:text-lg">
+    <h5
+      class="relative flex items-center pe-3 md:text-lg"
+      :class="{ 'saturate-0': isCompleted }"
+    >
       <!-- Show subject name -->
       <span
         v-if="showSubjectName"
-        class="me-2 rounded-xl px-2 py-0.5 font-bold tracking-wider"
+        class="border-3 me-2 rounded-xl px-2 font-bold tracking-wider"
         :style="{
-          background: backgroundColor,
+          background: task.required ? backgroundColor : 'transparent',
+          'border-color': backgroundColor,
         }"
-        :class="{
-          'text-black': isForegroundColorBlack,
-          'text-white': !isForegroundColorBlack,
-        }"
+        :class="[
+          isForegroundColorBlack &&
+          task.required /* if required, no BG, so white text */
+            ? 'text-black'
+            : 'text-white',
+        ]"
       >
         {{ task.subject }}</span
       >
