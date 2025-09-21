@@ -133,19 +133,19 @@ onBeforeMount(() => {
 watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
 
 const backgroundColor = computed(() =>
-  props.task ? stc(props.task.subject) : ""
+  props.task ? stc(props.task.subject) : "",
 );
 const isForegroundColorBlack = computed(
-  () => fontColorContrast(backgroundColor.value) == "#000000"
+  () => fontColorContrast(backgroundColor.value) == "#000000",
 );
 </script>
 <template>
   <div class="">
-    <h5 class="position-relative pe-3 flex items-center">
+    <h5 class="relative flex items-center pe-3 md:text-lg">
       <!-- Show subject name -->
       <span
         v-if="showSubjectName"
-        class="fw-bold me-2 py-0.5 px-2 rounded-xl"
+        class="me-2 rounded-xl px-2 py-0.5 font-bold tracking-wider"
         :style="{
           background: backgroundColor,
         }"
@@ -157,18 +157,18 @@ const isForegroundColorBlack = computed(
         {{ task.subject }}</span
       >
       <!-- Show only basic task -->
-      <span class="fw-bold" v-else>{{ task.required ? "*" : "" }}</span
+      <span class="font-bold" v-else>{{ task.required ? "*" : "" }}</span
       >{{ task.name }}
       <template v-if="showSubjectName">
         <span
-          class="ms-2 fw-bold"
+          class="ms-2 font-bold"
           :style="{ color: taskTypeToColor[task.type] }"
           >({{ (task.type as unknown as string).capitalize() }})</span
         >
       </template>
       <!-- !!! -->
       <span
-        class="incoming text-vut-red ms-2 fw-bold fs-3"
+        class="text-vut-red mx-2 rounded-xl text-2xl font-bold"
         v-if="!task.completed_by.includes(user?.nick ?? ``)"
         >{{ incomingExclamations }}</span
       >
@@ -182,34 +182,37 @@ const isForegroundColorBlack = computed(
       </div>
       <div
         v-else
-        class="ms-auto me-0 cursor-pointer hover:text-slate-400"
+        class="me-0 ms-auto cursor-pointer hover:text-slate-400"
         @click.stop="emit('update', task)"
       >
         <Icon icon="material-symbols:edit-rounded" />
       </div>
     </h5>
-
-    <div v-if="task.due_date" class="due-date fst-italic">
+    <!-- Small text under subject -->
+    <div
+      v-if="task.due_date"
+      class="due-date fst-italic text-sm md:mt-1 md:text-base"
+    >
       &#40;{{ getDayByDate(task.due_date) }}
       {{ task.due_date?.ISOToFormattedDateTime()
       }}{{
         task.due_date_end
           ? ` &hyphen; ${getDayByDate(
-              task.due_date_end
+              task.due_date_end,
             )} ${task.due_date_end.ISOToFormattedDateTime()}`
           : ``
       }}&#41; <span v-if="room">at {{ room }}&nbsp;</span>
       <span
-        :class="{
-          'text-vut-red': countdown != null && countdown <= 0,
-        }"
-        class="countdown fw-bold text-nowrap"
+        :class="[
+          countdown != null && countdown <= 0 ? 'text-vut-red' : 'text-white',
+        ]"
+        class="ms-2 text-nowrap font-bold"
         >{{ countdownText }}</span
       >
     </div>
     <div class="h-0 overflow-hidden" :class="{ collapsed: props.isCollapsed }">
       <div v-if="task.link">
-        <span class="fw-bold">Link: </span
+        <span class="font-bold">Link: </span
         ><a
           class="text-break"
           :href="task.link ?? '#'"
@@ -219,16 +222,16 @@ const isForegroundColorBlack = computed(
         >
       </div>
       <div v-if="task.description">
-        <span class="fw-bold">Description: </span>
+        <span class="font-bold">Description: </span>
         <div>
           {{ task.description }}
         </div>
       </div>
 
-      <div class="pt-2 fw-bold" v-if="!showSubjectName">
+      <div class="pt-2 font-bold" v-if="!showSubjectName">
         <!-- Update -->
         <button
-          class="bg-emerald-600 rounded-full p-2"
+          class="rounded-full bg-emerald-600 p-2"
           @click.stop="emit('update', task)"
         >
           <Icon icon="material-symbols:edit-rounded" />
@@ -240,10 +243,6 @@ const isForegroundColorBlack = computed(
   </div>
 </template>
 <style lang="scss" scoped>
-.countdown {
-  color: white;
-}
-
 .incoming {
   // vertical-align: top;
   // display: inline-block;

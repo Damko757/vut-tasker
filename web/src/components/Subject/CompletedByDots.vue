@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, inject, onMounted, ref, watch, type PropType } from "vue";
-import type { StoreType } from "../../store/store";
+import { computed, inject, type PropType } from "vue";
 import type { User } from "../../../../shared/Entities/User";
+import type { StoreType } from "../../store/store";
 
 const store: StoreType = inject("store") as unknown as StoreType;
 const _users = store.getters.getAllUsers();
@@ -19,17 +19,17 @@ const props = defineProps({
 });
 
 const availableCompletedBy = computed(() =>
-  props.completedBy.sort().filter((u) => users.value[u])
+  props.completedBy.sort().filter((u) => users.value[u]),
 );
 </script>
 <template>
   <div
-    class="d-flex flex-shrink-0 flex-wrap justify-content-start align-items-center wrapper"
+    class="wrapper flex w-10 shrink-0 flex-row-reverse flex-wrap items-center justify-start"
   >
     <div
       v-for="nick in availableCompletedBy"
       :key="nick"
-      class="dot"
+      class="dot m-0.5 aspect-square w-2 rounded-full"
       :style="{ background: users[nick]?.color ?? 'red' }"
       :title="nick"
     ></div>
@@ -42,10 +42,10 @@ const availableCompletedBy = computed(() =>
   // writing-mode: vertical-lr;
   position: relative;
   .dot {
-    width: 0.5em;
-    height: 0.5em;
-    margin: 0.1em;
-    border-radius: 1em;
+    // width: 0.5em;
+    // height: 0.5em;
+    // margin: 0.1em;
+    // border-radius: 1em;
   }
 }
 </style>

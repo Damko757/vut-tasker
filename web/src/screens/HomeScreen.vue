@@ -133,7 +133,7 @@ function load() {
     </div>
   </div>
 
-  <div class="types px-4">
+  <div class="types">
     <section class="type mb-2">
       <div v-if="!sortedTasks.length" class="fs-1 font-bold">
         <span style="color: orangered" class="fst-italic">
