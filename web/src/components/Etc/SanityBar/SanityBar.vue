@@ -16,6 +16,7 @@ const multipliers: Record<keyof typeof TaskType, number> = {
   HOMEWORK: 1,
   EXAM: 2,
   REGISTRATION: 0.5,
+  OTHER: 0.25,
 };
 
 const maxPoints = 10;
