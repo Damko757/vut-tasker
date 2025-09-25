@@ -11,10 +11,10 @@ const user = store.getters.getUser();
 
 const props = defineProps<{
   task: Task;
-  isCollapsed: boolean;
   showSubjectName?: boolean;
 }>();
 
+const isCollapsed = ref<boolean>(false);
 const room = computed(() => props.task.rooms?.[user?.value?.nick ?? ""]);
 
 const emit = defineEmits<{
@@ -140,7 +140,7 @@ const isCompleted = computed(() =>
 );
 </script>
 <template>
-  <div class="">
+  <div class="" @click="() => (isCollapsed = !isCollapsed)">
     <h5
       class="relative flex items-center pe-3 md:text-lg"
       :class="{ 'saturate-0': isCompleted }"
@@ -182,7 +182,7 @@ const isCompleted = computed(() =>
       <div class="me-0 ms-auto flex items-center justify-end gap-2">
         <div
           class="cursor-pointer hover:text-slate-400"
-          @click.stop="emit('update', task)"
+          @click.stop.prevent="emit('update', task)"
         >
           <Icon icon="material-symbols:edit-rounded" />
         </div>
@@ -219,7 +219,7 @@ const isCompleted = computed(() =>
         >{{ countdownText }}</span
       >
     </div>
-    <div class="h-0 overflow-hidden" :class="{ collapsed: props.isCollapsed }">
+    <div class="h-0 overflow-hidden" :class="{ collapsed: isCollapsed }">
       <div v-if="task.link">
         <a
           class="text-break text-fit-blue hover:text-fit-dark-blue underline"

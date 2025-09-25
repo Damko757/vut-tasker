@@ -55,7 +55,7 @@ function todoCheck(ns: boolean) {
 <template>
   <div
     :class="{ completed: state }"
-    class="mb-3 grid grid-cols-[auto_1fr] gap-3 py-2"
+    class="mb-3 grid grid-cols-[auto_1fr] gap-3 py-2 md:mb-1"
     v-if="!deleted"
   >
     <!-- CheckBox -->
@@ -67,11 +67,10 @@ function todoCheck(ns: boolean) {
       <CheckBox :state="state" @state-change="todoCheck" />
     </div>
     <!-- Task -->
-    <div class="col ps-0" @click="isCollapsed = !isCollapsed">
+    <div class="col ps-0">
       <TaskView
         v-if="action == 'view'"
         :task="task!"
-        :is-collapsed="isCollapsed"
         :showSubjectName="showSubjectName"
         @update="action = 'update'"
       />
