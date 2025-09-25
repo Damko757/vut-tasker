@@ -50,9 +50,9 @@ function redirect(subject: string) {
       class="mx-0 mb-0 mt-0 flex h-full w-full items-stretch justify-start p-0 text-xl"
       :class="
         clsx(
-          '[&>li]:ms-2 [&>li]:flex [&>li]:cursor-pointer [&>li]:items-center [&>li]:justify-center [&>li]:font-bold [&>li]:hover:underline',
+          '[&>.list-item]:ms-2 [&>.list-item]:flex [&>.list-item]:cursor-pointer [&>.list-item]:items-center [&>.list-item]:justify-center [&>.list-item]:font-bold [&>.list-item]:hover:underline',
           'md:mb-2 md:flex-col',
-          'text-center md:[&>li]:ms-0 md:[&>li]:mt-2',
+          'text-center md:[&>.list-item]:ms-0 md:[&>.list-item]:mt-2',
         )
       "
     >
@@ -71,7 +71,7 @@ function redirect(subject: string) {
       <!-- Subscribed -->
       <div
         v-for="subject in subjects.subscribed"
-        class=""
+        class="list-item"
         @click="redirect(subject)"
       >
         {{ subject }}
@@ -84,7 +84,7 @@ function redirect(subject: string) {
       <!-- Unsubscribed -->
       <div
         v-for="subject in subjects.unsubscribed"
-        class=""
+        class="list-item"
         @click="redirect(subject)"
       >
         {{ subject }}
