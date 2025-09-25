@@ -16,6 +16,7 @@ const props = defineProps<{
   task: Task | null;
   showSubjectName: boolean; // If subject name should be shown
 }>();
+
 const emit = defineEmits<{
   (e: "update", task: Task): void;
 }>();
@@ -39,6 +40,8 @@ function deleteTask(id: Task["_id"] | null) {
     .delete(API_URL + `/task/${props.task?._id}`)
     .then((response) => {
       deleted.value = true;
+      // TODO improve notification about subjects change
+      store.mutations.loadSubjects(); // May deleted all?
     })
     .catch(console.error);
 }

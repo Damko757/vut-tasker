@@ -1,38 +1,36 @@
 <script setup lang="ts">
-import axios from "axios";
 import { clsx } from "clsx";
-import { computed, inject, ref, type PropType } from "vue";
-import { API_URL } from "../const";
+import { inject, onMounted } from "vue";
 import type { StoreType } from "../store/store";
 
-const props = defineProps({
-  subjects: {
-    type: Object as PropType<string[] | null>,
-    default: null,
-  },
-});
 const store: StoreType = inject("store") as unknown as StoreType;
 
-const dynamicSubjects = ref<string[]>([]);
-axios
-  .get(API_URL + `/subjects`)
-  .then((response) => (dynamicSubjects.value = response.data));
-const subjects = computed(() => props.subjects ?? dynamicSubjects.value);
-const specifiedSubjects = computed(() => {
-  const out = {
-    subscribed: <string[]>[],
-    unsubscribed: <string[]>[],
-  };
+// const dynamicSubjects = ref<string[]>([]);
+// axios
+//   .get(API_URL + `/subjects`)
+//   .then((response) => (dynamicSubjects.value = response.data));
+// const subjects = computed(() => props.subjects ?? dynamicSubjects.value);
+// const specifiedSubjects = computed(() => {
+//   const out = {
+//     subscribed: <string[]>[],
+//     unsubscribed: <string[]>[],
+//   };
 
-  subjects.value.forEach((subject) =>
-    out[
-      store.getters.getUser().value?.subscribed_subjects.includes(subject)
-        ? "subscribed"
-        : "unsubscribed"
-    ].push(subject),
-  );
+//   subjects.value.forEach((subject) =>
+//     out[
+//       store.getters.getUser().value?.subscribed_subjects.includes(subject)
+//         ? "subscribed"
+//         : "unsubscribed"
+//     ].push(subject),
+//   );
 
-  return out;
+//   return out;
+// });
+
+const subjects = store.getters.getAllSubjects();
+
+onMounted(() => {
+  store.mutations.loadSubjects();
 });
 
 function redirect(subject: string) {
@@ -70,7 +68,7 @@ function redirect(subject: string) {
       </a>
       <!-- Subscribed -->
       <li
-        v-for="subject in specifiedSubjects.subscribed"
+        v-for="subject in subjects.subscribed"
         class=""
         @click="redirect(subject)"
       >
@@ -78,15 +76,12 @@ function redirect(subject: string) {
       </li>
       <!-- Divider only if some in subscribed and in unsubscribed -->
       <div
-        v-if="
-          specifiedSubjects.subscribed.length &&
-          specifiedSubjects.unsubscribed.length
-        "
+        v-if="subjects.subscribed.length && subjects.unsubscribed.length"
         class="mb-2 ms-2 mt-2 w-[2px] rounded-full bg-white md:mb-0 md:ms-0 md:mt-2 md:h-[2px] md:w-auto"
       ></div>
       <!-- Unsubscribed -->
       <li
-        v-for="subject in specifiedSubjects.unsubscribed"
+        v-for="subject in subjects.unsubscribed"
         class=""
         @click="redirect(subject)"
       >

@@ -3,11 +3,12 @@ import { Icon } from "@iconify/vue";
 import axios, { HttpStatusCode } from "axios";
 import fontColorContrast from "font-color-contrast";
 import stc from "string-to-color";
-import { computed, ref } from "vue";
+import { computed, inject, ref } from "vue";
 import { TaskType, type Task } from "../../../shared/Entities/Task";
 import Subscriber from "../components/Subject/Subscriber.vue";
 import TaskTypeSection from "../components/Subject/TaskTypeSection.vue";
 import { API_URL } from "../const";
+import type { StoreType } from "../store/store.ts";
 import "../Utils.ts";
 
 defineExpose({
@@ -16,6 +17,7 @@ defineExpose({
 const emit = defineEmits<{
   (e: "loadStateChange", newState: number): void;
 }>();
+const store: StoreType = inject("store") as unknown as StoreType;
 
 const props = defineProps({
   subjectName: {
@@ -104,7 +106,13 @@ const isForegroundColorBlack = computed(
           :subject-name="subjectName"
           :task-type="taskType"
           :tasks="typeToTasks.get(taskType as unknown as TaskType) ?? []"
-          @task-add="(task) => subjectTasks.push(task)"
+          @task-add="
+            (task) => {
+              subjectTasks.push(task);
+              // Update subject list
+              store.mutations.loadSubjects();
+            }
+          "
           @task-update="
             (newTask) => {
               // Replacing in subjectTasks or inserting
