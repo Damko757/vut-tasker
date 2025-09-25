@@ -142,13 +142,13 @@ const isCompleted = computed(() =>
 <template>
   <div class="" @click="() => (isCollapsed = !isCollapsed)">
     <h5
-      class="relative flex items-center pe-3 md:text-lg"
+      class="relative mb-2 flex flex-wrap items-start gap-x-2 md:text-lg"
       :class="{ 'saturate-0': isCompleted }"
     >
       <!-- Show subject name -->
       <span
         v-if="showSubjectName"
-        class="border-3 me-2 rounded-xl px-2 font-bold tracking-wider"
+        class="border-3 rounded-xl px-2 font-bold tracking-wider"
         :style="{
           background: task.required ? backgroundColor : 'transparent',
           'border-color': backgroundColor,
@@ -170,21 +170,16 @@ const isCompleted = computed(() =>
         }"
         >{{ task.name }}</span
       >
-      <template v-if="showSubjectName">
-        <span
-          class="ms-2 font-bold"
-          :style="{ color: taskTypeToColor[task.type] }"
-          >({{ (task.type as unknown as string).capitalize() }})</span
-        >
-      </template>
+
       <!-- !!! -->
       <span
-        class="text-vut-red mx-2 rounded-xl text-2xl font-bold"
+        class="text-vut-red rounded-xl text-2xl font-bold leading-6 md:order-2"
         v-if="!task.completed_by.includes(user?.nick ?? ``)"
         >{{ incomingExclamations }}</span
       >
+
       <!-- Dropdown -->
-      <div class="me-0 ms-auto flex items-center justify-end gap-2">
+      <div class="me-0 ms-auto flex items-center justify-end gap-2 md:order-6">
         <div
           class="cursor-pointer hover:text-slate-400"
           @click.stop.prevent="emit('update', task)"
@@ -201,28 +196,42 @@ const isCompleted = computed(() =>
           <Icon icon="material-symbols:arrow-forward-ios-rounded" />
         </div>
       </div>
+
+      <!-- Exam type will be after text on larger screens -->
+      <div
+        class="w-full max-md:grow md:order-1 md:w-fit"
+        v-if="showSubjectName"
+      >
+        <span class="font-bold" :style="{ color: taskTypeToColor[task.type] }"
+          >({{ (task.type as unknown as string).capitalize() }})</span
+        >
+      </div>
     </h5>
     <!-- Small text under subject -->
     <div
       v-if="task.due_date"
-      class="due-date fst-italic text-sm md:mt-1 md:text-base"
+      class="due-date fst-italic flex flex-wrap items-baseline justify-start gap-x-2 text-sm md:mt-1 md:text-base"
     >
-      &#40;{{ getDayByDate(task.due_date) }}
-      {{ task.due_date?.ISOToFormattedDateTime()
-      }}{{
-        task.due_date_end
-          ? ` &hyphen; ${getDayByDate(
-              task.due_date_end,
-            )} ${task.due_date_end.ISOToFormattedDateTime()}`
-          : ``
-      }}&#41; <span v-if="room">at {{ room }}</span>
-      <span
+      <div class="whitespace-nowrap">
+        &#40;{{ getDayByDate(task.due_date) }}
+        {{ task.due_date?.ISOToFormattedDateTime()
+        }}{{
+          task.due_date_end
+            ? ` &hyphen; ${getDayByDate(
+                task.due_date_end,
+              )} ${task.due_date_end.ISOToFormattedDateTime()}`
+            : ``
+        }}&#41;
+      </div>
+      <div v-if="room">at {{ room }}</div>
+      <div
         :class="[
           countdown != null && countdown <= 0 ? 'text-vut-red' : 'text-white',
         ]"
-        class="ms-2 text-nowrap font-bold"
-        >{{ countdownText }}</span
+        class="text-nowrap font-bold"
       >
+        {{ countdownText }}
+      </div>
     </div>
     <div class="h-0 overflow-hidden" :class="{ collapsed: isCollapsed }">
       <div v-if="task.link">

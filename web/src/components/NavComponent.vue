@@ -46,48 +46,50 @@ function redirect(subject: string) {
       )
     "
   >
-    <ul
+    <div
       class="mx-0 mb-0 mt-0 flex h-full w-full items-stretch justify-start p-0 text-xl"
       :class="
         clsx(
-          '[&>li]:ms-2 [&>li]:flex [&>li]:cursor-pointer [&>li]:items-center [&>li]:justify-center [&>li]:font-bold [&>li]:hover:underline',
+          '[&>.list-item]:ms-2 [&>.list-item]:flex [&>.list-item]:cursor-pointer [&>.list-item]:items-center [&>.list-item]:justify-center [&>.list-item]:font-bold [&>.list-item]:hover:underline',
           'md:mb-2 md:flex-col',
-          'text-center md:[&>li]:ms-0 md:[&>li]:mt-2',
+          'text-center md:[&>.list-item]:ms-0 md:[&>.list-item]:mt-2',
         )
       "
     >
-      <a
-        class="inline-flex cursor-pointer items-center justify-center overflow-hidden transition-all hover:saturate-0"
-        @click="redirect('/')"
-      >
-        <img
-          src="/logo.png"
-          alt="Home"
-          class="aspect-square h-10 rounded-lg object-contain"
-        />
-      </a>
+      <div>
+        <a
+          class="flex cursor-pointer items-center justify-center overflow-hidden transition-all hover:saturate-0"
+          @click="redirect('/')"
+        >
+          <img
+            src="/logo.png"
+            alt="Home"
+            class="aspect-square h-10 rounded-lg object-contain"
+          />
+        </a>
+      </div>
       <!-- Subscribed -->
-      <li
+      <div
         v-for="subject in subjects.subscribed"
-        class=""
+        class="list-item"
         @click="redirect(subject)"
       >
         {{ subject }}
-      </li>
+      </div>
       <!-- Divider only if some in subscribed and in unsubscribed -->
       <div
         v-if="subjects.subscribed.length && subjects.unsubscribed.length"
         class="mb-2 ms-2 mt-2 w-[2px] rounded-full bg-white md:mb-0 md:ms-0 md:mt-2 md:h-[2px] md:w-auto"
       ></div>
       <!-- Unsubscribed -->
-      <li
+      <div
         v-for="subject in subjects.unsubscribed"
-        class=""
+        class="list-item"
         @click="redirect(subject)"
       >
         {{ subject }}
-      </li>
-    </ul>
+      </div>
+    </div>
   </nav>
 </template>
 <style lang="scss" scoped>
