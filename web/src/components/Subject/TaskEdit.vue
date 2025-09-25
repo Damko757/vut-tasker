@@ -108,10 +108,10 @@ watch(
     >
       <Icon icon="material-symbols:delete-rounded" />
     </div>
-    <h5 class="relative font-bold">
+    <h5 class="relative w-fit font-bold">
       {{ addOrEdit == "edit" ? "Editing" : "Adding" }} task
     </h5>
-    <div v-if="edittedTask.due_date" class="due-date italic">
+    <div v-if="edittedTask.due_date" class="due-date w-fit italic">
       &#40;{{ getDayByDate(edittedTask.due_date) }}
       {{ edittedTask.due_date?.ISOToFormattedDateTime()
       }}{{
