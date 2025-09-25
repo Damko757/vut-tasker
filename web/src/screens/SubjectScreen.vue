@@ -1,14 +1,14 @@
 <script setup lang="ts">
+import { Icon } from "@iconify/vue";
 import axios, { HttpStatusCode } from "axios";
+import fontColorContrast from "font-color-contrast";
+import stc from "string-to-color";
 import { computed, ref } from "vue";
 import { TaskType, type Task } from "../../../shared/Entities/Task";
-import { API_URL } from "../const";
-import "../Utils.ts";
-import Tasks from "../components/Subject/Tasks.vue";
 import Subscriber from "../components/Subject/Subscriber.vue";
 import TaskTypeSection from "../components/Subject/TaskTypeSection.vue";
-import stc from "string-to-color";
-import fontColorContrast from "font-color-contrast";
+import { API_URL } from "../const";
+import "../Utils.ts";
 
 defineExpose({
   load,
@@ -66,35 +66,31 @@ const typeToTasks = computed(() => {
 
 const backgroundColor = computed(() => stc(props.subjectName));
 const isForegroundColorBlack = computed(
-  () => fontColorContrast(backgroundColor.value) == "#000000"
+  () => fontColorContrast(backgroundColor.value) == "#000000",
 );
 </script>
 <template>
-  <div
-    v-if="subjectTasks?.length == 0"
-    class="fs-2 fw-bold text-center text-danger"
-  >
-    !!!
-    <em
-      ><u>{{ subjectName }}</u></em
-    >
-    does not exist :/ !!!
-  </div>
   <div>
-    <h1 class="fw-bold px-2 d-flex align-items-center">
-      <span
-        class="px-3 rounded-3"
+    <h1 class="mb-3 flex items-center px-2">
+      <div
+        class="border-3 me-2 rounded-xl px-5 py-0.5 text-xl font-bold tracking-wider md:px-10 md:py-1 md:text-2xl"
         :style="{
-          background: backgroundColor,
+          'border-color': backgroundColor,
+          'background-color': backgroundColor,
         }"
-        :class="{
-          'text-black': isForegroundColorBlack,
-          'text-white': !isForegroundColorBlack,
-        }"
+        :class="[isForegroundColorBlack ? 'text-black' : 'text-white']"
       >
-        {{ subjectName }}
-      </span>
-      <div class="d-inline-block">
+        <div class="relative block">
+          <div
+            v-if="subjectTasks?.length == 0"
+            class="fw-bold text-danger absolute -left-2.5 top-1/2 me-2 block -translate-x-1/2 -translate-y-1/2 md:-left-5"
+          >
+            <Icon icon="material-symbols:add-circle-outline-rounded" />
+          </div>
+          {{ subjectName }}
+        </div>
+      </div>
+      <div class="inline-block">
         <Subscriber :subject-name="subjectName" />
       </div>
     </h1>
@@ -109,6 +105,14 @@ const isForegroundColorBlack = computed(
           :task-type="taskType"
           :tasks="typeToTasks.get(taskType as unknown as TaskType) ?? []"
           @task-add="(task) => subjectTasks.push(task)"
+          @task-update="
+            (newTask) => {
+              // Replacing in subjectTasks or inserting
+              const index = subjectTasks.findIndex((t) => t._id == newTask._id);
+              if (index == -1) subjectTasks.push(newTask);
+              else subjectTasks[index] = newTask;
+            }
+          "
         />
       </section>
     </div>
