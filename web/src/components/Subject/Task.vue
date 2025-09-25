@@ -62,7 +62,7 @@ function todoCheck(ns: boolean) {
     v-if="!deleted"
   >
     <!-- CheckBox -->
-    <div class="relative grid grid-cols-2 gap-x-0.5">
+    <div class="w-13 relative grid grid-cols-2 gap-x-0.5">
       <div>
         <div class="personal" v-if="task?.personal">#</div>
         <CompletedByDots :completed-by="task?.completed_by ?? []" v-else />
