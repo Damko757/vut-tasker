@@ -47,24 +47,24 @@ function redirect(subject: string) {
     "
   >
     <div
-      class="mx-0 mb-0 mt-0 flex h-full w-full items-stretch justify-start p-0 text-xl"
+      class="mx-0 mb-0 mt-0 flex h-full w-full items-stretch justify-start gap-x-2 p-0 text-xl md:gap-x-0 md:gap-y-2"
       :class="
         clsx(
-          '[&>.list-item]:ms-2 [&>.list-item]:flex [&>.list-item]:cursor-pointer [&>.list-item]:items-center [&>.list-item]:justify-center [&>.list-item]:font-bold [&>.list-item]:hover:underline',
+          '[&>.list-item]:flex [&>.list-item]:cursor-pointer [&>.list-item]:items-center [&>.list-item]:justify-center [&>.list-item]:font-bold [&>.list-item]:hover:underline',
           'md:mb-2 md:flex-col',
-          'text-center md:[&>.list-item]:ms-0 md:[&>.list-item]:mt-2',
+          'text-center',
         )
       "
     >
-      <div>
+      <div class="flex flex-shrink-0 items-center justify-center">
         <a
-          class="flex cursor-pointer items-center justify-center overflow-hidden transition-all hover:saturate-0"
+          class="flex aspect-square h-10 cursor-pointer items-center justify-center overflow-hidden rounded-lg transition-all hover:saturate-0"
           @click="redirect('/')"
         >
           <img
             src="/logo.png"
             alt="Home"
-            class="aspect-square h-10 rounded-lg object-contain"
+            class="h-full w-full object-contain"
           />
         </a>
       </div>
@@ -79,7 +79,7 @@ function redirect(subject: string) {
       <!-- Divider only if some in subscribed and in unsubscribed -->
       <div
         v-if="subjects.subscribed.length && subjects.unsubscribed.length"
-        class="mb-2 ms-2 mt-2 w-[2px] rounded-full bg-white md:mb-0 md:ms-0 md:mt-2 md:h-[2px] md:w-auto"
+        class="mb-2 mt-2 w-[2px] flex-shrink-0 rounded-full bg-white md:mb-0 md:mt-0 md:h-[2px] md:w-auto"
       ></div>
       <!-- Unsubscribed -->
       <div
