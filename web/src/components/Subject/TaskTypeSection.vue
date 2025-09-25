@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Icon } from "@iconify/vue";
 import { ref, type PropType } from "vue";
 import {
   taskTypeToColor,
@@ -10,6 +11,7 @@ import Tasks from "./Tasks.vue";
 
 const emit = defineEmits<{
   (e: "taskAdd", task: Task): void;
+  (e: "taskUpdate", task: Task): void;
 }>();
 
 const props = defineProps({
@@ -37,19 +39,19 @@ function addTask(newTask: Task | null) {
 }
 </script>
 <template>
-  <h3 class="fw-bold w-fit-content position-relative">
+  <h3 class="relative w-fit font-bold">
     <div
-      class="pe-3 ps-1"
+      class="inline-block ps-1 text-2xl"
       :style="{ color: taskTypeToColor[taskType as TaskType] }"
     >
       {{ taskType.capitalize() }}
     </div>
     <div
-      class="btn-success btn fw-bold add"
+      class="inline-block cursor-pointer px-3 text-lg hover:text-emerald-500"
+      :class="adding ? 'pointer-events-none text-slate-500' : ''"
       @click="adding = true"
-      v-show="!adding"
     >
-      Add
+      <Icon icon="material-symbols:add-rounded" />
     </div>
     <div
       class="hr"
@@ -69,7 +71,16 @@ function addTask(newTask: Task | null) {
         }"
       />
     </div>
-    <Tasks :tasks="tasks" :subject="subjectName" :type="taskType" />
+    <Tasks
+      :tasks="tasks"
+      :subject="subjectName"
+      :type="taskType"
+      @update="
+        (t) => {
+          if (t) emit('taskUpdate', t);
+        }
+      "
+    />
   </div>
 </template>
 <style lang="scss" scoped>
@@ -79,12 +90,5 @@ function addTask(newTask: Task | null) {
   min-height: 0.15em;
   border-radius: 0.15em;
   width: 100%;
-}
-
-.btn.add {
-  position: absolute;
-  top: 0;
-  right: 0;
-  translate: calc(100% + 0.75rem) 0;
 }
 </style>

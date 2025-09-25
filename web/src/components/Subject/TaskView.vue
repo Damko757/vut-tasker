@@ -163,8 +163,13 @@ const isCompleted = computed(() =>
         {{ task.subject }}</span
       >
       <!-- Show only basic task -->
-      <span class="font-bold" v-else>{{ task.required ? "*" : "" }}</span
-      >{{ task.name }}
+      <span
+        class="font-bold"
+        :class="{
+          'text-slate-400': !showSubjectName && !task.required,
+        }"
+        >{{ task.name }}</span
+      >
       <template v-if="showSubjectName">
         <span
           class="ms-2 font-bold"
