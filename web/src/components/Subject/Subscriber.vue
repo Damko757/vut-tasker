@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { API_URL } from "../../const";
-import { computed, inject, ref } from "vue";
+import { Icon } from "@iconify/vue";
 import axios, { type AxiosResponse } from "axios";
+import { computed } from "vue";
 import type { User } from "../../../../shared/Entities/User";
-import { getStore, type StoreType } from "../../store/store";
+import { API_URL } from "../../const";
+import { getStore } from "../../store/store";
 
 const props = defineProps({
   subjectName: {
@@ -16,7 +17,7 @@ const store = getStore();
 
 const user = store.getters.getUser();
 const subscribed = computed(() =>
-  user.value?.subscribed_subjects.includes(props.subjectName)
+  user.value?.subscribed_subjects.includes(props.subjectName),
 );
 
 function changeSubscribedSubjects(newSubjects: string[]) {
@@ -25,7 +26,7 @@ function changeSubscribedSubjects(newSubjects: string[]) {
       `${API_URL}/user/${user.value!.nick}`,
       {
         subscribed_subjects: newSubjects,
-      }
+      },
     )
     .then((response) => {
       store.state.user.value = response.data;
@@ -41,20 +42,26 @@ function subscribe() {
 function unsubscribe() {
   changeSubscribedSubjects(
     user.value?.subscribed_subjects.filter((sub) => sub != props.subjectName) ??
-      []
+      [],
   );
 }
 </script>
 <template>
-  <div v-if="subscribed" class="wrapper">
-    <button class="btn btn-danger mx-3 fw-bold" @click="unsubscribe()">
-      Unsubscribe...
-    </button>
-  </div>
-  <div v-else class="wrapper">
-    <button class="btn btn-success mx-3 fw-bold" @click="subscribe()">
-      Subscribe!
-    </button>
+  <div class="cursor-pointer text-3xl">
+    <div
+      v-if="subscribed"
+      class="wrapper text-red-400 hover:text-red-200"
+      @click="unsubscribe()"
+    >
+      <Icon icon="material-symbols:favorite-rounded" />
+    </div>
+    <div
+      v-else
+      class="wrapper text-white hover:text-red-200"
+      @click="subscribe()"
+    >
+      <Icon icon="material-symbols:favorite-outline-rounded" />
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import HomeScreen from "./HomeScreen.vue";
 import NavComponent from "../components/NavComponent.vue";
+import HomeScreen from "./HomeScreen.vue";
 import SubjectScreen from "./SubjectScreen.vue";
 
 const dots = ref("");
@@ -34,22 +34,22 @@ onMounted(async () => {
 </script>
 <template>
   <NavComponent />
-  <main>
+  <main class="px-3 md:ps-20">
     <div
       v-if="loadState == 0"
-      class="fw-bold text-white p-3 fs-2 text-wrap"
+      class="fw-bold fs-2 text-wrap p-3 text-white"
       style="word-break: break-all"
     >
       Loading{{ dots }}
     </div>
     <div
       v-else-if="loadState == -1"
-      class="fw-bold p-3 fs-1 text-danger text-center"
+      class="fw-bold fs-1 text-danger p-3 text-center"
     >
       Unable to connect! :C
       <button
         type="button"
-        class="btn btn-success d-block mx-auto fw-bold"
+        class="btn btn-success d-block fw-bold mx-auto"
         @click="load"
       >
         Refresh
@@ -79,14 +79,10 @@ onMounted(async () => {
   </main>
 </template>
 <style lang="scss" scoped>
-@import "/src/SCSS/main.scss";
 main {
   margin-top: 1em;
   margin-bottom: 4em;
   max-width: 100vw;
   overflow: hidden;
-  @include media-breakpoint-up(md) {
-    padding-left: 5rem;
-  }
 }
 </style>

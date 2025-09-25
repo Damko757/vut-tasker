@@ -1,35 +1,24 @@
 <script setup lang="ts">
-import {
-  computed,
-  onMounted,
-  ref,
-  type PropType,
-  watch,
-  onActivated,
-  onBeforeMount,
-} from "vue";
+import { Icon } from "@iconify/vue";
+import fontColorContrast from "font-color-contrast";
+import stc from "string-to-color";
+import { computed, onBeforeMount, ref, watch } from "vue";
 import { taskTypeToColor, type Task } from "../../../../shared/Entities/Task";
 import { getStore } from "../../store/store";
-import stc from "string-to-color";
-import fontColorContrast from "font-color-contrast";
 import { getDayByDate } from "../../Utils";
 const store = getStore();
 const user = store.getters.getUser();
 
-const props = defineProps({
-  task: {
-    type: Object as PropType<Task>,
-    required: true,
-  },
-  isCollapsed: { type: Boolean, required: true },
-  showAll: { type: Boolean, default: false },
-});
+const props = defineProps<{
+  task: Task;
+  showSubjectName?: boolean;
+}>();
 
+const isCollapsed = ref<boolean>(false);
 const room = computed(() => props.task.rooms?.[user?.value?.nick ?? ""]);
 
 const emit = defineEmits<{
   (e: "update", task: Task): void;
-  (e: "delete", task: Task): void;
 }>();
 
 const extraInfo: (keyof Task)[] = ["link", "description"];
@@ -140,73 +129,105 @@ onBeforeMount(() => {
 watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
 
 const backgroundColor = computed(() =>
-  props.task ? stc(props.task.subject) : ""
+  props.task ? stc(props.task.subject) : "",
 );
 const isForegroundColorBlack = computed(
-  () => fontColorContrast(backgroundColor.value) == "#000000"
+  () => fontColorContrast(backgroundColor.value) == "#000000",
+);
+
+const isCompleted = computed(() =>
+  props.task.completed_by.includes(user.value?.nick ?? ""),
 );
 </script>
 <template>
-  <div class="cursor-pointer">
-    <h5 class="position-relative pe-3">
+  <div class="" @click="() => (isCollapsed = !isCollapsed)">
+    <h5
+      class="relative flex items-center pe-3 md:text-lg"
+      :class="{ 'saturate-0': isCompleted }"
+    >
       <!-- Show subject name -->
       <span
-        v-if="showAll"
-        class="fw-bold me-2 px-1 rounded-2"
+        v-if="showSubjectName"
+        class="border-3 me-2 rounded-xl px-2 font-bold tracking-wider"
         :style="{
-          background: backgroundColor,
+          background: task.required ? backgroundColor : 'transparent',
+          'border-color': backgroundColor,
         }"
-        :class="{
-          'text-black': isForegroundColorBlack,
-          'text-white': !isForegroundColorBlack,
-        }"
+        :class="[
+          isForegroundColorBlack &&
+          task.required /* if required, no BG, so white text */
+            ? 'text-black'
+            : 'text-white',
+        ]"
       >
-        {{ task.required ? "*" : "" }}{{ task.subject }}:</span
+        {{ task.subject }}</span
       >
       <!-- Show only basic task -->
-      <span class="fw-bold" v-else>{{ task.required ? "*" : "" }}</span
-      >{{ task.name }}
-      <template v-if="showAll">
-        <span class="fw-bold" :style="{ color: taskTypeToColor[task.type] }"
+      <span
+        class="font-bold"
+        :class="{
+          'text-slate-400': !showSubjectName && !task.required,
+        }"
+        >{{ task.name }}</span
+      >
+      <template v-if="showSubjectName">
+        <span
+          class="ms-2 font-bold"
+          :style="{ color: taskTypeToColor[task.type] }"
           >({{ (task.type as unknown as string).capitalize() }})</span
         >
       </template>
+      <!-- !!! -->
       <span
-        class="incoming text-danger ms-2 fw-bold fs-3"
+        class="text-vut-red mx-2 rounded-xl text-2xl font-bold"
         v-if="!task.completed_by.includes(user?.nick ?? ``)"
         >{{ incomingExclamations }}</span
       >
-      <div
-        class="collapse-arrow"
-        :class="{ collapsed: props.isCollapsed }"
-        v-if="!showAll || extraInfo.some((x) => task[x])"
-      >
+      <!-- Dropdown -->
+      <div class="me-0 ms-auto flex items-center justify-end gap-2">
+        <div
+          class="cursor-pointer hover:text-slate-400"
+          @click.stop.prevent="emit('update', task)"
         >
+          <Icon icon="material-symbols:edit-rounded" />
+        </div>
+        <div
+          class="cursor-pointer hover:text-slate-400"
+          :class="[
+            isCollapsed ? 'rotate-90' : '-rotate-90',
+            extraInfo.some((x) => task[x]) ? 'opacity-100' : 'opacity-0',
+          ]"
+        >
+          <Icon icon="material-symbols:arrow-forward-ios-rounded" />
+        </div>
       </div>
     </h5>
-    <div v-if="task.due_date" class="due-date fst-italic">
+    <!-- Small text under subject -->
+    <div
+      v-if="task.due_date"
+      class="due-date fst-italic text-sm md:mt-1 md:text-base"
+    >
       &#40;{{ getDayByDate(task.due_date) }}
       {{ task.due_date?.ISOToFormattedDateTime()
       }}{{
         task.due_date_end
           ? ` &hyphen; ${getDayByDate(
-              task.due_date_end
+              task.due_date_end,
             )} ${task.due_date_end.ISOToFormattedDateTime()}`
           : ``
-      }}&#41; <span v-if="room">at {{ room }}&nbsp;</span>
+      }}&#41; <span v-if="room">at {{ room }}</span>
       <span
-        :class="{
-          'text-danger': countdown != null && countdown <= 0,
-        }"
-        class="countdown fw-bold text-nowrap"
+        :class="[
+          countdown != null && countdown <= 0 ? 'text-vut-red' : 'text-white',
+        ]"
+        class="ms-2 text-nowrap font-bold"
         >{{ countdownText }}</span
       >
     </div>
-    <div class="h-0 overflow-hidden" :class="{ collapsed: props.isCollapsed }">
+    <div class="h-0 overflow-hidden" :class="{ collapsed: isCollapsed }">
       <div v-if="task.link">
-        <span class="fw-bold">Link: </span
-        ><a
-          class="text-break"
+        <a
+          class="text-break text-fit-blue hover:text-fit-dark-blue underline"
           :href="task.link ?? '#'"
           @click.stop
           target="_blank"
@@ -214,38 +235,22 @@ const isForegroundColorBlack = computed(
         >
       </div>
       <div v-if="task.description">
-        <span class="fw-bold">Description: </span>
-        <div>
+        <div class="bg-black-400 mt-2 rounded-xl p-2">
           {{ task.description }}
         </div>
-      </div>
-
-      <div class="pt-2 fw-bold" v-if="!showAll">
-        <button class="btn btn-success" @click.stop="emit('update', task)">
-          Update
-        </button>
-        <button class="btn btn-danger mx-3" @click.stop="emit('delete', task)">
-          Delete
-        </button>
       </div>
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
-@import "/src/SCSS/main.scss";
-
-.countdown {
-  color: $white;
-}
-
 .incoming {
-  vertical-align: top;
-  display: inline-block;
-  height: 0 !important;
+  // vertical-align: top;
+  // display: inline-block;
+  // height: 0 !important;
 }
 
 .due-date {
-  color: darken($white, 10%);
+  color: var(--color-slate-400);
 }
 
 .collapsed {
@@ -253,17 +258,17 @@ const isForegroundColorBlack = computed(
 }
 
 .collapse-arrow {
-  position: absolute;
-  font-size: 1.75em;
-  right: 0;
-  top: 50%;
-  translate: 0% -50%;
-  rotate: 90deg;
-  transition: 250ms;
-  transform-origin: center;
+  // position: absolute;
+  // font-size: 1.75em;
+  // right: 0;
+  // top: 50%;
+  // translate: 0% -50%;
+  // rotate: 90deg;
+  // transition: 250ms;
+  // transform-origin: center;
 
-  &.collapsed {
-    rotate: -90deg !important;
-  }
+  // &.collapsed {
+  //   rotate: -90deg !important;
+  // }
 }
 </style>

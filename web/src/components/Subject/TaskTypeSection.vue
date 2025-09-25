@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { computed, ref, type PropType } from "vue";
+import { Icon } from "@iconify/vue";
+import { ref, type PropType } from "vue";
 import {
   taskTypeToColor,
   type Task,
   type TaskType,
 } from "../../../../shared/Entities/Task";
-import Tasks from "./Tasks.vue";
 import TaskEdit from "./TaskEdit.vue";
+import Tasks from "./Tasks.vue";
 
 const emit = defineEmits<{
   (e: "taskAdd", task: Task): void;
+  (e: "taskUpdate", task: Task): void;
 }>();
 
 const props = defineProps({
@@ -37,19 +39,19 @@ function addTask(newTask: Task | null) {
 }
 </script>
 <template>
-  <h3 class="fw-bold w-fit-content position-relative">
+  <h3 class="relative w-fit font-bold">
     <div
-      class="ps-1 pe-3"
+      class="inline-block ps-1 text-2xl"
       :style="{ color: taskTypeToColor[taskType as TaskType] }"
     >
       {{ taskType.capitalize() }}
     </div>
     <div
-      class="btn-success btn fw-bold add"
+      class="inline-block cursor-pointer px-3 text-lg hover:text-emerald-500"
+      :class="adding ? 'pointer-events-none text-slate-500' : ''"
       @click="adding = true"
-      v-show="!adding"
     >
-      Add
+      <Icon icon="material-symbols:add-rounded" />
     </div>
     <div
       class="hr"
@@ -62,27 +64,31 @@ function addTask(newTask: Task | null) {
         v-if="adding"
         :add-or-edit="'add'"
         @done="addTask"
-        :task="{ type: props.taskType as unknown as TaskType, subject: props.subjectName, required: true }"
+        :task="{
+          type: props.taskType as unknown as TaskType,
+          subject: props.subjectName,
+          required: true,
+        }"
       />
     </div>
-    <Tasks :tasks="tasks" :subject="subjectName" :type="taskType" />
+    <Tasks
+      :tasks="tasks"
+      :subject="subjectName"
+      :type="taskType"
+      @update="
+        (t) => {
+          if (t) emit('taskUpdate', t);
+        }
+      "
+    />
   </div>
 </template>
 <style lang="scss" scoped>
-@import "/src/SCSS/main.scss";
-
 .hr {
   margin-top: 0.5em;
-  background-color: $white;
+  background-color: white;
   min-height: 0.15em;
   border-radius: 0.15em;
   width: 100%;
-}
-
-.btn.add {
-  position: absolute;
-  top: 0;
-  right: 0;
-  translate: calc(100% + 0.75rem) 0;
 }
 </style>

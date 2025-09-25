@@ -1,33 +1,34 @@
-import { defineConfig } from "vite";
+import tailwindcss from "@tailwindcss/vite";
 import vue from "@vitejs/plugin-vue";
-import path from "node:path";
-import { resolve } from "path";
 import { globSync } from "glob";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolve } from "path";
+import { defineConfig } from "vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [vue()],
-    build: {
-        rollupOptions: {
-            input: Object.fromEntries(
-                globSync(["./*.html"]).map((file) => [
-                    file.slice(0, file.length - path.extname(file).length),
-                    fileURLToPath(new URL(file, import.meta.url)),
-                ])
-            ),
-        },
-        emptyOutDir: true,
+  plugins: [vue(), tailwindcss()],
+  build: {
+    rollupOptions: {
+      input: Object.fromEntries(
+        globSync(["./*.html"]).map((file) => [
+          file.slice(0, file.length - path.extname(file).length),
+          fileURLToPath(new URL(file, import.meta.url)),
+        ])
+      ),
     },
-    resolve: {
-        alias: {
-            "~bootstrap": resolve(__dirname, "node_modules/bootstrap"),
-        },
+    emptyOutDir: true,
+  },
+  resolve: {
+    alias: {
+      "~bootstrap": resolve(__dirname, "node_modules/bootstrap"),
     },
-    server: {
-        port: 5000,
-        watch: {
-            usePolling: true,
-        },
+  },
+  server: {
+    port: 5000,
+    watch: {
+      usePolling: true,
     },
+  },
 });

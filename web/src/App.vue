@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import UserSelectScreen from "./screens/UserSelectScreen.vue";
 import MainScreen from "./screens/MainScreen.vue";
+import UserSelectScreen from "./screens/UserSelectScreen.vue";
 import { getStore } from "./store/store";
 
 getStore().mutations.loadUser();
@@ -13,9 +13,8 @@ const user = getStore().getters.getUser();
 </template>
 
 <style lang="scss">
-@import "/src/SCSS/main.scss";
 body {
-  background-color: $black !important;
-  color: $white;
+  background-color: var(--color-black);
+  color: white;
 }
 </style>

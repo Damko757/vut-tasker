@@ -10,19 +10,24 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@iconify/vue": "^5.0.0",
+    "@tailwindcss/vite": "^4.1.13",
     "@vueuse/integrations": "^11.1.0",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
+    "clsx": "^2.1.1",
     "font-color-contrast": "^11.1.0",
     "glob": "^11.0.0",
     "moment": "^2.30.1",
     "string-to-color": "^2.2.2",
+    "tailwindcss": "^4.1.13",
     "universal-cookie": "^7.2.0",
     "vue": "^3.4.37"
   },
   "devDependencies": {
     "@types/node": "^22.5.5",
     "@vitejs/plugin-vue": "^5.1.2",
+    "prettier-plugin-tailwindcss": "^0.6.14",
     "sass": "~1.64.2",
     "sass-embedded": "~1.64.2",
     "typescript": "^5.5.3",

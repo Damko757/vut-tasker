@@ -24,6 +24,7 @@ const props = defineProps({
 });
 
 const taskElements = ref<InstanceType<typeof Task>[]>([]);
+const emit = defineEmits<{ (e: "update", task: TaskT | null): void }>();
 
 const sortedTasks: ComputedRef<TaskT[]> = computed<TaskT[]>(() => {
   const completed: TaskT[] = [];
@@ -46,9 +47,11 @@ const sortedTasks: ComputedRef<TaskT[]> = computed<TaskT[]>(() => {
 <template>
   <div v-for="(task, i) in sortedTasks" :key="task._id">
     <Task
-      v-model="sortedTasks[i]"
+      :task="sortedTasks[i]"
+      @update="(t) => emit('update', t)"
       @delete=""
-      :ref="(el) => taskElements[i] = el as InstanceType<typeof Task>"
+      :ref="(el) => (taskElements[i] = el as InstanceType<typeof Task>)"
+      :show-subject-name="false"
     />
   </div>
 </template>

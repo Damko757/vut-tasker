@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, ref, onMounted } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const value = defineModel({
   type: String,
@@ -27,15 +27,15 @@ onMounted(() => {
 const inputRef = ref<HTMLInputElement | null>(null);
 </script>
 <template>
-  <textarea v-model="value" :type="type" ref="inputRef"></textarea>
+  <textarea
+    v-model="value"
+    :type="type"
+    ref="inputRef"
+    class="rounded-xl px-2 py-1 outline-0"
+  ></textarea>
 </template>
 <style lang="scss" scoped>
-@import "/src/SCSS/main.scss";
 textarea {
-  background: none;
-  outline: none;
-  border: 0.2em solid $white;
-  border-radius: 0.1em;
-  color: $white;
+  border: 0.2em solid white;
 }
 </style>
