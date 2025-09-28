@@ -18,6 +18,7 @@ On HomePage, there is SanityBar in a upper-right corner. It shows, how much of (
 - Project: +1.5
 - Homework: +1
 - Registration: +0.5
+- Other: 0.25
 
 # Development
 
@@ -73,25 +74,19 @@ To run **Bun Dev Server**, you can run (in /server dir):
 ```bash
 bun run hot
 ```
-
 > Bun Development Server port is 3000 (http://localhost:3000)
+
+You also need to run at least Mongo Database to store tasks. Simply run:
+```bash
+sudo docker compose up -d mongodb 
+```
 
 # Building and running in production
 
-To build this project, you need to build web to a bundles and then mount the whole project to Docker
-
-1. Building Server (/dist will be created):
+To run in production, just use provided docker-compose.yml file, that will automatically build `api` and `web` image 
 
 ```bash
-bun build src/index.ts
-```
-
-2. Starting docker
-
-The server sub-project needs to be built from a Dockerfile. The most simple way to run Web&Server is:
-
-```build
-sudo docker compose up --build
+sudo docker compose up -d --build --force-recreate
 ```
 
 > Note: The WEB and API ports are defined in _.env_ file
