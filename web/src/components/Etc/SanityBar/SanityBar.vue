@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
-import { Color, type RGB } from "../../../Color";
+import { computed } from "vue";
 import type { Task, TaskType } from "../../../../../shared/Entities/Task";
+import { Color, type RGB } from "../../../Color";
 import { getStore } from "../../../store/store";
-import { roundTo } from "../../../Utils";
 
 const store = getStore();
 const user = store.getters.getUser();
@@ -36,16 +35,12 @@ const points = computed(() =>
     .reduce(
       (a, b) =>
         a + multipliers[`${b.type}`.toUpperCase() as keyof typeof multipliers],
-      0
-    )
+      0,
+    ),
 );
-const ratio = computed(() => points.value / maxPoints);
-// watch(ratio, () => {
-//   if (ratio.value >= 1)
-//     document.getElementsByTagName("body")[0].classList.add("epilepsy-mode");
-//   else
-//     document.getElementsByTagName("body")[0].classList.remove("epilepsy-mode");
-// });
+const ratio = computed(() =>
+  Math.max(Math.min(points.value / maxPoints, 1), 0),
+);
 
 const colors: RGB[] = [
   {
@@ -69,14 +64,16 @@ const bgColor = computed<RGB>(() =>
     ? Color.mixColors(
         colors[0 + Number(ratio.value > 0.5)],
         colors[1 + Number(ratio.value > 0.5)],
-        (ratio.value % 0.51) * 2 // % 0.5 returns 0
+        (ratio.value % 0.51) * 2, // % 0.5 returns 0
       )
-    : { r: 0, g: 0, b: 0 }
+    : { r: 0, g: 0, b: 0 },
 );
 </script>
 <template>
-  <div class="bar-wrapper">
-    <div class="bar-safe-zone">
+  <div
+    class="w-100 h-2 overflow-hidden rounded-t-[calc(var(--spacing)*1)] bg-stone-600"
+  >
+    <!-- <div class="bar-safe-zone">
       <div
         class="bar"
         :style="{
@@ -85,8 +82,14 @@ const bgColor = computed<RGB>(() =>
         }"
         :class="{ 'epilepsy-mode': ratio >= 1 }"
       ></div>
-    </div>
-    <div class="ratio">{{ roundTo(ratio * 100, 2) }} %</div>
+    </div> -->
+    <div
+      class="h-full rounded-full"
+      :style="{
+        width: `${ratio * 100}%`,
+        backgroundColor: `${Color.rgbToHex(bgColor)}`,
+      }"
+    ></div>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -125,7 +128,7 @@ const bgColor = computed<RGB>(() =>
   }
 
   .epilepsy-mode {
-    animation: epilepsy-color 1s linear infinite;
+    animation: epilepsy-color 10s linear infinite;
   }
 
   @keyframes epilepsy-color {

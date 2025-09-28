@@ -9,7 +9,7 @@ const filterMap = defineModel<{ [key in TaskType]: boolean }>("filterMap", {
 }); // true -> show, false -> hide
 </script>
 <template>
-  <div class="wrapper bg-black-100 rounded-xl px-3 py-2 text-base">
+  <div class="wrapper bg-black-100 rounded-b-xl px-3 py-2 text-base">
     <div
       v-for="key in Object.keys(filterMap)"
       :key="key"

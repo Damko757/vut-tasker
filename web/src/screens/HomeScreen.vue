@@ -12,6 +12,7 @@ import {
   loadFilterValue,
 } from "../components/Etc/HomeFilter/HomeFilter";
 import HomeFilter from "../components/Etc/HomeFilter/HomeFilter.vue";
+import SanityBar from "../components/Etc/SanityBar/SanityBar.vue";
 import RainbowText from "../components/Home/RainbowText.vue";
 import TasksView from "../components/Home/TasksView.vue";
 import { API_URL } from "../const";
@@ -114,8 +115,9 @@ function load() {
   <!-- Top Bar -->
   <div class="grid w-full grid-cols-1 text-3xl md:grid-cols-2">
     <div class="relative my-3 md:order-2">
-      <div class="sanity-wrapper" @click="invertFilter">
+      <div class="sanity-wrapper ms-auto w-fit" @click="invertFilter">
         <!-- <SanityBar v-if="!showFilter" :tasks="sortedTasks" /> -->
+        <SanityBar :tasks="sortedTasks" />
         <HomeFilter :filter-map="filterMap" />
       </div>
     </div>
