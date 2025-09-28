@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PropType } from "vue";
+import { ref, type PropType } from "vue";
 import type { User } from "../../../../shared/Entities/User";
 
 const props = defineProps({
@@ -8,20 +8,35 @@ const props = defineProps({
     type: Object as PropType<User>,
   },
 });
+
+const hovering = ref(false);
 </script>
 <template>
   <div
-    class="fw-bold d-flex fs-2 user w-fit-content no-select m-2"
+    class="relative mx-3 cursor-pointer px-3 py-1 text-2xl font-bold transition-colors"
+    :style="{ color: hovering ? user.color : 'white' }"
+    @mouseover="hovering = true"
+    @mouseleave="hovering = false"
+  >
+    <div class="relative z-10">{{ user.nick }}</div>
+    <div
+      class="absolute left-0 top-0 z-0 h-full rounded-xl transition-all"
+      :style="{ backgroundColor: hovering ? 'white' : user.color }"
+      :class="[hovering ? 'w-full' : 'w-2']"
+    ></div>
+  </div>
+  <!-- <div
+    class="user m-2 flex w-fit select-none text-xl font-bold"
     :style="{ '--color': user.color }"
   >
-    <div class="line rounded-3 me-1" :style="{ background: user.color }"></div>
-    <div class="w-fit-content position-relative nick mx-3 px-1">
+    <div class="line me-1 rounded-xl" :style="{ background: user.color }"></div>
+    <div class="nick relative mx-3 w-fit px-1">
       <div class="text-block-wrapper">
-        <div class="text-block rounded-2 px-1">{{ user.nick }}</div>
+        <div class="text-block rounded-xl px-1">{{ user.nick }}</div>
       </div>
       <div>{{ user.nick }}</div>
     </div>
-  </div>
+  </div> -->
 </template>
 <style scoped lang="scss">
 .user {

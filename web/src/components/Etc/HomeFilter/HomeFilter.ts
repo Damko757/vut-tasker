@@ -1,25 +1,18 @@
-const SHOW_FILTER = "SHOW_FILTER";
-// Loads from localStrorage preferences
-export const loadFilterValue = (
-  letterSuffix: string,
-  defaultValue: boolean,
-) => {
-  const v = localStorage.getItem(SHOW_FILTER + "_" + letterSuffix);
-  if (v === null || v === "") return defaultValue;
+const FILTER_SETTINGS = "FILTER_SETTINGS";
 
-  return v == "1" ? true : false; // Implicit type
-};
-
-export const saveFilterValue = (letterSuffix: string, value: boolean) => {
-  localStorage.setItem(SHOW_FILTER + "_" + letterSuffix, value ? "1" : "0");
-};
-
-// TODO: Remebember selected options
 // TODO: DBL/Long click to use-only
-export const filterState = (newValue: string | undefined = undefined) => {
-  if (newValue !== undefined) {
-    localStorage.setItem(SHOW_FILTER, newValue);
-  }
+export const useHomeFilterMemory = () => {
+  /** Fetches current state of saved items */
+  const get = () => {
+    const v = localStorage.getItem(FILTER_SETTINGS);
+    if (!v) return null;
 
-  return localStorage.getItem(SHOW_FILTER);
+    return JSON.parse(v); // Implicit type
+  };
+
+  /** Saves pairs of settings to localStorage */
+  const save = (pairs: Record<string, boolean>) => {
+    localStorage.setItem(FILTER_SETTINGS, JSON.stringify(pairs));
+  };
+  return { get, save: save };
 };
