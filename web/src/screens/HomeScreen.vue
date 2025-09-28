@@ -7,10 +7,7 @@ import {
   TaskType,
   type Task,
 } from "../../../shared/Entities/Task";
-import {
-  filterState,
-  loadFilterValue,
-} from "../components/Etc/HomeFilter/HomeFilter";
+import { useHomeFilterMemory } from "../components/Etc/HomeFilter/HomeFilter";
 import HomeFilter from "../components/Etc/HomeFilter/HomeFilter.vue";
 import SanityBar from "../components/Etc/SanityBar/SanityBar.vue";
 import RainbowText from "../components/Home/RainbowText.vue";
@@ -86,23 +83,22 @@ function loadTasks() {
       emit("loadStateChange", -1);
     });
 }
-const showFilter = ref(false);
-const invertFilter = () => {
-  showFilter.value = !showFilter.value;
-  filterState(showFilter.value.toString());
-};
 
-onMounted(() => {
-  showFilter.value = filterState() == "true";
-});
+const homeFilterMemory = useHomeFilterMemory();
 
 const filterMap = ref<{ [key in TaskType | "See"]: boolean }>({
-  See: loadFilterValue("S", false), // Hide completed
-  [TaskType.EXAM]: loadFilterValue("E", true),
-  [TaskType.PROJECT]: loadFilterValue("P", true),
-  [TaskType.HOMEWORK]: loadFilterValue("H", true),
-  [TaskType.REGISTRATION]: loadFilterValue("R", true),
-  [TaskType.OTHER]: loadFilterValue("O", true),
+  See: false, // Hide completed
+  [TaskType.EXAM]: true,
+  [TaskType.PROJECT]: true,
+  [TaskType.HOMEWORK]: true,
+  [TaskType.REGISTRATION]: true,
+  [TaskType.OTHER]: true,
+});
+
+onMounted(() => {
+  // Fetching saved filterMap config
+  const filterMapFromMemory = homeFilterMemory.get();
+  if (filterMapFromMemory) filterMap.value = filterMapFromMemory;
 });
 
 watch(store.state.user, loadTasks);
@@ -115,7 +111,7 @@ function load() {
   <!-- Top Bar -->
   <div class="grid w-full grid-cols-1 text-3xl md:grid-cols-2">
     <div class="relative my-3 md:order-2">
-      <div class="sanity-wrapper ms-auto w-fit" @click="invertFilter">
+      <div class="ms-auto w-fit">
         <!-- <SanityBar v-if="!showFilter" :tasks="sortedTasks" /> -->
         <SanityBar :tasks="sortedTasks" />
         <HomeFilter :filter-map="filterMap" />

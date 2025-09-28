@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { TaskType, taskTypeToColor } from "../../../../../shared/Entities/Task";
-import { saveFilterValue } from "./HomeFilter";
+import { useHomeFilterMemory } from "./HomeFilter";
 
 const typeToColor = { ...taskTypeToColor, See: "white" };
 
 const filterMap = defineModel<{ [key in TaskType]: boolean }>("filterMap", {
   required: true,
 }); // true -> show, false -> hide
+
+const homeFilterMemory = useHomeFilterMemory();
 </script>
 <template>
   <div class="wrapper bg-black-100 rounded-b-xl px-3 py-2 text-base">
@@ -16,7 +18,8 @@ const filterMap = defineModel<{ [key in TaskType]: boolean }>("filterMap", {
       @click.stop="
         () => {
           filterMap[key as TaskType] = !filterMap[key as TaskType];
-          saveFilterValue(key[0].toUpperCase(), filterMap[key as TaskType]);
+
+          homeFilterMemory.save(filterMap);
         }
       "
       :class="{
