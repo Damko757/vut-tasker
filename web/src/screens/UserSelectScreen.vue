@@ -19,11 +19,12 @@ const users = ref<User[]>();
 axios.get<User[]>(API_URL + "/users").then((response) => {
   users.value = response.data;
 });
+// TODO FIX CSS
 </script>
 <template>
-  <main class="md:p-5 px-3">
-    <h1 class="fw-bold p-2">Hello! Who are you?</h1>
-    <div class="d-flex justify-content-center align-items-center flex-wrap">
+  <main class="px-3 md:p-5">
+    <h1 class="p-2 text-2xl font-bold">Hello! Who are you?</h1>
+    <div class="flex flex-wrap items-center justify-center">
       <UserComponent
         v-if="users != undefined"
         v-for="user in users"
@@ -31,7 +32,7 @@ axios.get<User[]>(API_URL + "/users").then((response) => {
         :user="user"
         @click="onUserClick(user)"
       />
-      <div v-else class="fst-italic">Loading...</div>
+      <div v-else class="italic">Loading...</div>
     </div>
   </main>
 </template>
