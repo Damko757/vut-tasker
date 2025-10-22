@@ -58,7 +58,7 @@ function todoCheck(ns: boolean) {
 <template>
   <div
     :class="{ completed: state }"
-    class="mb-3 grid grid-cols-[auto_1fr] gap-3 py-2 md:mb-1"
+    class="mb-3 grid grid-cols-[auto_minmax(0,100%)] gap-3 py-2 md:mb-1"
     v-if="!deleted"
   >
     <!-- CheckBox -->

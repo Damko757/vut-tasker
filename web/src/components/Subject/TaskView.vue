@@ -236,7 +236,7 @@ const isCompleted = computed(() =>
     <div class="h-0 overflow-hidden" :class="{ collapsed: isCollapsed }">
       <div v-if="task.link">
         <a
-          class="text-break text-fit-blue hover:text-fit-dark-blue underline"
+          class="text-break text-fit-blue hover:text-fit-dark-blue break-words underline"
           :href="task.link ?? '#'"
           @click.stop
           target="_blank"

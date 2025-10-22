@@ -20,6 +20,7 @@ On HomePage, there is SanityBar in a upper-right corner. It shows, how much of (
 - Project: +1.5
 - Homework: +1
 - Registration: +0.5
+- Other: 0.25
 
 Every development change should be created at **vut-tasker**, and then merged here.
 
@@ -30,7 +31,62 @@ Every development change should be created at **vut-tasker**, and then merged he
 
 In `./build` are 4. shell scripts (currently), that will run/build/start specified subproject to docker container:
 
-1. Bun (bun-run.sh)
-2. Mongo (mongo-run.sh)
-3. Web (web-run.sh)
-4. All (run.sh)
+<a id="dev-web"></a>
+
+## Web
+
+### Initialization
+
+To install web modules (dependencies), enter web directory and run `bun i`:
+
+```bash
+cd web
+bun i
+```
+
+### Web-Dev server
+
+To run **Vite Dev Server**, you can run (in /web dir):
+
+```bash
+bun run dev
+```
+
+> Vite Development Server port is 5000 (http://localhost:5000)
+
+<a id="dev-api"></a>
+
+## API
+
+### Initialization
+
+To install web (server) modules (dependencies), enter server directory and run `bun i`:
+
+```bash
+cd server
+bun i
+```
+
+### Bun-Dev server
+
+To run **Bun Dev Server**, you can run (in /server dir):
+
+```bash
+bun run hot
+```
+> Bun Development Server port is 3000 (http://localhost:3000)
+
+You also need to run at least Mongo Database to store tasks. Simply run:
+```bash
+sudo docker compose up -d mongodb 
+```
+
+# Building and running in production
+
+To run in production, just use provided docker-compose.yml file, that will automatically build `api` and `web` image 
+
+```bash
+sudo docker compose up -d --build --force-recreate
+```
+
+> Note: The WEB and API ports are defined in _.env_ file
