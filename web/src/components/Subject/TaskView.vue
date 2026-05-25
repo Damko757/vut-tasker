@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
 import fontColorContrast from "font-color-contrast";
-import stc from "string-to-color";
 import { computed, onBeforeMount, ref, watch } from "vue";
 import { taskTypeToColor, type Task } from "../../../../shared/Entities/Task";
 import { getStore } from "../../store/store";
 import { getDayByDate } from "../../Utils";
+import { Color } from "../../Color";
+
 const store = getStore();
 const user = store.getters.getUser();
 
@@ -129,7 +130,7 @@ onBeforeMount(() => {
 watch(() => [props.task.due_date, props.task.due_date_end], setCountdown);
 
 const backgroundColor = computed(() =>
-  props.task ? stc(props.task.subject) : "",
+  props.task ? Color.subjectToColor(props.task.subject) : "",
 );
 const isForegroundColorBlack = computed(
   () => fontColorContrast(backgroundColor.value) == "#000000",

@@ -1,3 +1,9 @@
+import stc from "string-to-color";
+
+/** Predefined subject colors for `subjectToColor` */
+const subjectColors: Record<string, string> = {
+  "3BIT": "#FF69B4",
+};
 export interface RGB {
   r: number;
   g: number;
@@ -25,13 +31,13 @@ export class Color {
   static mixColors<ColorT extends Colors>(
     a: ColorT,
     b: ColorT,
-    ratio: normalizedNumber
+    ratio: normalizedNumber,
   ) {
     const mix = { ...a };
     for (const key in a) {
       const diff = <number>b[key] - <number>a[key];
       mix[key] = Math.round(
-        <number>mix[key] + diff * ratio
+        <number>mix[key] + diff * ratio,
       ) as (typeof mix)[typeof key];
     }
 
@@ -51,5 +57,16 @@ export class Color {
         .padStart(2, "0");
     }
     return out;
+  }
+
+  /**
+   * Converts subject name into its respective color.
+   * @param subjectName Name of the subject to convert
+   * @returns HEX color
+   */
+  static subjectToColor(subjectName: string): string {
+    if (subjectName in subjectColors) return subjectColors[subjectName]; // Lookup in predefined colors
+
+    return stc(subjectName);
   }
 }

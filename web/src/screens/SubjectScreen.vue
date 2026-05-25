@@ -2,7 +2,7 @@
 import { Icon } from "@iconify/vue";
 import axios, { HttpStatusCode } from "axios";
 import fontColorContrast from "font-color-contrast";
-import stc from "string-to-color";
+import { Color } from "../Color";
 import { computed, inject, ref } from "vue";
 import { TaskType, type Task } from "../../../shared/Entities/Task";
 import Subscriber from "../components/Subject/Subscriber.vue";
@@ -66,7 +66,7 @@ const typeToTasks = computed(() => {
   return map;
 });
 
-const backgroundColor = computed(() => stc(props.subjectName));
+const backgroundColor = computed(() => Color.subjectToColor(props.subjectName));
 const isForegroundColorBlack = computed(
   () => fontColorContrast(backgroundColor.value) == "#000000",
 );
