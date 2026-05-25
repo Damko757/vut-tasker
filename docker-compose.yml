@@ -1,5 +1,5 @@
 services:
-  web:
+  vt-web:
     container_name: vut-tasker-web
     build:
       context: ./
@@ -11,12 +11,9 @@ services:
       # environment:
       # - NGINX_PORT=80
     networks:
-      servers-network:
-        ipv4_address: 192.168.0.202
-    ports:
-      - 80:80
+      caddy:
     restart: unless-stopped
-  api:
+  vt-api:
     tty: true
     depends_on:
       - mongodb
@@ -24,8 +21,8 @@ services:
     build:
       dockerfile: ./server/Dockerfile
       context: ./
-    ports:
-      - 3000:3000
+    # ports:
+    #   - 3000:3000
     volumes:
       - ./server/traffic.log:/usr/src/app/traffic.log
       - ./server/src:/usr/src/app/src
@@ -33,8 +30,8 @@ services:
       - ./.env:/usr/src/.env
     restart: unless-stopped
     networks:
-      servers-network:
-        ipv4_address: 192.168.0.203
+      vt-internal: # for mongodb connection
+      caddy:
       # vut-tasker-prod-network:
   mongodb:
     container_name: vut-tasker-prod-mongodb
@@ -48,20 +45,23 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${DATABASE_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
     networks:
-      servers-network:
-        ipv4_address: 192.168.0.204
+      vt-internal:
       # vut-tasker-prod-network:
-  cloudflare:
-    restart: unless-stopped
-    container_name: vut-tasker-prod-cloudflare
-    image: cloudflare/cloudflared:latest
-    command: tunnel --no-autoupdate run --token eyJhIjoiMjgwN2ZmYzk3NDBjZWE0YjQ0NTFmNzUxMjY3MWJhYmUiLCJ0IjoiNDZiNWY3MDAtMzM1YS00MjVkLWIwYTktZDQxMjNjODM1OTdiIiwicyI6Ik1XUTJZVFUzWVRrdE1tVTJaQzAwTXpNNExUazNNamN0TWpabVlUUXlZalE1T1dWayJ9
-    networks:
-      servers-network:
-        ipv4_address: 192.168.0.201
+  # cloudflare:
+  #   restart: unless-stopped
+  #   container_name: vut-tasker-prod-cloudflare
+  #   image: cloudflare/cloudflared:latest
+  #   command: tunnel --no-autoupdate run --token eyJhIjoiMjgwN2ZmYzk3NDBjZWE0YjQ0NTFmNzUxMjY3MWJhYmUiLCJ0IjoiNDZiNWY3MDAtMzM1YS00MjVkLWIwYTktZDQxMjNjODM1OTdiIiwicyI6Ik1XUTJZVFUzWVRrdE1tVTJaQzAwTXpNNExUazNNamN0TWpabVlUUXlZalE1T1dWayJ9
+  #   networks:
+  #     servers-network:
+  #       ipv4_address: 192.168.0.201
 networks:
-  servers-network:
+  caddy:
     external: true
+  vt-internal:
+    driver: bridge
+  # servers-network:
+  #   external: true
     # vut-tasker-prod-network:
     #   name: vut-tasker-prod-network
     # driver: macvlan
