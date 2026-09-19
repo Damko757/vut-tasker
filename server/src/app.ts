@@ -16,12 +16,12 @@ import { ENV } from "./const.ts";
 import type { HttpMethod } from "./Entities/HttpMethod.ts";
 import type { MiddlewareFunction } from "./Entities/MiddlewareFunction.ts";
 import { CookieValue } from "./Utils/Utils.ts";
-import fs from "fs/promises"
+import fs from "fs/promises";
 import { resolve } from "path";
 
 const requestStatistics: {
-  [key: string]: Record<HttpMethod, number>
-} = {}
+  [key: string]: Record<HttpMethod, number>;
+} = {};
 
 export const initApp = () => {
   const app = express();
@@ -31,7 +31,7 @@ export const initApp = () => {
     cors({
       origin: ENV.WEB_URL,
       credentials: true,
-    })
+    }),
   );
   app.use(bodyParser.json());
   app.use(cookieParser());
@@ -39,18 +39,19 @@ export const initApp = () => {
   // Logs what user made how many requests
   app.use((...[req, res, next]: Parameters<MiddlewareFunction>) => {
     const nick = req.cookies[CookieValue.USER];
-    if(!nick) return next();
+    if (!nick || ENV.PROD != "1") return next();
 
     new Promise<void>(async (resolve, reject) => {
-      if(!(nick in requestStatistics)) requestStatistics[nick] = {
+      if (!(nick in requestStatistics))
+        requestStatistics[nick] = {
           GET: 0,
           POST: 0,
           DELETE: 0,
           OPTIONS: 0,
           PATCH: 0,
           PUT: 0,
-        }
-      
+        };
+
       requestStatistics[nick][req.method.toUpperCase() as HttpMethod]++;
 
       await fs.writeFile("./traffic.log", JSON.stringify(requestStatistics));

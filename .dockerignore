@@ -1,11 +1,32 @@
-**/node_modules/
-README.md
-!.env
-.git/
+# Dependency directories
+**/node_modules
+node_modules/
+
+# Build outputs (these should be compiled inside Docker, not copied from host)
+**/dist
+**/build
+dist/
+build/
+
+# Version control
+.git
 .gitignore
-TODO/
-mongodb/
-docs/
-!shared/
-!web/
-!server/
+.github/
+
+# Environment variables & secrets
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# IDE and OS-specific files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Documentation and misc
+README.md
+*.md

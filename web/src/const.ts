@@ -1,1 +1,1 @@
-export const API_URL = "https://api-vut-tasker.ddmk.xyz";
+export const API_URL = import.meta.env.VITE_API_URL;

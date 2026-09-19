@@ -2,18 +2,19 @@ import mongoose from "mongoose";
 import { ENV } from "./const.ts";
 import chalk from "chalk";
 import { UserModel } from "./Schemas/User.ts";
-import { USERS } from "../../shared/config/users.ts";
+import { USERS } from "@vut-tasker/shared/config/users.ts";
+
 export const initMongoose = async () => {
   return new Promise<void>((resolve, rejected) => {
     const connectString = `mongodb://${ENV.DATABASE_USER}:${ENV.DATABASE_PASSWORD}@${ENV.DATABASE_URI}/test?authSource=admin`;
-    // const connectString = `mongodb://root:root@192.168.0.204/test?authSource=admin`;
+    // const connectString = `mongodb://root:root@localhost/test?authSource=admin`;
 
     mongoose
       .set("strictQuery", false)
       .connect(connectString)
       .then(async () => {
         console.info(
-          chalk.green(`Successfully connected to ${chalk.underline("Mongo")}!`)
+          chalk.green(`Successfully connected to ${chalk.underline("Mongo")}!`),
         );
 
         UserModel.count().then((c) => {

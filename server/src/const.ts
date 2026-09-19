@@ -1,4 +1,5 @@
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 
-export const ENV =
-    dotenv.config({ path: __dirname + "/./../../.env" }).parsed ?? {};
+dotenv.config()
+export const ENV = process.env
+    // dotenv.config({ path: __dirname + "/./../../.env" }).parsed ?? {};

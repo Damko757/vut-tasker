@@ -2,11 +2,10 @@
   "name": "vut-tasker-server",
   "module": "index.ts",
   "type": "module",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
-    "start": "bun run src/index.ts",
-    "hot": "bun run --hot src/index.ts",
-    "build": "bun build src/index.ts"
+    "dev": "tsx watch --env-file=../.env src/index.ts",
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/bun": "latest",
@@ -14,7 +13,9 @@
     "@types/dotenv": "^8.2.0",
     "@types/express": "^5.0.0",
     "@types/helmet": "^4.0.0",
-    "@types/node": "^22.7.4"
+    "@types/node": "^22.7.4",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.3"
   },
   "peerDependencies": {
     "typescript": "^5.6.2"
@@ -22,6 +23,7 @@
   "dependencies": {
     "@types/cookie-parser": "^1.4.7",
     "@types/mongoose-unique-validator": "^1.0.9",
+    "@vut-tasker/shared": "*",
     "axios": "^1.7.9",
     "body-parser": "^1.20.3",
     "bun": "^1.1.29",

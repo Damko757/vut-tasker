@@ -4,15 +4,14 @@
   "version": "1.1.0",
   "type": "module",
   "scripts": {
-    "dev": "bunx --bun vite",
-    "buildx": "vite build",
-    "build": "vue-tsc -b && bun run buildx",
-    "preview": "vite preview"
+    "dev": "vite",
+    "build": "tsc && vite build"
   },
   "dependencies": {
     "@iconify/vue": "^5.0.0",
     "@tailwindcss/vite": "^4.1.13",
     "@vueuse/integrations": "^11.1.0",
+    "@vut-tasker/shared": "*",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "clsx": "^2.1.1",
@@ -30,7 +29,7 @@
     "prettier-plugin-tailwindcss": "^0.6.14",
     "sass": "~1.64.2",
     "sass-embedded": "~1.64.2",
-    "typescript": "^5.5.3",
+    "typescript": "^5.9.3",
     "vite": "^5.4.1",
     "vue-tsc": "^2.0.29"
   }

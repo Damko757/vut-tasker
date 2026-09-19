@@ -1,0 +1,11 @@
+{
+  "name": "@vut-tasker/shared",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
