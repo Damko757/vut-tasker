@@ -1,9 +1,9 @@
+import chalk from "chalk";
 import type { Application, NextFunction, Request, Response } from "express";
+import type { ErrorResponse } from "../Entities/ErrorResponse.ts";
 import type { HttpMethod } from "../Entities/HttpMethod.ts";
 import type { MiddlewareFunction } from "../Entities/MiddlewareFunction.ts";
 import { HttpStatusCodes } from "./HttpStatusCodes.ts";
-import type { ErrorResponse } from "../Entities/ErrorResponse.ts";
-import chalk from "chalk";
 
 export class Router {
   routables: Routable[];
@@ -19,7 +19,6 @@ export class Router {
   }
 
   createRoutes(app: Application) {
-    const handleInvalidMethod = this.handleInvalidMethod;
     const self = this;
 
     this.routingMap = {};
@@ -65,7 +64,7 @@ export class Router {
               path,
               allRoutes[path][
                 method as keyof (typeof allRoutes)["path"]
-              ] as MiddlewareFunction
+              ] as MiddlewareFunction,
             );
           }
 
@@ -76,17 +75,17 @@ export class Router {
 
       for (const path in this.allowedRouteMethods) {
         app.use(path, (...args: Parameters<MiddlewareFunction>) =>
-          self.handleInvalidMethod(path, ...args)
+          self.handleInvalidMethod(path, ...args),
         );
       }
     });
 
-    app.get("/", (req: Request, res: Response, next: NextFunction) => {
+    app.get("/", (_req: Request, res: Response, _next: NextFunction) => {
       const paths = Object.keys(this.routingMap);
       const routes: Record<string, HttpMethod[]> = {};
       paths.forEach(
         (path) =>
-          (routes[path] = Object.keys(this.routingMap[path]) as HttpMethod[])
+          (routes[path] = Object.keys(this.routingMap[path]) as HttpMethod[]),
       );
       res.send(routes);
     });
@@ -99,7 +98,7 @@ export class Router {
     matchedPath: string,
     req: Request,
     res: Response,
-    next: NextFunction
+    _next: NextFunction,
   ) {
     const methods = this.allowedRouteMethods[matchedPath];
     methods.sort();
@@ -115,13 +114,13 @@ export class Router {
     // Request methods you wish to allow
     res.setHeader(
       "Access-Control-Allow-Methods",
-      Object.keys(methods).join(", ")
+      Object.keys(methods).join(", "),
     );
 
     // Request headers you wish to allow
     res.setHeader(
       "Access-Control-Allow-Headers",
-      "X-Requested-With,content-type"
+      "X-Requested-With,content-type",
     );
 
     // Set to true if you need the website to include cookies in the requests sent

@@ -1,42 +1,39 @@
 import type { NextFunction, Request, Response } from "express";
 import { UserModel } from "../Schemas/User.ts";
-import type { Routable, RoutingMap } from "../Utils/Router.ts";
-import { Controller } from "./Controller.ts";
 import { HttpStatusCodes } from "../Utils/HttpStatusCodes.ts";
-import type { MiddlewareFunction } from "../Entities/MiddlewareFunction.ts";
-import { TaskModel } from "../Schemas/Task.ts";
+import type { Routable, RoutingMap } from "../Utils/Router.ts";
 import { CookieValue } from "../Utils/Utils.ts";
-import { ENV } from "../const.ts";
+import { Controller } from "./Controller.ts";
 
 export class UserController
   extends Controller<typeof UserModel>
   implements Routable
 {
-  routes() {
+  routes(): RoutingMap {
     return {
       "/users": {
-        GET: this.getAllUsers,
-        POST: this.postUser,
+        GET: (req, res, next) => this.getAllUsers(req, res, next),
+        POST: (req, res, next) => this.postUser(req, res, next),
       },
       "/user": {
-        GET: this.getUserByNick,
+        GET: (req, res, next) => this.getUserByNick(req, res, next),
       },
       "/user/:nick": {
-        GET: this.getUserByNick,
-        PUT: this.putUserByNick,
-        PATCH: this.patchUserByNick,
-        DELETE: this.deleteUserByNick,
+        GET: (req, res, next) => this.getUserByNick(req, res, next),
+        PUT: (req, res, next) => this.putUserByNick(req, res, next),
+        PATCH: (req, res, next) => this.patchUserByNick(req, res, next),
+        DELETE: (req, res, next) => this.deleteUserByNick(req, res, next),
       },
       "/login/:nick": {
-        POST: this.loginUserByNick,
+        POST: (req, res, _next) => this.loginUserByNick(req, res),
       },
       "/logoff": {
-        POST: this.logoff,
+        POST: (req, res, _next) => this.logoff(req, res),
       },
     };
   }
 
-  async logoff(req: Request, res: Response) {
+  async logoff(_req: Request, res: Response) {
     res.clearCookie(CookieValue.USER);
   }
 
@@ -59,11 +56,11 @@ export class UserController
     res.status(HttpStatusCodes.OK).send(user);
   }
 
-  async getAllUsers(req: Request, res: Response, next: NextFunction) {
+  async getAllUsers(_req: Request, res: Response, _next: NextFunction) {
     res.status(HttpStatusCodes.OK).send(await UserModel.find().exec());
   }
 
-  async postUser(req: Request, res: Response, next: NextFunction) {
+  async postUser(req: Request, res: Response, _next: NextFunction) {
     const user = new UserModel(req.body);
 
     return user
@@ -76,7 +73,7 @@ export class UserController
       });
   }
 
-  async getUserByNick(req: Request, res: Response, next: NextFunction) {
+  async getUserByNick(req: Request, res: Response, _next: NextFunction) {
     const user = await UserModel.findOne({
       nick: req.params.nick ?? req.cookies[CookieValue.USER] ?? "",
     }).exec();
@@ -84,8 +81,8 @@ export class UserController
     if (user) return res.send(user);
     return res.status(HttpStatusCodes.NOT_FOUND).send();
   }
-  async putUserByNick(req: Request, res: Response, next: NextFunction) {
-    Controller.replace(UserModel, { nick: req.params.nick }, req.body)
+  async putUserByNick(req: Request, res: Response, _next: NextFunction) {
+    this.replace(UserModel, { nick: req.params.nick }, req.body)
       .then((updated) => {
         return updated
           ? res.status(HttpStatusCodes.OK).send(updated)
@@ -95,8 +92,8 @@ export class UserController
         return res.status(HttpStatusCodes.UNPROCESSABLE_ENTITY).send(error);
       });
   }
-  async patchUserByNick(req: Request, res: Response, next: NextFunction) {
-    Controller.update(UserModel, { nick: req.params.nick }, req.body)
+  async patchUserByNick(req: Request, res: Response, _next: NextFunction) {
+    this.update(UserModel, { nick: req.params.nick }, req.body)
       .then((updated) => {
         return updated
           ? res.status(HttpStatusCodes.OK).send(updated)
@@ -106,8 +103,8 @@ export class UserController
         return res.status(HttpStatusCodes.UNPROCESSABLE_ENTITY).send(error);
       });
   }
-  async deleteUserByNick(req: Request, res: Response, next: NextFunction) {
-    const result = await Controller.delete(UserModel, {
+  async deleteUserByNick(req: Request, res: Response, _next: NextFunction) {
+    const result = await this.delete(UserModel, {
       nick: req.params.nick,
     });
 

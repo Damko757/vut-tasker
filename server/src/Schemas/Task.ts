@@ -1,5 +1,5 @@
-import mongoose, { type ObjectId } from "mongoose";
-import { TaskType, type Task as _Task } from "../../../shared/Entities/Task.ts";
+import mongoose from "mongoose";
+import { TaskType, Task as _Task } from "../../../shared/Entities/Task.ts";
 
 const taskTypes = [];
 for (const taskType in TaskType) {
@@ -14,7 +14,7 @@ const TaskSchema = new mongoose.Schema({
     enum: {
       values: taskTypes,
       message: `Type '{VALUE}' is not in allowed types: ${taskTypes.join(
-        ", "
+        ", ",
       )}.`,
     },
   },
@@ -35,7 +35,7 @@ const TaskSchema = new mongoose.Schema({
   rooms: { type: Object, default: {} },
 });
 
-TaskSchema.pre("validate", function (next, ...args) {
+TaskSchema.pre("validate", function (next, ..._args) {
   if (this.get("type")) this.set("type", this.get("type").toLowerCase());
   next();
 });

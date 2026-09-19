@@ -1,7 +1,7 @@
-import { describe, test, expect, beforeAll, afterAll } from "bun:test";
-import { TaskController } from "../../src/Controllers/TaskController";
-import { TaskType, type Task } from "../../../shared/Entities/Task";
+import { afterAll, beforeAll, describe, expect, test } from "@jest/globals";
 import axios, { HttpStatusCode } from "axios";
+import { Task, TaskType } from "../../../shared/Entities/Task.ts";
+import { ENV } from "../../src/const.ts";
 
 const task: Task = {
   subject: "TST",
@@ -16,7 +16,7 @@ const task: Task = {
   completed_by: ["xyz"],
   created_by: "tester",
 };
-const API_URL = "http://localhost:3000";
+const API_URL = ENV.API_URL;
 describe("Task CRUD", () => {
   let actualTask: null | Task = null;
 
@@ -27,7 +27,7 @@ describe("Task CRUD", () => {
 
   test("GET", () => {
     expect(
-      axios.get(`${API_URL}/task/${actualTask?._id}`)
+      axios.get(`${API_URL}/task/${actualTask?._id}`),
     ).resolves.toMatchObject({
       data: task,
     });
@@ -35,7 +35,7 @@ describe("Task CRUD", () => {
 
   test("PATCH", () => {
     expect(
-      axios.patch(`${API_URL}/task/${actualTask?._id}`, { name: "Test123" })
+      axios.patch(`${API_URL}/task/${actualTask?._id}`, { name: "Test123" }),
     ).resolves.toMatchObject({
       status: HttpStatusCode.Ok,
       data: {
@@ -46,7 +46,7 @@ describe("Task CRUD", () => {
 
   test("DELETE", async () => {
     expect(
-      axios.delete(`${API_URL}/task/${actualTask?._id}`)
+      axios.delete(`${API_URL}/task/${actualTask?._id}`),
     ).resolves.toMatchObject({
       status: HttpStatusCode.NoContent,
     });
@@ -55,7 +55,7 @@ describe("Task CRUD", () => {
     });
   });
 
-  test.todo("PUT", () => {});
+  test.todo("PUT");
 });
 
 describe("Room CRUD", () => {
@@ -71,7 +71,7 @@ describe("Room CRUD", () => {
     expect(
       axios.post(`${API_URL}/task/${actualTask._id}/room/ABC`, {
         room: "RoomABC",
-      })
+      }),
     ).resolves.toMatchObject({
       data: {
         rooms: {
@@ -82,7 +82,7 @@ describe("Room CRUD", () => {
     expect(
       axios.post(`${API_URL}/task/${actualTask._id}/room/XYZ`, {
         room: "RoomXYZ",
-      })
+      }),
     ).resolves.toMatchObject({
       data: {
         rooms: {
@@ -94,7 +94,7 @@ describe("Room CRUD", () => {
   });
   test("Deleting", async () => {
     expect(
-      axios.delete(`${API_URL}/task/${actualTask._id}/room/ABC`)
+      axios.delete(`${API_URL}/task/${actualTask._id}/room/ABC`),
     ).resolves.toMatchObject({
       data: {
         rooms: {
@@ -104,7 +104,7 @@ describe("Room CRUD", () => {
     });
 
     const response = await axios.delete(
-      `${API_URL}/task/${actualTask._id}/room/XYZ`
+      `${API_URL}/task/${actualTask._id}/room/XYZ`,
     );
 
     expect(response.data.rooms).toBeUndefined();

@@ -1,23 +1,22 @@
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import express, {
   type NextFunction,
   type Request,
   type Response,
 } from "express";
-import bodyParser from "body-parser";
-import cookieParser from "cookie-parser";
+import fs from "fs/promises";
 import helmet from "helmet";
-import cors from "cors";
-import type { ErrorResponse } from "./Entities/ErrorResponse.ts";
-import { HttpStatusCodes } from "./Utils/HttpStatusCodes.ts";
-import { Router } from "./Utils/Router.ts";
-import { routableControllers } from "./Utils/RoutableControllers.ts";
-import { errorHandler } from "./Utils/ErrorHandler.ts";
 import { ENV } from "./const.ts";
+import type { ErrorResponse } from "./Entities/ErrorResponse.ts";
 import type { HttpMethod } from "./Entities/HttpMethod.ts";
 import type { MiddlewareFunction } from "./Entities/MiddlewareFunction.ts";
+import { errorHandler } from "./Utils/ErrorHandler.ts";
+import { HttpStatusCodes } from "./Utils/HttpStatusCodes.ts";
+import { routableControllers } from "./Utils/RoutableControllers.ts";
+import { Router } from "./Utils/Router.ts";
 import { CookieValue } from "./Utils/Utils.ts";
-import fs from "fs/promises";
-import { resolve } from "path";
 
 const requestStatistics: {
   [key: string]: Record<HttpMethod, number>;
@@ -37,11 +36,11 @@ export const initApp = () => {
   app.use(cookieParser());
 
   // Logs what user made how many requests
-  app.use((...[req, res, next]: Parameters<MiddlewareFunction>) => {
+  app.use((...[req, _res, next]: Parameters<MiddlewareFunction>) => {
     const nick = req.cookies[CookieValue.USER];
     if (!nick || ENV.PROD != "1") return next();
 
-    new Promise<void>(async (resolve, reject) => {
+    new Promise<void>(async (resolve, _reject) => {
       if (!(nick in requestStatistics))
         requestStatistics[nick] = {
           GET: 0,
@@ -64,7 +63,7 @@ export const initApp = () => {
   const router = new Router(routableControllers);
   router.createRoutes(app);
 
-  app.use((req: Request, res: Response, next: NextFunction) => {
+  app.use((req: Request, res: Response, _next: NextFunction) => {
     const errorMsg: ErrorResponse = {
       message: `Unknown request: ${req.method} ${req.url}`,
     };

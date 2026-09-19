@@ -15,14 +15,16 @@ export default defineConfig({
         globSync(["./*.html"]).map((file) => [
           file.slice(0, file.length - path.extname(file).length),
           fileURLToPath(new URL(file, import.meta.url)),
-        ])
+        ]),
       ),
     },
     emptyOutDir: true,
   },
+  envDir: "../",
   resolve: {
     alias: {
-      "~bootstrap": resolve(__dirname, "node_modules/bootstrap"),
+      "@bootstrap": resolve(__dirname, "../node_modules/bootstrap"),
+      "@scss": fileURLToPath(new URL("./src/SCSS", import.meta.url)),
     },
   },
   server: {

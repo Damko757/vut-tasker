@@ -1,66 +1,65 @@
-import mongoose, { type Error } from "mongoose";
-import type { NextFunction, Request, Response } from "express";
-import type { Routable, RoutingMap } from "../Utils/Router.ts";
-import { Controller } from "./Controller.ts";
-import { TaskModel } from "../Schemas/Task.ts";
-import chalk from "chalk";
-import type { Task } from "../../../shared/Entities/Task.ts";
-import { CookieValue } from "../Utils/Utils.ts";
-import type { MiddlewareFunction } from "../Entities/MiddlewareFunction.ts";
 import { HttpStatusCode } from "axios";
+import type { NextFunction, Request, Response } from "express";
+import mongoose from "mongoose";
+import { Task } from "../../../shared/Entities/Task.ts";
+import type { MiddlewareFunction } from "../Entities/MiddlewareFunction.ts";
+import { TaskModel } from "../Schemas/Task.ts";
+import type { Routable, RoutingMap } from "../Utils/Router.ts";
+import { CookieValue } from "../Utils/Utils.ts";
+import { Controller } from "./Controller.ts";
 
 export class TaskController
   extends Controller<typeof TaskModel>
   implements Routable
 {
-  routes() {
+  routes(): RoutingMap {
     return {
       "/task/:id/:nick": {
-        POST: TaskController.addNick,
-        DELETE: TaskController.removeNick,
+        POST: this.addNick,
+        DELETE: this.removeNick,
       },
       "/task/:id": {
-        DELETE: TaskController.deleteByTaskId,
-        PUT: TaskController.putByTaskId,
-        PATCH: TaskController.patchByTaskId,
-        GET: TaskController.getTaskById,
+        DELETE: (req, res, next) => this.deleteByTaskId(req, res, next),
+        PUT: (req, res, next) => this.putByTaskId(req, res, next),
+        PATCH: (req, res, next) => this.patchByTaskId(req, res, next),
+        GET: (req, res, next) => this.getTaskById(req, res, next),
       },
       "/task/:id/room/:nick": {
-        POST: TaskController.addRoom,
-        DELETE: TaskController.removeRoom,
+        POST: (req, res, next) => this.addRoom(req, res, next),
+        DELETE: (req, res, next) => this.removeRoom(req, res, next),
       },
       "/tasks/:subject/:type": {
-        GET: TaskController.getByTaskSubjectAndType,
+        GET: (req, res, next) => this.getByTaskSubjectAndType(req, res, next),
       },
       "/tasks/:subject": {
-        GET: TaskController.getByTaskSubjectAndType,
+        GET: (req, res, next) => this.getByTaskSubjectAndType(req, res, next),
       },
       "/tasks": {
-        GET: TaskController.getAllTasks,
-        POST: TaskController.postTask,
+        GET: (req, res, next) => this.getAllTasks(req, res, next),
+        POST: (req, res, next) => this.postTask(req, res, next),
       },
     };
   }
 
-  static async addNick(req: Request, res: Response, next: NextFunction) {
+  async addNick(req: Request, res: Response, _next: NextFunction) {
     const task = await TaskModel.findOne({ _id: req.params.id }).exec(); //Should be session, but whatever;
     if (!task) return res.status(HttpStatusCode.NotFound);
 
     const completedBy = task?.completed_by ?? [];
-    if (!completedBy?.includes(req.params.nick))
-      completedBy.push(req.params.nick);
+    if (!completedBy?.includes(req.params.nick as string))
+      completedBy.push(req.params.nick as string);
 
     res
       .status(HttpStatusCode.Ok)
       .send(
-        await Controller.update(
+        await this.update(
           TaskModel,
           { _id: req.params.id },
-          { completed_by: completedBy }
-        )
+          { completed_by: completedBy },
+        ),
       );
   }
-  static async removeNick(req: Request, res: Response, next: NextFunction) {
+  async removeNick(req: Request, res: Response, _next: NextFunction) {
     const task = await TaskModel.findOne({ _id: req.params.id }).exec(); //Should be session, but whatever;
     if (!task) return res.status(HttpStatusCode.NotFound);
 
@@ -70,22 +69,22 @@ export class TaskController
     res
       .status(HttpStatusCode.Ok)
       .send(
-        await Controller.update(
+        await this.update(
           TaskModel,
           { _id: req.params.id },
-          { completed_by: completedBy }
-        )
+          { completed_by: completedBy },
+        ),
       );
   }
 
-  static async deleteByTaskId(req: Request, res: Response, next: NextFunction) {
+  async deleteByTaskId(req: Request, res: Response, _next: NextFunction) {
     const task = await TaskModel.findOne({ _id: req.params.id }).exec();
     if (!task) return res.status(HttpStatusCode.NotFound).send();
 
-    const result = await TaskModel.findByIdAndDelete(req.params.id).exec();
+    await TaskModel.findByIdAndDelete(req.params.id).exec();
     res.status(HttpStatusCode.NoContent).send();
   }
-  static async postTask(req: Request, res: Response, next: NextFunction) {
+  async postTask(req: Request, res: Response, _next: NextFunction) {
     req.body.created_by =
       req.body.created_by ?? req.cookies[CookieValue.USER] ?? "";
     const task = new TaskModel(req.body);
@@ -103,7 +102,7 @@ export class TaskController
    * Fetches all tasks
    * @query subjects - Semicolon splitted subjects to include
    */
-  static async getAllTasks(req: Request, res: Response, next: NextFunction) {
+  async getAllTasks(req: Request, res: Response, _next: NextFunction) {
     const filter: mongoose.FilterQuery<Task> = {}; // Generic filter
 
     // If subjects defined, filter by semicolon divided values
@@ -117,12 +116,12 @@ export class TaskController
         .send(
           TaskController.filterPersonalTasks(
             tasks,
-            req.cookies[CookieValue.USER] ?? ""
-          )
+            req.cookies[CookieValue.USER] ?? "",
+          ),
         );
     });
   }
-  static async getTaskById(req: Request, res: Response, next: NextFunction) {
+  async getTaskById(req: Request, res: Response, _next: NextFunction) {
     TaskModel.findById(req.params.id)
       .then((task) => {
         if (task) res.send(task);
@@ -131,8 +130,8 @@ export class TaskController
       .catch(() => res.sendStatus(HttpStatusCode.NotFound));
   }
 
-  static async addRoom(...[req, res, next]: Parameters<MiddlewareFunction>) {
-    const nick = req.params.nick;
+  async addRoom(...[req, res, _next]: Parameters<MiddlewareFunction>) {
+    const nick = req.params.nick as string;
 
     const task = await TaskModel.findOne({ _id: req.params.id }).exec(); //Should be session, but whatever;
     if (!task) return res.status(HttpStatusCode.NotFound);
@@ -146,8 +145,8 @@ export class TaskController
       .then(async (_) => res.send(await TaskModel.findById(task._id).exec()))
       .catch(() => res.sendStatus(HttpStatusCode.InternalServerError));
   }
-  static async removeRoom(...[req, res, next]: Parameters<MiddlewareFunction>) {
-    const nick = req.params.nick;
+  async removeRoom(...[req, res, _next]: Parameters<MiddlewareFunction>) {
+    const nick = req.params.nick as string;
 
     const task = await TaskModel.findOne({ _id: req.params.id }).exec(); //Should be session, but whatever;
     if (!task) return res.status(HttpStatusCode.NotFound);
@@ -162,10 +161,10 @@ export class TaskController
       .catch(() => res.sendStatus(HttpStatusCode.InternalServerError));
   }
 
-  static async getByTaskSubjectAndType(
+  async getByTaskSubjectAndType(
     req: Request,
     res: Response,
-    next: NextFunction
+    _next: NextFunction,
   ) {
     const tasks = await TaskModel.find({
       subject: req.params.subject,
@@ -181,11 +180,11 @@ export class TaskController
       .send(
         TaskController.filterPersonalTasks(
           tasks,
-          req.cookies[CookieValue.USER] ?? ""
-        )
+          req.cookies[CookieValue.USER] ?? "",
+        ),
       );
   }
-  static async patchByTaskId(req: Request, res: Response, next: NextFunction) {
+  async patchByTaskId(req: Request, res: Response, _next: NextFunction) {
     if (req.body.rooms)
       return res.status(HttpStatusCode.BadRequest).send({
         reason: "Rooms are patched by POST/DELETE /task/:id/room/:nick",
@@ -194,25 +193,26 @@ export class TaskController
       return res.status(HttpStatusCode.BadRequest).send({
         reason: "Completed-by are patched by POST/DELETE /task/:id/:nick",
       }) as unknown as void;
-    Controller.update(TaskModel, { _id: req.params.id }, req.body)
+
+    this.update(TaskModel, { _id: req.params.id }, req.body)
       .then((updated) => {
         return updated
           ? res.status(HttpStatusCode.Ok).send(updated)
           : res.status(HttpStatusCode.NotFound).send();
       })
       .catch((error) => {
-        return res.status(HttpStatusCode.UnprocessableEntity).send(error);
+        return res.status(HttpStatusCode.UnprocessableContent).send(error);
       });
   }
-  static async putByTaskId(req: Request, res: Response, next: NextFunction) {
-    Controller.replace(TaskModel, { _id: req.params.id }, req.body)
+  async putByTaskId(req: Request, res: Response, _next: NextFunction) {
+    this.replace(TaskModel, { _id: req.params.id }, req.body)
       .then((updated) => {
         return updated
           ? res.status(HttpStatusCode.Ok).send(updated)
           : res.status(HttpStatusCode.NotFound).send();
       })
       .catch((error) => {
-        return res.status(HttpStatusCode.UnprocessableEntity).send(error);
+        return res.status(HttpStatusCode.UnprocessableContent).send(error);
       });
   }
 

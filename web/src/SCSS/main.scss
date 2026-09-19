@@ -1,39 +1,39 @@
-@use 'sass:color';
+@use "sass:color";
 
-@import "./build/colors.scss";
-@import "../../node_modules/bootstrap/scss/bootstrap";
+@import "./colors.scss";
+@import "bootstrap/scss/bootstrap";
 
-@import "./build/mixins.scss";
-@import "./build/font.scss";
+@import "./mixins.scss";
+@import "./font.scss";
 
 /* Hide the spin buttons in WebKit browsers */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* Hide spin buttons in Firefox */
 input[type="number"] {
-    -moz-appearance: textfield;
+  -moz-appearance: textfield;
 }
 
 .w-fit-content {
-    width: fit-content !important;
+  width: fit-content !important;
 }
 
 .no-select {
-    @include noUserSelect();
+  @include noUserSelect();
 }
 
 .no-scrollbar {
-    @include hideScrollbar();
+  @include hideScrollbar();
 }
 
 .cursor-pointer {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .h-0 {
-    height: 0 !important;
+  height: 0 !important;
 }

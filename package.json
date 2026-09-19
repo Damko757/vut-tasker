@@ -4,7 +4,6 @@
   "version": "1.2.3",
   "workspaces": [
     "web",
-    "shared",
     "server"
   ],
   "scripts": {
@@ -13,13 +12,7 @@
     "build": "npm run build --workspaces"
   },
   "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "dependencies": {
-    "dotenv": "^16.4.5"
+    "typescript": "~5.9.0"
   },
   "description": "This is production version of **[vut-tasker](https://github.com/Damko757/vut-tasker)**",
   "main": "index.js",

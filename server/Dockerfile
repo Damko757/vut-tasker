@@ -5,7 +5,6 @@ WORKDIR /app
 # 1. Copy root and workspace package manifests
 COPY package.json ./
 COPY server/package.json ./server/
-COPY shared/package.json ./shared/
 
 # 2. Install all dependencies (resolves workspace links)
 RUN npm install
@@ -27,8 +26,6 @@ ENV NODE_ENV=production
 # Copy necessary production artifacts from the builder stage
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/shared/package.json ./shared/
-COPY --from=builder /app/shared/dist ./shared/dist
 COPY --from=builder /app/server/package.json ./server/
 COPY --from=builder /app/server/dist ./server/dist
 
@@ -39,4 +36,4 @@ WORKDIR /app/server
 EXPOSE 3000
 
 # Run the compiled JavaScript directly with Node.js
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/server/src/index.js"]

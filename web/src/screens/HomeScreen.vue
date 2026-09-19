@@ -156,7 +156,7 @@ function load() {
   </div>
 </template>
 <style lang="scss" scoped>
-@import "/src/SCSS/build/colors.scss";
+@import "@scss/colors.scss";
 
 .sanity-wrapper {
   // width: 30em;

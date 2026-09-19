@@ -1,4 +1,4 @@
-import { describe, test, expect, jest } from "bun:test";
+import { describe, expect, jest, test } from "@jest/globals";
 import axios, { HttpStatusCode } from "axios";
 import { METHODS } from "http";
 
@@ -10,8 +10,8 @@ describe("Initial test", () => {
     expect(Object.keys(response.data).length > 0).toBe(true);
     expect(
       Object.keys(response.data).every((key) =>
-        response.data[key].every((method) => METHODS.includes(method))
-      )
+        response.data[key].every((method: any) => METHODS.includes(method)),
+      ),
     ).toBe(true);
   });
 

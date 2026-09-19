@@ -1,14 +1,14 @@
-import mongoose from "mongoose";
-import { ENV } from "./const.ts";
 import chalk from "chalk";
+import mongoose from "mongoose";
+import { USERS } from "../../shared/config/users.ts";
+import { ENV } from "./const.ts";
 import { UserModel } from "./Schemas/User.ts";
-import { USERS } from "@vut-tasker/shared/config/users.ts";
 
 export const initMongoose = async () => {
   return new Promise<void>((resolve, rejected) => {
     const connectString = `mongodb://${ENV.DATABASE_USER}:${ENV.DATABASE_PASSWORD}@${ENV.DATABASE_URI}/test?authSource=admin`;
     // const connectString = `mongodb://root:root@localhost/test?authSource=admin`;
-
+    console.log(connectString);
     mongoose
       .set("strictQuery", false)
       .connect(connectString)

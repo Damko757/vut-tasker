@@ -1,9 +1,8 @@
-import { ENV } from "./const.ts";
-import * as mongoose from "mongoose";
 import chalk from "chalk";
+import { ENV } from "./const.ts";
 
-import { initMongoose } from "./initMongoose.ts";
 import { initApp } from "./app.ts";
+import { initMongoose } from "./initMongoose.ts";
 
 Promise.all([initApp(), initMongoose()])
   .then(([app, _]) => {

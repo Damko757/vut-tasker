@@ -4,18 +4,18 @@ import type { ErrorResponse } from "../Entities/ErrorResponse.ts";
 import { HttpStatusCodes } from "./HttpStatusCodes.ts";
 
 export const errorHandler = (
-    err: any,
-    req: Request,
-    res: Response,
-    next: NextFunction
+  err: any,
+  _req: Request,
+  res: Response,
+  _next: NextFunction,
 ) => {
-    console.error(chalk.red(err));
+  console.error(chalk.red(err));
 
-    const errorMsg: ErrorResponse = {
-        message: "Could not complete request",
-        detail: err.message ?? undefined,
-        error: err,
-    };
+  const errorMsg: ErrorResponse = {
+    message: "Could not complete request",
+    detail: err.message ?? undefined,
+    error: err,
+  };
 
-    res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send(errorMsg);
+  res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send(errorMsg);
 };

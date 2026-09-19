@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import uniqueValidator from "mongoose-unique-validator";
-import { type User } from "../../../shared/Entities/User.ts";
+import { User } from "../../../shared/Entities/User.ts";
 const UserSchema = new mongoose.Schema({
   nick: { type: String, unique: true, required: true },
   forename: { type: String, required: false },

@@ -1,11 +1,13 @@
 {
-  "name": "vut-tasker-server",
-  "module": "index.ts",
-  "type": "module",
+  "name": "@vut-tasker/server",
   "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
   "scripts": {
-    "dev": "tsx watch --env-file=../.env src/index.ts",
-    "build": "tsc"
+    "dev": "tsx watch --conditions=source --env-file=../.env src/index.ts",
+    "build": "tsc -b",
+    "start": "node dist/index.js"
   },
   "devDependencies": {
     "@types/bun": "latest",
@@ -14,6 +16,7 @@
     "@types/express": "^5.0.0",
     "@types/helmet": "^4.0.0",
     "@types/node": "^22.7.4",
+    "ts-jest": "^29.4.12",
     "tsx": "^4.23.13",
     "typescript": "^5.9.3"
   },
@@ -23,7 +26,6 @@
   "dependencies": {
     "@types/cookie-parser": "^1.4.7",
     "@types/mongoose-unique-validator": "^1.0.9",
-    "@vut-tasker/shared": "*",
     "axios": "^1.7.9",
     "body-parser": "^1.20.3",
     "bun": "^1.1.29",
