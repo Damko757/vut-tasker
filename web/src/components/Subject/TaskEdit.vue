@@ -10,9 +10,11 @@ import DateTimeInput from "../Form/DateTimeInput/DateTimeInput.vue";
 import CheckBox from "./CheckBox.vue";
 import SimpleInput from "./SimpleInput.vue";
 import SimpleTextArea from "./SimpleTextArea.vue";
+import LoadingIcon from "../Etc/Icones/LoadingIcon.vue";
 
 const store = getStore();
 const user = store.getters.getUser();
+const submitting = ref(false);
 
 const props = defineProps<{
   task: Partial<Task> | null;
@@ -48,6 +50,8 @@ const submit = () => {
     type: edittedTask.value.type!,
   };
 
+  submitting.value = true;
+
   const promise = props.task?._id
     ? axios.patch<Task>(API_URL + `/task/${props.task._id}`, taskToSend)
     : axios.post<Task>(API_URL + `/tasks`, taskToSend);
@@ -74,6 +78,9 @@ const submit = () => {
     })
     .catch((error) => {
       console.error(error);
+    })
+    .finally(() => {
+      submitting.value = false;
     });
 };
 
@@ -103,7 +110,7 @@ watch(
   <section class="relative">
     <div
       v-if="addOrEdit == 'edit'"
-      class="rounded-bl-4xl absolute right-0 top-0 cursor-pointer rounded-tr-xl bg-red-500 pb-3 pe-2 ps-3 pt-2 text-xl hover:bg-red-400"
+      class="absolute top-0 right-0 cursor-pointer rounded-tr-xl rounded-bl-4xl bg-red-500 ps-3 pe-2 pt-2 pb-3 text-xl hover:bg-red-400"
       @click="() => emit('delete', task?._id ?? null)"
     >
       <Icon icon="material-symbols:delete-rounded" />
@@ -197,9 +204,11 @@ watch(
       <div class="mt-5 text-2xl font-bold">
         <button
           class="me-3 cursor-pointer rounded-xl bg-emerald-700 px-5 py-1 hover:bg-emerald-600"
+          :disabled="submitting"
           @click="submit()"
         >
-          <Icon icon="material-symbols:check-rounded" />
+          <LoadingIcon v-if="submitting" />
+          <Icon v-else icon="material-symbols:check-rounded" />
         </button>
         <button
           class="cursor-pointer rounded-xl bg-red-700 px-5 py-1 hover:bg-red-600"
