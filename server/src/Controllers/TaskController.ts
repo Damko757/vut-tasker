@@ -15,8 +15,8 @@ export class TaskController
   routes(): RoutingMap {
     return {
       "/task/:id/:nick": {
-        POST: this.addNick,
-        DELETE: this.removeNick,
+        POST: (req, res, next) => this.addNick(req, res, next),
+        DELETE: (req, res, next) => this.removeNick(req, res, next),
       },
       "/task/:id": {
         DELETE: (req, res, next) => this.deleteByTaskId(req, res, next),
