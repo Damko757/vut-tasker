@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Icon } from "@iconify/vue";
 import axios, { HttpStatusCode } from "axios";
 import { computed, inject, onMounted, ref, watch } from "vue";
 import {
@@ -118,15 +117,6 @@ function load() {
       </div>
     </div>
     <div class="mb-2 flex items-center font-bold md:order-1 md:mb-5">
-      <!-- FitCheats link -->
-      <a
-        class="fitcheats-link"
-        href="https://vutbr-my.sharepoint.com/shared"
-        target="_blank"
-        title="FitCheats"
-      >
-        <Icon icon="material-symbols:dataset-linked-outline-rounded" />
-      </a>
       <h1 class="px-2">Upcoming tasks:</h1>
     </div>
   </div>
@@ -158,21 +148,4 @@ function load() {
 <style lang="scss" scoped>
 @import "@scss/colors.scss";
 
-.sanity-wrapper {
-  // width: 30em;
-  // max-width: 80%;
-  // margin-left: auto;
-  // margin-right: 0em;
-  // position: relative;
-}
-
-.fitcheats-link {
-  color: $fit-blue;
-  transition: 250ms;
-  display: inline-block;
-
-  &:hover {
-    color: $fit-dark-blue;
-  }
-}
 </style>
